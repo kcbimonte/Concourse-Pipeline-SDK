@@ -9,6 +9,7 @@ import org.concourseci.bundled.registry.RegistryImageResourceType;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Get;
 import org.concourseci.sdk.resource.Resource;
+import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.Command;
 import org.concourseci.sdk.step.task.Platform;
 import org.concourseci.sdk.step.task.Task;
@@ -121,20 +122,19 @@ class PipelineTest {
         Get initialGet = repo.getGetDefinition().enableTrigger();
 
         setSelf.addStep(initialGet);
+        setSelf.addStep(SetPipeline.create("self", initialGet, "pipelines/set-pipelines.yml"));
+
+        Get blockedGet = repo.getGetDefinition().enableTrigger().addPassedRequirement(setSelf);
 
         // Set Example Pipelines
         Job setExamples = new Job("set-example-pipelines").markPublic();
 
-        Get examplesGet = repo.getGetDefinition().enableTrigger().addPassedRequirement(setSelf);
-
-        setExamples.addStep(examplesGet);
+        setExamples.addStep(blockedGet);
 
         // Set Rendered Pipelines
         Job setRendered = new Job("set-rendered-pipelines").markPublic();
 
-        Get renderedGet = repo.getGetDefinition().enableTrigger().addPassedRequirement(setSelf);
-
-        setRendered.addStep(renderedGet);
+        setRendered.addStep(blockedGet);
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
