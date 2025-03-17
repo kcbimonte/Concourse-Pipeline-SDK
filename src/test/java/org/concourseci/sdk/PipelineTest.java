@@ -6,8 +6,10 @@ import org.concourseci.bundled.git.GitConfig;
 import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.registry.RegistryImageConfig;
 import org.concourseci.bundled.registry.RegistryImageResourceType;
+import org.concourseci.bundled.time.TimeResource;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Get;
+import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.*;
 import org.concourseci.sdk.variable.Variable;
@@ -210,6 +212,29 @@ class PipelineTest {
         createAndConsume.addStep(new Task("consume-the-file", consumeFileConfig));
 
         pipeline.addJob(createAndConsume);
+
+        System.out.println(gson.toJson(pipeline));
+    }
+
+    @Test
+    void timeTriggered() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        Resource every30Seconds = TimeResource.createResource("every-30s", null).setIcon("clock-outline");
+        pipeline.addResource(every30Seconds);
+
+        Job job = new Job("job").markPublic();
+
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+
+        Command helloWorld = Command.createCommand("echo").addArg("Hello, world!");
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, helloWorld);
+
+        job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(new Task("simple-task", config));
+
+        pipeline.addJob(job);
 
         System.out.println(gson.toJson(pipeline));
     }
