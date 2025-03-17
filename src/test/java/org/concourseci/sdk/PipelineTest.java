@@ -17,8 +17,6 @@ import org.concourseci.sdk.variable.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.DayOfWeek;
-
 class PipelineTest {
 
     Gson gson;
@@ -183,8 +181,8 @@ class PipelineTest {
 
         setRendered.addStep(renderTask);
 
-        setRendered.addStep(SetPipeline.create("hello-world-rendered","pipeline/hello-world-rendered.yml"));
-        setRendered.addStep(SetPipeline.create("multi-files-rendered","pipeline/multi-files-rendered.yml"));
+        setRendered.addStep(SetPipeline.create("hello-world-rendered", "pipeline/hello-world-rendered.yml"));
+        setRendered.addStep(SetPipeline.create("multi-files-rendered", "pipeline/multi-files-rendered.yml"));
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
@@ -236,6 +234,29 @@ class PipelineTest {
         TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, helloWorld);
 
         job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(new Task("simple-task", config));
+
+        pipeline.addJob(job);
+
+        System.out.println(gson.toJson(pipeline));
+    }
+
+    @Test
+    void gitTriggered() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        Resource concourseDocs = GitResource.createResource("concourse-docs-git", GitConfig.create("https://github.com/concourse/docs")).setIcon("github");
+        pipeline.addResource(concourseDocs);
+
+        Job job = new Job("job").markPublic();
+
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+
+        Command lsDocs = Command.createCommand("ls").addArg("-la").addArg("./concourse-docs-git");
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, lsDocs);
+
+        job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(new Task("list-files", config));
 
         pipeline.addJob(job);
 
