@@ -262,4 +262,40 @@ class PipelineTest {
 
         System.out.println(gson.toJson(pipeline));
     }
+
+    @Test
+    void manuallyTriggered() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        Resource every30Seconds = TimeResource.createResource("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
+        pipeline.addResource(every30Seconds);
+
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+
+        Command lsDocs = Command.createCommand("echo").addArg("Hello, world");
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, lsDocs);
+
+        Task simpleTask = new Task("simple-task", config);
+
+        Job triggeredFirst = new Job("triggered-first")
+                .markPublic()
+                .addStep(every30Seconds.createGetDefinition().enableTrigger())
+                .addStep(simpleTask);
+
+        Job notTriggered = new Job("not-triggered")
+                .markPublic()
+                .addStep(every30Seconds.createGetDefinition().addPassedRequirement(triggeredFirst))
+                .addStep(simpleTask);
+
+        Job triggeredSecond = new Job("triggered-second")
+                .markPublic()
+                .addStep(every30Seconds.createGetDefinition().addPassedRequirement(triggeredFirst).enableTrigger())
+                .addStep(simpleTask);
+
+        pipeline.addJob(triggeredFirst).addJob(triggeredSecond).addJob(notTriggered);
+
+        System.out.println(gson.toJson(pipeline));
+    }
 }
