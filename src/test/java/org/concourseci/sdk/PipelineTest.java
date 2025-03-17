@@ -119,12 +119,12 @@ class PipelineTest {
         // Set Self
         Job setSelf = new Job("set-self").markPublic();
 
-        Get initialGet = repo.getGetDefinition().enableTrigger();
+        Get initialGet = repo.createGetDefinition().enableTrigger();
 
         setSelf.addStep(initialGet);
         setSelf.addStep(SetPipeline.create("self", initialGet, "pipelines/set-pipelines.yml"));
 
-        Get blockedGet = repo.getGetDefinition().enableTrigger().addPassedRequirement(setSelf);
+        Get blockedGet = repo.createGetDefinition().enableTrigger().addPassedRequirement(setSelf);
 
         // Set Example Pipelines
         Job setExamples = new Job("set-example-pipelines").markPublic();

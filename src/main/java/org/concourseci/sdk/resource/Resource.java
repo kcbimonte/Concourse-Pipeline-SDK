@@ -31,11 +31,11 @@ public abstract class Resource {
         this.config = config;
     }
 
-    public Get getGetDefinition() {
+    public Get createGetDefinition() {
         return new Get(this);
     }
 
-    public Get getGetDefinition(String identifier) {
+    public Get createGetDefinition(String identifier) {
         return new Get(this, identifier);
     }
 
@@ -56,7 +56,6 @@ public abstract class Resource {
         this.checkEvery = duration;
 
         return this;
-
     }
 
     @Override
