@@ -8,6 +8,8 @@ import org.concourseci.bundled.registry.RegistryImageConfig;
 import org.concourseci.bundled.registry.RegistryImageResourceType;
 import org.concourseci.bundled.time.TimeConfig;
 import org.concourseci.bundled.time.TimeResource;
+import org.concourseci.sdk.job.BuildLogRetentionPolicy;
+import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Get;
 import org.concourseci.sdk.resource.Resource;
@@ -273,7 +275,7 @@ class PipelineTest {
 
         AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        Command lsDocs = Command.createCommand("echo").addArg("Hello, world");
+        Command lsDocs = Command.createCommand("echo").addArg("Hello, world!");
 
         TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, lsDocs);
 
@@ -281,6 +283,7 @@ class PipelineTest {
 
         Job triggeredFirst = new Job("triggered-first")
                 .markPublic()
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(20))
                 .addStep(every30Seconds.createGetDefinition().enableTrigger())
                 .addStep(simpleTask);
 
@@ -291,6 +294,7 @@ class PipelineTest {
 
         Job triggeredSecond = new Job("triggered-second")
                 .markPublic()
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(20))
                 .addStep(every30Seconds.createGetDefinition().addPassedRequirement(triggeredFirst).enableTrigger())
                 .addStep(simpleTask);
 
