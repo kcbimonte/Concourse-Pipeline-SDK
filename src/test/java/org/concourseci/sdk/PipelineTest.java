@@ -6,6 +6,7 @@ import org.concourseci.bundled.git.GitConfig;
 import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.registry.RegistryImageConfig;
 import org.concourseci.bundled.registry.RegistryImageResourceType;
+import org.concourseci.bundled.time.TimeConfig;
 import org.concourseci.bundled.time.TimeResource;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Get;
@@ -15,6 +16,8 @@ import org.concourseci.sdk.step.task.*;
 import org.concourseci.sdk.variable.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.DayOfWeek;
 
 class PipelineTest {
 
@@ -221,7 +224,7 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        Resource every30Seconds = TimeResource.createResource("every-30s", null).setIcon("clock-outline");
+        Resource every30Seconds = TimeResource.createResource("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
         pipeline.addResource(every30Seconds);
 
         Job job = new Job("job").markPublic();
