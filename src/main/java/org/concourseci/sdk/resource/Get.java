@@ -2,7 +2,7 @@ package org.concourseci.sdk.resource;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
-import org.concourseci.sdk.Job;
+import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 

@@ -1,6 +1,7 @@
 package org.concourseci.sdk;
 
 import lombok.Getter;
+import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.resource.ResourceType;
 
@@ -15,6 +16,12 @@ public class Pipeline {
     private final Set<Group> groups = new HashSet<>();
     private final Set<Job> jobs = new HashSet<>();
 
+    /**
+     * Adds a Job to the list of Pipeline Jobs. Each Job must have a unique name.
+     *
+     * @param job Job to add to the pipeline
+     * @return itself to support chaining
+     */
     public Pipeline addJob(Job job) {
         jobs.add(job);
 

@@ -1,4 +1,4 @@
-package org.concourseci.sdk;
+package org.concourseci.sdk.job;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
@@ -27,6 +27,9 @@ public class Job {
 
     @SerializedName("public")
     private Boolean isPublic = false;
+
+    @SerializedName("build_log_retention")
+    private BuildLogRetentionPolicy buildLogRetentionPolicy;
 
     public Job(String name) {
         Validator.validateIdentifier(name);
@@ -68,6 +71,12 @@ public class Job {
 
     public Job markPublic() {
         this.isPublic = true;
+
+        return this;
+    }
+
+    public Job setBuildLogRetention(BuildLogRetentionPolicy policy) {
+        this.buildLogRetentionPolicy = policy;
 
         return this;
     }
