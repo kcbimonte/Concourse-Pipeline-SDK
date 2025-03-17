@@ -9,10 +9,7 @@ import org.concourseci.bundled.registry.RegistryImageResourceType;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Get;
 import org.concourseci.sdk.step.SetPipeline;
-import org.concourseci.sdk.step.task.Command;
-import org.concourseci.sdk.step.task.Platform;
-import org.concourseci.sdk.step.task.Task;
-import org.concourseci.sdk.step.task.TaskConfig;
+import org.concourseci.sdk.step.task.*;
 import org.concourseci.sdk.variable.Variable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -176,7 +173,7 @@ class PipelineTest {
 
         Command renderCommand = Command.createCommand("sh").addArg("-cx").addArg(yttGen);
 
-        TaskConfig renderConfig = TaskConfig.create(Platform.LINUX, carvelytt, renderCommand);
+        TaskConfig renderConfig = TaskConfig.create(Platform.LINUX, carvelytt, renderCommand).addInput(Input.create(blockedGet)).addOutput(Output.create("pipeline"));
         Task renderTask = new Task("render-pipelines", renderConfig);
 
         setRendered.addStep(renderTask);

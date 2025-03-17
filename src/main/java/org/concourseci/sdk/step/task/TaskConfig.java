@@ -3,6 +3,9 @@ package org.concourseci.sdk.step.task;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.Resource;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class TaskConfig {
     private final Platform platform;
@@ -12,6 +15,10 @@ public class TaskConfig {
 
     @SerializedName("run")
     private final Command command;
+
+
+    private final Set<Input> inputs = new HashSet<>();
+    private final Set<Output> outputs = new HashSet<>();
 
     private TaskConfig(Platform platform, Resource anonymousResource, Command command) {
         this.platform = platform;
@@ -25,5 +32,17 @@ public class TaskConfig {
 
 
         return new TaskConfig(platform, resource, command);
+    }
+
+    public TaskConfig addInput(Input input) {
+        this.inputs.add(input);
+
+        return this;
+    }
+
+    public TaskConfig addOutput(Output output) {
+        this.outputs.add(output);
+
+        return this;
     }
 }
