@@ -31,6 +31,21 @@ public class Job {
     @SerializedName("build_log_retention")
     private BuildLogRetentionPolicy buildLogRetentionPolicy;
 
+    @SerializedName("ensure")
+    private IStep ensure;
+
+    @SerializedName("on_abort")
+    private IStep onAbort;
+
+    @SerializedName("on_error")
+    private IStep onError;
+
+    @SerializedName("on_failure")
+    private IStep onFailure;
+
+    @SerializedName("on_success")
+    private IStep onSuccess;
+
     public Job(String name) {
         Validator.validateIdentifier(name);
 
@@ -77,6 +92,36 @@ public class Job {
 
     public Job setBuildLogRetention(BuildLogRetentionPolicy policy) {
         this.buildLogRetentionPolicy = policy;
+
+        return this;
+    }
+
+    public Job setEnsure(IStep step) {
+        this.ensure = step;
+
+        return this;
+    }
+
+    public Job setOnAbort(IStep step) {
+        this.onAbort = step;
+
+        return this;
+    }
+
+    public Job setOnError(IStep step) {
+        this.onError = step;
+
+        return this;
+    }
+
+    public Job setOnFailure(IStep step) {
+        this.onFailure = step;
+
+        return this;
+    }
+
+    public Job setOnSuccess(IStep step) {
+        this.onSuccess = step;
 
         return this;
     }

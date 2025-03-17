@@ -1,5 +1,6 @@
 package org.concourseci.sdk.step.task;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import org.concourseci.sdk.resource.Get;
@@ -21,6 +22,21 @@ public class Task implements IStep {
     private Boolean privileged = false;
 
     private final Map<String, Object> vars = new HashMap<>();
+
+    @SerializedName("ensure")
+    private IStep ensure;
+
+    @SerializedName("on_abort")
+    private IStep onAbort;
+
+    @SerializedName("on_error")
+    private IStep onError;
+
+    @SerializedName("on_failure")
+    private IStep onFailure;
+
+    @SerializedName("on_success")
+    private IStep onSuccess;
 
     public Task(String name, TaskConfig config) {
         Validator.validateIdentifier(name);
@@ -47,6 +63,36 @@ public class Task implements IStep {
 
     public Task addVar(String name, String value) {
         this.vars.put(name, value);
+
+        return this;
+    }
+
+    public Task setEnsure(IStep step) {
+        this.ensure = step;
+
+        return this;
+    }
+
+    public Task setOnAbort(IStep step) {
+        this.onAbort = step;
+
+        return this;
+    }
+
+    public Task setOnError(IStep step) {
+        this.onError = step;
+
+        return this;
+    }
+
+    public Task setOnFailure(IStep step) {
+        this.onFailure = step;
+
+        return this;
+    }
+
+    public Task setOnSuccess(IStep step) {
+        this.onSuccess = step;
 
         return this;
     }
