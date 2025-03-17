@@ -111,7 +111,8 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitResource repo = GitResource.createResource("concourse-examples", GitConfig.create("https://github.com/concourse/examples", "master"));
+        GitResource repo = GitResource.createResource("concourse-examples", GitConfig.create("https://github.com/concourse/examples"));
+        repo.setIcon("github").setCheckEvery("30m");
 
         pipeline.addResource(repo);
 

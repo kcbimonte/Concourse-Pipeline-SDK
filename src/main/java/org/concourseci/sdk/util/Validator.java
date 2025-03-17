@@ -14,4 +14,13 @@ public class Validator {
         }
     }
 
+    public static void validateDuration(String duration) throws RuntimeException {
+        Pattern pattern = Pattern.compile("^(?:(\\d+)y)?(?:(\\d+)w)?(?:(\\d+)d)?(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\d+)s)?(?:(\\d+)ms)?$");
+        Matcher matcher = pattern.matcher(duration);
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid duration format: " + duration);
+        }
+    }
+
 }

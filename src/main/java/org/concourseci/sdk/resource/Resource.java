@@ -8,8 +8,14 @@ import org.concourseci.sdk.util.Validator;
 public abstract class Resource {
     private final String name;
     private final String type;
+
     @SerializedName("source")
     private final IResourceConfig config;
+
+    private String icon = null;
+
+    @SerializedName("check_every")
+    private String checkEvery = null;
 
     public Resource(String name, ResourceType type, IResourceConfig config) {
         Validator.validateIdentifier(name);
@@ -31,6 +37,26 @@ public abstract class Resource {
 
     public Get getGetDefinition(String identifier) {
         return new Get(this, identifier);
+    }
+
+    public Resource setIcon(String icon) {
+        this.icon = icon;
+
+        return this;
+    }
+
+    public Resource setCheckEvery(String duration) {
+        if (duration.equals("never")) {
+            this.checkEvery = duration;
+
+            return this;
+        }
+
+        Validator.validateDuration(duration);
+        this.checkEvery = duration;
+
+        return this;
+
     }
 
     @Override

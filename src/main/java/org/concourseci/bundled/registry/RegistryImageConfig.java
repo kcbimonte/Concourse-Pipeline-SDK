@@ -5,7 +5,7 @@ import org.concourseci.sdk.resource.IResourceConfig;
 public class RegistryImageConfig implements IResourceConfig {
     private final String repository;
 
-    private String tag = "latest";
+    private String tag = null;
 
     private RegistryImageConfig(String repository) {
         this.repository = repository;

@@ -9,14 +9,14 @@ public class GitConfig implements IResourceConfig {
     private final URI uri;
 
     @Setter
-    private String branch;
+    private String branch = null;
 
     private GitConfig(URI uri) {
         this.uri = uri;
     }
 
     public static GitConfig create(String uri) {
-        return create(uri, "main");
+        return create(uri, null);
     }
 
     public static GitConfig create(String uri, String branch) {
