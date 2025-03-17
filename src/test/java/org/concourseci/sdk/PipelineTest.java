@@ -185,4 +185,32 @@ class PipelineTest {
 
         System.out.println(gson.toJson(pipeline));
     }
+
+    @Test
+    void createAndConsume() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        Job createAndConsume = new Job("create-and-consume").markPublic();
+
+        Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on ${date}\" > ./files/created_file");
+
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+
+        Output filesOutput = Output.create("files");
+
+        TaskConfig makeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, makeFileCommand).addOutput(filesOutput);
+
+        createAndConsume.addStep(new Task("make-a-file", makeFileConfig));
+
+        Command consumeFileCommand = Command.createCommand("cat").addArg("./files/created_file");
+
+        TaskConfig consumeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, consumeFileCommand).addInput(Input.create(filesOutput));
+
+        createAndConsume.addStep(new Task("consume-the-file", consumeFileConfig));
+
+        pipeline.addJob(createAndConsume);
+
+        System.out.println(gson.toJson(pipeline));
+    }
 }
