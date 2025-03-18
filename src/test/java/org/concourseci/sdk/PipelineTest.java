@@ -35,16 +35,11 @@ class PipelineTest {
 
         Job job = new Job("job").markPublic();
 
-        Command command = Command.createCommand("echo");
-        command.addArg("Hello world!");
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        AnonymousResource anonResource = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
-        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
-
-        Task task = new Task("simple-task", config);
-
-        job.addStep(task);
+        job.addStep(simpleTask);
 
         pipeline.addJob(job);
 
@@ -58,16 +53,11 @@ class PipelineTest {
 
         Job job = new Job("serial-job").markPublic().markSerial();
 
-        Command command = Command.createCommand("echo");
-        command.addArg("Hello world!");
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        AnonymousResource anonResource = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
-        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
-
-        Task task = new Task("simple-task", config);
-
-        job.addStep(task);
+        job.addStep(simpleTask);
 
         pipeline.addJob(job);
 
@@ -231,11 +221,9 @@ class PipelineTest {
 
         AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        Command helloWorld = Command.createCommand("echo").addArg("Hello, world!");
+        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
-        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, helloWorld);
-
-        job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(new Task("simple-task", config));
+        job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(simpleTask);
 
         pipeline.addJob(job);
 
@@ -254,11 +242,9 @@ class PipelineTest {
 
         AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        Command lsDocs = Command.createCommand("ls").addArg("-la").addArg("./concourse-docs-git");
+        Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
 
-        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, lsDocs);
-
-        job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(new Task("list-files", config));
+        job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(simpleTask);
 
         pipeline.addJob(job);
 
@@ -275,11 +261,7 @@ class PipelineTest {
 
         AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
 
-        Command lsDocs = Command.createCommand("echo").addArg("Hello, world!");
-
-        TaskConfig config = TaskConfig.create(Platform.LINUX, busyBox, lsDocs);
-
-        Task simpleTask = new Task("simple-task", config);
+        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
         Job triggeredFirst = new Job("triggered-first")
                 .markPublic()
@@ -301,5 +283,52 @@ class PipelineTest {
         pipeline.addJob(triggeredFirst).addJob(triggeredSecond).addJob(notTriggered);
 
         System.out.println(gson.toJson(pipeline));
+    }
+
+    @Test
+    void hooks() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        AnonymousResource busyBox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+
+        // Successful Task Configuration
+        Task onSuccessTask = generateTask(busyBox, "task-success", "echo", "This task succeeded!");
+        Task onAbortTask = generateTask(busyBox, "task-aborted", "echo", "This task was aborted!");
+        Task successfulTask = generateTask(busyBox, "successful-task", "sh", "-lc", "exit 0")
+                .setOnSuccess(onSuccessTask)
+                .setOnAbort(onAbortTask);
+
+        // Failing Task Configuration
+        Task onFailureTask = generateTask(busyBox, "task-failure", "echo", "This task failed!");
+        Task failingTask = generateTask(busyBox, "failing-task", "sh", "-lc", "exit 1")
+                .setOnFailure(onFailureTask);
+
+        // Job Configuration
+        Task onSuccessJob = generateTask(busyBox, "job-success", "echo", "This job succeeded!");
+        Task onFailureJob = generateTask(busyBox, "job-failure", "echo", "This job failed!");
+        Task onAbortJob = generateTask(busyBox, "job-aborted", "echo", "This job was aborted!");
+
+        Job job = new Job("job")
+                .markPublic()
+                .addStep(successfulTask)
+                .addStep(failingTask)
+                .setOnSuccess(onSuccessJob)
+                .setOnFailure(onFailureJob)
+                .setOnAbort(onAbortJob);
+
+        pipeline.addJob(job);
+
+        System.out.println(gson.toJson(pipeline));
+    }
+
+    private static Task generateTask(AnonymousResource resource, String taskName, String simpleCommand, String... commandArgs) {
+        Command command = Command.createCommand(simpleCommand);
+
+        for (String arg : commandArgs) command.addArg(arg);
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
+
+        return new Task(taskName, config);
     }
 }
