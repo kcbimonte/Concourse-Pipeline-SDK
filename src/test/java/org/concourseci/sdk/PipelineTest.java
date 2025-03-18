@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.concourseci.bundled.git.GitConfig;
 import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.registry.RegistryImageConfig;
+import org.concourseci.bundled.registry.RegistryImageResource;
 import org.concourseci.bundled.registry.RegistryImageResourceType;
 import org.concourseci.bundled.time.TimeConfig;
 import org.concourseci.bundled.time.TimeResource;
@@ -22,6 +23,16 @@ import org.junit.jupiter.api.Test;
 class PipelineTest {
 
     Gson gson;
+
+    private static Task generateTask(AnonymousResource resource, String taskName, String simpleCommand, String... commandArgs) {
+        Command command = Command.createCommand(simpleCommand);
+
+        for (String arg : commandArgs) command.addArg(arg);
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
+
+        return new Task(taskName, config);
+    }
 
     @BeforeEach
     void setUp() {
@@ -322,13 +333,42 @@ class PipelineTest {
         System.out.println(gson.toJson(pipeline));
     }
 
-    private static Task generateTask(AnonymousResource resource, String taskName, String simpleCommand, String... commandArgs) {
-        Command command = Command.createCommand(simpleCommand);
+    @Test
+    void golangLibrary() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
 
-        for (String arg : commandArgs) command.addArg(arg);
+        RegistryImageConfig v120Config = RegistryImageConfig.create("golang", "1.20-alpine");
+        Resource v120Image = RegistryImageResource.createResource("golang-1.20.x-image", v120Config).setIcon("docker");
 
-        TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
+        RegistryImageConfig v121Config = RegistryImageConfig.create("golang", "1.21-alpine");
+        Resource v121Image = RegistryImageResource.createResource("golang-1.21.x-image", v121Config).setIcon("docker");
 
-        return new Task(taskName, config);
+        RegistryImageConfig v122Config = RegistryImageConfig.create("golang", "1.22-alpine");
+        Resource v122Image = RegistryImageResource.createResource("golang-1.22.x-image", v122Config).setIcon("docker");
+
+        pipeline.addResource(v120Image).addResource(v121Image).addResource(v122Image);
+
+        String goTest = """
+                GOPATH=$PWD/go
+                
+                go version
+                """;
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, Command.createCommand("/bin/sh").addArg("-c").addArg(goTest));
+
+        Job v120 = new Job("golang-1.20").markPublic()
+                .addStep(v120Image.createGetDefinition().enableTrigger())
+                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()));
+        Job v121 = new Job("golang-1.21").markPublic()
+                .addStep(v121Image.createGetDefinition().enableTrigger())
+                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()));
+        Job v122 = new Job("golang-1.22").markPublic()
+                .addStep(v122Image.createGetDefinition().enableTrigger())
+                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()));
+
+        pipeline.addJob(v120).addJob(v121).addJob(v122);
+
+        System.out.println(gson.toJson(pipeline));
     }
 }
