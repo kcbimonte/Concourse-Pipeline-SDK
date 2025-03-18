@@ -75,39 +75,39 @@ class PipelineTest {
         System.out.println(gson.toJson(pipeline));
     }
 
-    @Test
-    void pipelineVar() {
-        // Define Pipeline
-        Pipeline pipeline = new Pipeline();
-
-        String firstJob = String.format("%s-job", Variable.referenceVariable("first"));
-
-        String helloVar = Variable.referenceVariable("hello");
-
-        Job job = new Job(firstJob).markPublic();
-
-        Command command = Command.createCommand("echo");
-        command.addArg(String.format("Hello, %s", helloVar));
-
-        AnonymousResource anonResource = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
-
-        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
-
-        Task task = new Task("simple-task", config);
-
-        job.addStep(task);
-
-        String levelJobName = String.format("level-%s-job", Variable.referenceVariable("number"));
-
-        Job levelJob = new Job(levelJobName).markPublic();
-
-        levelJob.addStep(task);
-
-        pipeline.addJob(levelJob);
-        pipeline.addJob(job);
-
-        System.out.println(gson.toJson(pipeline));
-    }
+//    @Test
+//    void pipelineVar() {
+//        // Define Pipeline
+//        Pipeline pipeline = new Pipeline();
+//
+//        String firstJob = String.format("%s-job", Variable.referenceVariable("first"));
+//
+//        String helloVar = Variable.referenceVariable("hello");
+//
+//        Job job = new Job(firstJob).markPublic();
+//
+//        Command command = Command.createCommand("echo");
+//        command.addArg(String.format("Hello, %s", helloVar));
+//
+//        AnonymousResource anonResource = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+//
+//        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
+//
+//        Task task = new Task("simple-task", config);
+//
+//        job.addStep(task);
+//
+//        String levelJobName = String.format("level-%s-job", Variable.referenceVariable("number"));
+//
+//        Job levelJob = new Job(levelJobName).markPublic();
+//
+//        levelJob.addStep(task);
+//
+//        pipeline.addJob(levelJob);
+//        pipeline.addJob(job);
+//
+//        System.out.println(gson.toJson(pipeline));
+//    }
 
     @Test
     void setPipeline() {

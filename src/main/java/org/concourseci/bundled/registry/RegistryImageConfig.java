@@ -1,25 +1,36 @@
 package org.concourseci.bundled.registry;
 
+import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.IResourceConfig;
 
 public class RegistryImageConfig implements IResourceConfig {
     private final String repository;
 
-    private String tag = null;
+    private final String tag;
 
-    private RegistryImageConfig(String repository) {
+    @SerializedName("username")
+    private String usernameVariable;
+
+    @SerializedName("password")
+    private String passwordVariable;
+
+    public RegistryImageConfig(String repository, String tag) {
         this.repository = repository;
+        this.tag = tag;
     }
 
     public static RegistryImageConfig create(String repository) {
-        return new RegistryImageConfig(repository);
+        return RegistryImageConfig.create(repository, null);
     }
 
     public static RegistryImageConfig create(String repository, String tag) {
-        RegistryImageConfig config = new RegistryImageConfig(repository);
+        return new RegistryImageConfig(repository, tag);
+    }
 
-        config.tag = tag;
+    public RegistryImageConfig setCredentials(String usernameVariable, String passwordVariable) {
+        this.usernameVariable = usernameVariable;
+        this.passwordVariable = passwordVariable;
 
-        return config;
+        return this;
     }
 }

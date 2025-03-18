@@ -6,7 +6,7 @@ import org.concourseci.sdk.resource.ResourceType;
 public class RegistryImageResourceType extends ResourceType {
     private static RegistryImageResourceType type = null;
 
-    private RegistryImageResourceType(String name) {
+    public RegistryImageResourceType(String name) {
         super(name);
     }
 
