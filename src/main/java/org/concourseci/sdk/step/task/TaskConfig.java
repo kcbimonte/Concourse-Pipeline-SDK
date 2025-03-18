@@ -11,7 +11,7 @@ public class TaskConfig {
     private final Platform platform;
 
     @SerializedName("image_resource")
-    private final Resource resource;
+    private Resource resource;
 
     @SerializedName("run")
     private final Command command;
@@ -32,6 +32,10 @@ public class TaskConfig {
 
 
         return new TaskConfig(platform, resource, command);
+    }
+
+    public static TaskConfig create(Platform platform, Command command) {
+        return new TaskConfig(platform, null, command);
     }
 
     public TaskConfig addInput(Input input) {

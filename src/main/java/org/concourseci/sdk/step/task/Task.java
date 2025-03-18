@@ -56,9 +56,10 @@ public class Task implements IStep {
         this.file = String.format("%s/%s", get.getIdentifier(), path);
     }
 
-    public void setImage(String image) {
-        Validator.validateIdentifier(image);
-        this.image = image;
+    public Task setImage(Get image) {
+        this.image = image.getIdentifier();
+
+        return this;
     }
 
     public Task addVar(String name, String value) {
