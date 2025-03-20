@@ -1,5 +1,6 @@
 package org.concourseci.sdk.step.task;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.Resource;
 
@@ -19,6 +20,8 @@ public class TaskConfig {
 
     private final Set<Input> inputs = new HashSet<>();
     private final Set<Output> outputs = new HashSet<>();
+
+    private JsonObject params = null;
 
     private TaskConfig(Platform platform, Resource anonymousResource, Command command) {
         this.platform = platform;
@@ -46,6 +49,22 @@ public class TaskConfig {
 
     public TaskConfig addOutput(Output output) {
         this.outputs.add(output);
+
+        return this;
+    }
+
+    public TaskConfig addParam(String key, String value) {
+        if (params == null) params = new JsonObject();
+
+        params.addProperty(key, value);
+
+        return this;
+    }
+
+    public TaskConfig addParam(String key, JsonObject value) {
+        if (params == null) params = new JsonObject();
+
+        params.add(key, value);
 
         return this;
     }
