@@ -371,4 +371,52 @@ class PipelineTest {
 
         System.out.println(gson.toJson(pipeline));
     }
+
+    @Test
+    void railsApplication() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        GitConfig repoConfig = GitConfig.create("https://github.com/rails/rails-contributors.git");
+        Resource repo = GitResource.createResource("rails-contributors-git", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        // Task Config
+        AnonymousResource ruby = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("ruby", "2.6.5"));
+        String railsTesting = """
+                echo "=== Setting up Postgres..."
+                apt-get update
+                apt-get install -y postgresql libpq-dev cmake nodejs
+                cat > /etc/postgresql/*/main/pg_hba.conf <<-EOF
+                host   all   postgres   localhost   trust
+                EOF
+                service postgresql restart
+                echo "=== Project requires that we clone rails... "
+                cd rails-contributors-git
+                git clone --mirror https://github.com/rails/rails
+                echo "=== Installing Gems..."
+                gem install -N bundler
+                bundle install
+                echo "=== Running Tests..."
+                bundle exec rails db:setup
+                bundle exec rails test
+                """;
+        Command taskCommand = Command.createCommand("/bin/bash").addArg("-c").addArg(railsTesting);
+        TaskConfig taskConfig = TaskConfig.create(Platform.LINUX, ruby, taskCommand)
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addParam("RAILS_ENV", "test")
+                .addParam("DATABASE_URL", "postgresql://postgres@localhost");
+
+        Task task = new Task("run-tests", taskConfig);
+
+        // Job
+        Job job = new Job("test").markPublic();
+
+        job.addStep(repo.createGetDefinition().enableTrigger()).addStep(task);
+
+        pipeline.addJob(job);
+
+        // Serialize
+        System.out.println(gson.toJson(pipeline));
+    }
 }
