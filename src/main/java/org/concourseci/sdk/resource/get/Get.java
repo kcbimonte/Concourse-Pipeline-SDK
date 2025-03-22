@@ -20,6 +20,9 @@ public abstract class Get implements IStep {
 
     private Boolean trigger = false;
 
+    @SerializedName("params")
+    private IGetConfig config;
+
     @SerializedName("passed")
     private final List<String> passedJobs = new ArrayList<>();
 
@@ -42,6 +45,12 @@ public abstract class Get implements IStep {
 
     public Get addPassedRequirement(Job job) {
         this.passedJobs.add(job.getName());
+
+        return this;
+    }
+
+    public Get setConfig(IGetConfig config) {
+        this.config = config;
 
         return this;
     }
