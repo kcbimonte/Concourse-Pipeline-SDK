@@ -1,6 +1,6 @@
 package org.concourseci.sdk.step.task;
 
-import org.concourseci.sdk.resource.Get;
+import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.util.Validator;
 
 public class Input {

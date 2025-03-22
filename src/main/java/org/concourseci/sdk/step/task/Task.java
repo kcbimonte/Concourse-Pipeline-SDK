@@ -3,7 +3,7 @@ package org.concourseci.sdk.step.task;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
-import org.concourseci.sdk.resource.Get;
+import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 

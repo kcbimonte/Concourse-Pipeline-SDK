@@ -1,8 +1,9 @@
-package org.concourseci.sdk.resource;
+package org.concourseci.sdk.resource.get;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import org.concourseci.sdk.job.Job;
+import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Get implements IStep {
-
-    private String resource = null;
+public abstract class Get implements IStep {
 
     @SerializedName("get")
     private final String identifier;
+
+    private String resource = null;
 
     private Boolean trigger = false;
 

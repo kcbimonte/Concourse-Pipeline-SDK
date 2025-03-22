@@ -12,7 +12,7 @@ import org.concourseci.bundled.time.TimeResource;
 import org.concourseci.sdk.job.BuildLogRetentionPolicy;
 import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.AnonymousResource;
-import org.concourseci.sdk.resource.Get;
+import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.*;

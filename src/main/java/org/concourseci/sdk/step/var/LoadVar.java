@@ -1,7 +1,7 @@
 package org.concourseci.sdk.step.var;
 
 import com.google.gson.annotations.SerializedName;
-import org.concourseci.sdk.resource.Get;
+import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 
