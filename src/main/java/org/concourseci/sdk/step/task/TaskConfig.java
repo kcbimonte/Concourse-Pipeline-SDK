@@ -2,7 +2,7 @@ package org.concourseci.sdk.step.task;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import org.concourseci.sdk.resource.Resource;
+import org.concourseci.sdk.resource.AnonymousResource;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ public class TaskConfig {
     private final Platform platform;
 
     @SerializedName("image_resource")
-    private Resource resource;
+    private AnonymousResource resource;
 
     @SerializedName("run")
     private final Command command;
@@ -23,13 +23,13 @@ public class TaskConfig {
 
     private JsonObject params = null;
 
-    private TaskConfig(Platform platform, Resource anonymousResource, Command command) {
+    private TaskConfig(Platform platform, AnonymousResource anonymousResource, Command command) {
         this.platform = platform;
         this.resource = anonymousResource;
         this.command = command;
     }
 
-    public static TaskConfig create(Platform platform, Resource resource, Command command) {
+    public static TaskConfig create(Platform platform, AnonymousResource resource, Command command) {
         if (!platform.equals(Platform.LINUX))
             resource = null;
 

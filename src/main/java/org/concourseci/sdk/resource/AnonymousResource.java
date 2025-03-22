@@ -1,7 +1,17 @@
 package org.concourseci.sdk.resource;
 
-public class AnonymousResource extends Resource {
+import com.google.gson.annotations.SerializedName;
+
+public class AnonymousResource {
+    @SerializedName("type")
+    private final String resourceType;
+
+    @SerializedName("source")
+    private final IResourceConfig config;
+
     public AnonymousResource(ResourceType type, IResourceConfig config) {
-        super(type, config);
+        this.resourceType = type.getName();
+        this.config = config;
     }
+
 }

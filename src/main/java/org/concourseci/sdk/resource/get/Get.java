@@ -20,8 +20,6 @@ public abstract class Get implements IStep {
 
     private Boolean trigger = false;
 
-    private IGetConfig params;
-
     @SerializedName("passed")
     private final List<String> passedJobs = new ArrayList<>();
 
