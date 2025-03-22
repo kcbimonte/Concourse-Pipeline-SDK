@@ -3,7 +3,7 @@ package org.concourseci.bundled.pool;
 import org.concourseci.sdk.resource.Resource;
 
 public class PoolResource extends Resource {
-    private PoolResource(String name, PoolResourceType type, PoolConfig config) {
+    protected PoolResource(String name, PoolResourceType type, PoolConfig config) {
         super(name, type, config);
     }
 

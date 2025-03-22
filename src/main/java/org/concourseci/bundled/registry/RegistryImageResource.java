@@ -3,7 +3,7 @@ package org.concourseci.bundled.registry;
 import org.concourseci.sdk.resource.Resource;
 
 public class RegistryImageResource extends Resource {
-    public RegistryImageResource(String name, RegistryImageResourceType type, RegistryImageConfig config) {
+    protected RegistryImageResource(String name, RegistryImageResourceType type, RegistryImageConfig config) {
         super(name, type, config);
     }
 

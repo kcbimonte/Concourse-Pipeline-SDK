@@ -14,7 +14,7 @@ public class RegistryImageConfig implements IResourceConfig {
     @SerializedName("password")
     private String passwordVariable;
 
-    public RegistryImageConfig(String repository, String tag) {
+    protected RegistryImageConfig(String repository, String tag) {
         this.repository = repository;
         this.tag = tag;
     }

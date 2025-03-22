@@ -34,7 +34,7 @@ public class GitConfig implements IResourceConfig {
     @SerializedName("fetch_tags")
     private Boolean fetchTags;
 
-    private GitConfig(URI uri) {
+    protected GitConfig(URI uri) {
         this.uri = uri;
     }
 

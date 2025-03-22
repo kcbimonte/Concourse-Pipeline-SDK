@@ -3,7 +3,7 @@ package org.concourseci.bundled.time;
 import org.concourseci.sdk.resource.Resource;
 
 public class TimeResource extends Resource {
-    private TimeResource(String name, TimeResourceType type, TimeConfig config) {
+    protected TimeResource(String name, TimeResourceType type, TimeConfig config) {
         super(name, type, config);
     }
 

@@ -3,7 +3,7 @@ package org.concourseci.bundled.mock;
 import org.concourseci.sdk.resource.Resource;
 
 public class MockResource extends Resource {
-    private MockResource(String name, MockResourceType type, MockConfig config) {
+    protected MockResource(String name, MockResourceType type, MockConfig config) {
         super(name, type, config);
     }
 

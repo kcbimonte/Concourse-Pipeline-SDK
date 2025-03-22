@@ -3,7 +3,7 @@ package org.concourseci.bundled.hg;
 import org.concourseci.sdk.resource.Resource;
 
 public class HGResource extends Resource {
-    private HGResource(String name, HGResourceType type, HGConfig config) {
+    protected HGResource(String name, HGResourceType type, HGConfig config) {
         super(name, type, config);
     }
 

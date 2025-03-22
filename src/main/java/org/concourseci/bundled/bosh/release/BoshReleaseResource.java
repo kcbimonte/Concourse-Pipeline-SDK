@@ -3,7 +3,7 @@ package org.concourseci.bundled.bosh.release;
 import org.concourseci.sdk.resource.Resource;
 
 public class BoshReleaseResource extends Resource {
-    private BoshReleaseResource(String name, BoshReleaseResourceType type, BoshReleaseConfig config) {
+    protected BoshReleaseResource(String name, BoshReleaseResourceType type, BoshReleaseConfig config) {
         super(name, type, config);
     }
 

@@ -3,7 +3,7 @@ package org.concourseci.bundled.s3;
 import org.concourseci.sdk.resource.Resource;
 
 public class S3Resource extends Resource {
-    private S3Resource(String name, S3ResourceType type, S3Config config) {
+    protected S3Resource(String name, S3ResourceType type, S3Config config) {
         super(name, type, config);
     }
 

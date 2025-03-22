@@ -3,7 +3,7 @@ package org.concourseci.bundled.semver;
 import org.concourseci.sdk.resource.Resource;
 
 public class SemVerResource extends Resource {
-    public SemVerResource(String name, SemVerResourceType type, SemVerConfig config) {
+    protected SemVerResource(String name, SemVerResourceType type, SemVerConfig config) {
         super(name, type, config);
     }
 

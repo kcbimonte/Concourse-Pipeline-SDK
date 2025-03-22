@@ -3,7 +3,7 @@ package org.concourseci.bundled.githubrelease;
 import org.concourseci.sdk.resource.Resource;
 
 public class GithubReleaseResource extends Resource {
-    private GithubReleaseResource(String name, GithubReleaseResourceType type, GithubReleaseConfig config) {
+    protected GithubReleaseResource(String name, GithubReleaseResourceType type, GithubReleaseConfig config) {
         super(name, type, config);
     }
 

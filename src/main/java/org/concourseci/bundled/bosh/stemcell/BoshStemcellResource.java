@@ -3,7 +3,7 @@ package org.concourseci.bundled.bosh.stemcell;
 import org.concourseci.sdk.resource.Resource;
 
 public class BoshStemcellResource extends Resource {
-    private BoshStemcellResource(String name, BoshStemcellResourceType type, BoshStemcellConfig config) {
+    protected BoshStemcellResource(String name, BoshStemcellResourceType type, BoshStemcellConfig config) {
         super(name, type, config);
     }
 

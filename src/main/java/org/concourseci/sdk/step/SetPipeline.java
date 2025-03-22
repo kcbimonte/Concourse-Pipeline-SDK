@@ -26,8 +26,6 @@ public class SetPipeline implements IStep {
     private JsonObject instanceVars = null;
 
     private SetPipeline(String name, String file) {
-        Validator.validateIdentifier(name);
-
         this.name = name;
         this.file = file;
     }

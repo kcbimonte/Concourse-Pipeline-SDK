@@ -4,7 +4,7 @@ import org.concourseci.sdk.resource.Resource;
 
 @Deprecated
 public class TrackerResource extends Resource {
-    private TrackerResource(String name, TrackerResourceType type, TrackerConfig config) {
+    protected TrackerResource(String name, TrackerResourceType type, TrackerConfig config) {
         super(name, type, config);
     }
 
