@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GitConfig implements IResourceConfig {
+public class GitResourceConfig implements IResourceConfig {
     private final URI uri;
 
     private String branch = null;
@@ -34,29 +34,29 @@ public class GitConfig implements IResourceConfig {
     @SerializedName("fetch_tags")
     private Boolean fetchTags;
 
-    protected GitConfig(URI uri) {
+    protected GitResourceConfig(URI uri) {
         this.uri = uri;
     }
 
-    public static GitConfig create(String uri) {
+    public static GitResourceConfig create(String uri) {
         return create(uri, null);
     }
 
-    public static GitConfig create(String uri, String branch) {
-        GitConfig config = new GitConfig(URI.create(uri));
+    public static GitResourceConfig create(String uri, String branch) {
+        GitResourceConfig config = new GitResourceConfig(URI.create(uri));
         config.branch = branch;
 
         return config;
     }
 
-    public GitConfig setHttpsCredentials(String username, String passwordVariable) {
+    public GitResourceConfig setHttpsCredentials(String username, String passwordVariable) {
         this.username = username;
         this.passwordVariable = passwordVariable;
 
         return this;
     }
 
-    public GitConfig addPath(String path) {
+    public GitResourceConfig addPath(String path) {
         if (this.paths == null) {
             this.paths = new HashSet<>();
         }
@@ -66,7 +66,7 @@ public class GitConfig implements IResourceConfig {
         return this;
     }
 
-    public GitConfig setIgnorePaths(String path) {
+    public GitResourceConfig setIgnorePaths(String path) {
         if (this.ignorePaths == null) {
             this.ignorePaths = new HashSet<>();
         }
@@ -76,13 +76,13 @@ public class GitConfig implements IResourceConfig {
         return this;
     }
 
-    public GitConfig skipSSLVerification() {
+    public GitResourceConfig skipSSLVerification() {
         this.skipSSLVerification = true;
 
         return this;
     }
 
-    public GitConfig setTagFilter(String tagFilter) {
+    public GitResourceConfig setTagFilter(String tagFilter) {
         this.tagFilter = tagFilter;
 
         this.tagRegex = null;
@@ -90,7 +90,7 @@ public class GitConfig implements IResourceConfig {
         return this;
     }
 
-    public GitConfig setTagRegex(String tagRegex) {
+    public GitResourceConfig setTagRegex(String tagRegex) {
         this.tagRegex = tagRegex;
 
         this.tagFilter = null;
@@ -98,7 +98,7 @@ public class GitConfig implements IResourceConfig {
         return this;
     }
 
-    public GitConfig fetchTags() {
+    public GitResourceConfig fetchTags() {
         this.fetchTags = true;
 
         return this;

@@ -2,7 +2,7 @@ package org.concourseci.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.concourseci.bundled.git.GitConfig;
+import org.concourseci.bundled.git.GitResourceConfig;
 import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.registry.RegistryImageConfig;
 import org.concourseci.bundled.registry.RegistryImageResource;
@@ -113,7 +113,7 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitResource repo = GitResource.createResource("concourse-examples", GitConfig.create("https://github.com/concourse/examples"));
+        GitResource repo = GitResource.createResource("concourse-examples", GitResourceConfig.create("https://github.com/concourse/examples"));
         repo.setIcon("github").setCheckEvery("30m");
 
         pipeline.addResource(repo);
@@ -245,7 +245,7 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        Resource concourseDocs = GitResource.createResource("concourse-docs-git", GitConfig.create("https://github.com/concourse/docs")).setIcon("github");
+        Resource concourseDocs = GitResource.createResource("concourse-docs-git", GitResourceConfig.create("https://github.com/concourse/docs")).setIcon("github");
         pipeline.addResource(concourseDocs);
 
         Job job = new Job("job").markPublic();
@@ -376,7 +376,7 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitConfig repoConfig = GitConfig.create("https://github.com/rails/rails-contributors.git");
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/rails/rails-contributors.git");
         Resource repo = GitResource.createResource("rails-contributors-git", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
