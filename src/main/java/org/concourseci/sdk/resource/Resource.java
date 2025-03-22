@@ -3,6 +3,8 @@ package org.concourseci.sdk.resource;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import org.concourseci.sdk.resource.get.Get;
+import org.concourseci.sdk.resource.get.NoOpGet;
+import org.concourseci.sdk.resource.put.NoOpPut;
 import org.concourseci.sdk.resource.put.Put;
 import org.concourseci.sdk.util.Validator;
 
@@ -33,13 +35,21 @@ public abstract class Resource {
         this.config = config;
     }
 
-    public abstract Get createGetDefinition();
+    public Get createGetDefinition() {
+        return new NoOpGet(this);
+    }
 
-    public abstract Get createGetDefinition(String identifier);
+    public Get createGetDefinition(String identifier) {
+        return new NoOpGet(this, identifier);
+    }
 
-    public abstract Put createPutDefinition();
+    public Put createPutDefinition() {
+        return new NoOpPut(this);
+    }
 
-    public abstract Put createPutDefinition(String identifier);
+    public Put createPutDefinition(String identifier) {
+        return new NoOpPut(this, identifier);
+    }
 
     public Resource setIcon(String icon) {
         this.icon = icon;
