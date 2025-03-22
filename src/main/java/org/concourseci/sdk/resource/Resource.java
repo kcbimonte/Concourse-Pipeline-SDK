@@ -2,6 +2,8 @@ package org.concourseci.sdk.resource;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
+import org.concourseci.sdk.resource.get.Get;
+import org.concourseci.sdk.resource.put.Put;
 import org.concourseci.sdk.util.Validator;
 
 @Getter
@@ -35,9 +37,9 @@ public abstract class Resource {
 
     public abstract Get createGetDefinition(String identifier);
 
-    public Get createGetDefinition(String identifier) {
-        return new Get(this, identifier);
-    }
+    public abstract Put createPutDefinition();
+
+    public abstract Put createPutDefinition(String identifier);
 
     public Resource setIcon(String icon) {
         this.icon = icon;
