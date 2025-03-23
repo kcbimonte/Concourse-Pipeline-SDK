@@ -508,4 +508,37 @@ class PipelineTest {
         // Serialize
         System.out.println(gson.toJson(pipeline));
     }
+
+    @Test
+    void phpApplication() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/beyondcode/laravel-websockets.git");
+        Resource repo = GitResource.createResource("larvel-websockets-git", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        // Task Config
+        String phpTest = """
+                cd larvel-websockets-git
+                
+                composer install
+                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+                """;
+        Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
+        AnonymousResource resource = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("composer"));
+        TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
+                .addInput(Input.create(repo.createGetDefinition()));
+        Task task = new Task("run-tests", config);
+
+        // Job Config
+        Job job = new Job("test").markPublic()
+                .addStep(repo.createGetDefinition().enableTrigger())
+                .addStep(task);
+
+        pipeline.addJob(job);
+
+        // Serialize
+        System.out.println(gson.toJson(pipeline));
+    }
 }
