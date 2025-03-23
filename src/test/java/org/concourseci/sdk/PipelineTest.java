@@ -1,7 +1,5 @@
 package org.concourseci.sdk;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.git.GitResourceConfig;
 import org.concourseci.bundled.registry.RegistryImageConfig;
@@ -17,12 +15,10 @@ import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.Task;
 import org.concourseci.sdk.step.task.config.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PipelineTest {
 
-    Gson gson;
 
     private static Task generateTask(AnonymousResource resource, String taskName, String simpleCommand, String... commandArgs) {
         Command command = Command.createCommand(simpleCommand);
@@ -32,11 +28,6 @@ class PipelineTest {
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
 
         return new Task(taskName, config);
-    }
-
-    @BeforeEach
-    void setUp() {
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     @Test
@@ -54,7 +45,7 @@ class PipelineTest {
 
         pipeline.addJob(job);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -72,7 +63,7 @@ class PipelineTest {
 
         pipeline.addJob(job);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
 //    @Test
@@ -106,7 +97,7 @@ class PipelineTest {
 //        pipeline.addJob(levelJob);
 //        pipeline.addJob(job);
 //
-//        System.out.println(gson.toJson(pipeline));
+//        System.out.println(pipeline.render());
 //    }
 
     @Test
@@ -189,7 +180,7 @@ class PipelineTest {
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -217,7 +208,7 @@ class PipelineTest {
 
         pipeline.addJob(createAndConsume);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -238,7 +229,7 @@ class PipelineTest {
 
         pipeline.addJob(job);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -259,7 +250,7 @@ class PipelineTest {
 
         pipeline.addJob(job);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -293,7 +284,7 @@ class PipelineTest {
 
         pipeline.addJob(triggeredFirst).addJob(triggeredSecond).addJob(notTriggered);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -330,7 +321,7 @@ class PipelineTest {
 
         pipeline.addJob(job);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -369,7 +360,7 @@ class PipelineTest {
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -417,7 +408,7 @@ class PipelineTest {
         pipeline.addJob(job);
 
         // Serialize
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -463,7 +454,7 @@ class PipelineTest {
         pipeline.addJob(job);
 
         // Serialize
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -506,7 +497,7 @@ class PipelineTest {
         pipeline.addJob(job);
 
         // Serialize
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 
     @Test
@@ -539,6 +530,6 @@ class PipelineTest {
         pipeline.addJob(job);
 
         // Serialize
-        System.out.println(gson.toJson(pipeline));
+        System.out.println(pipeline.render());
     }
 }

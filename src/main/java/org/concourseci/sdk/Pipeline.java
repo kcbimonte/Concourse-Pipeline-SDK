@@ -1,5 +1,7 @@
 package org.concourseci.sdk;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.Resource;
@@ -44,5 +46,11 @@ public class Pipeline {
         groups.add(group);
 
         return this;
+    }
+
+    public String render() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        return gson.toJson(this);
     }
 }
