@@ -15,7 +15,7 @@ import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.SetPipeline;
-import org.concourseci.sdk.step.task.*;
+import org.concourseci.sdk.step.task.Task;
 import org.concourseci.sdk.step.task.config.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -459,6 +459,49 @@ class PipelineTest {
                 .markPublic()
                 .addStep(repo.createGetDefinition().enableTrigger())
                 .addStep(task);
+
+        pipeline.addJob(job);
+
+        // Serialize
+        System.out.println(gson.toJson(pipeline));
+    }
+
+    @Test
+    void nodeJSApplication() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/nodejs/nodejs.org.git");
+        Resource repo = GitResource.createResource("repo", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "18");
+        Resource image = RegistryImageResource.createResource("node-image", registryConfig);
+        pipeline.addResource(image);
+
+        // Task Config
+        Output dependencies = Output.create("dependencies").setPath("repo/node_modules");
+        Command installCommand = Command.createCommand("npm").addArg("install").setWorkingDirectory("repo");
+        TaskConfig installConfig = TaskConfig.create(Platform.LINUX, installCommand)
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addOutput(dependencies);
+        Task install = new Task("install", installConfig);
+        install.setImage(image.createGetDefinition());
+
+        Command testCommand = Command.createCommand("npm").addArg("run").addArg("test").setWorkingDirectory("repo");
+        TaskConfig testConfig = TaskConfig.create(Platform.LINUX, testCommand)
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addInput(Input.create(dependencies).setPath("repo/node_modules"));
+        Task test = new Task("test", testConfig);
+        test.setImage(image.createGetDefinition());
+
+        // Job Config
+        Job job = new Job("test")
+                .markPublic()
+                .addStep(image.createGetDefinition())
+                .addStep(repo.createGetDefinition().enableTrigger())
+                .addStep(install)
+                .addStep(test);
 
         pipeline.addJob(job);
 
