@@ -8,6 +8,15 @@ import org.concourseci.sdk.resource.put.NoOpPut;
 import org.concourseci.sdk.resource.put.Put;
 import org.concourseci.sdk.util.Validator;
 
+/**
+ * Resources are the heart and soul of Concourse. They represent all external inputs to and outputs of jobs in the
+ * pipeline.
+ * <p>
+ * Each resource represents a versioned artifact with an external source of truth. Configuring the same resource
+ * in any pipeline on any Concourse cluster will behave the exact same way. Concourse will continuously check each
+ * configured resource to discover new versions. These versions then flow through the pipeline via get steps
+ * configured on Jobs.
+ */
 @Getter
 public abstract class Resource {
     private final String name;

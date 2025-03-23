@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.concourseci.sdk.util.Validator;
 
-
+/**
+ * Each resource in a pipeline has a type. The resource's type determines what versions are detected, the bits
+ * that are fetched when the resource's {@link org.concourseci.sdk.resource.get.Get} step runs, and the side effect
+ * that occurs when the resource's {@link org.concourseci.sdk.resource.put.Put} step runs.
+ */
 public abstract class ResourceType {
     @Getter
     private final String name;

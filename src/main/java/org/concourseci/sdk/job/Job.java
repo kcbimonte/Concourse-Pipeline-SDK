@@ -10,6 +10,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Jobs determine the actions of your pipeline. They determine how resources progress through it, and how the pipeline
+ * is visualized.
+ * <p>
+ * The most important attribute of a job is its build plan, configured as job.plan. This determines the sequence of
+ * Steps to execute in any builds of the job.
+ *
+ * @see org.concourseci.sdk.step
+ */
 public class Job {
 
     @Getter
@@ -46,6 +55,12 @@ public class Job {
     @SerializedName("on_success")
     private IStep onSuccess;
 
+    /**
+     * Creates a new Job given a valid identifier.
+     *
+     * @see Validator#validateIdentifier(String)
+     * @param name The name of the job. This should be short; it will show up in URLs.
+     */
     public Job(String name) {
         Validator.validateIdentifier(name);
 
