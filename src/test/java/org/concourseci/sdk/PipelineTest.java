@@ -2,8 +2,8 @@ package org.concourseci.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.concourseci.bundled.git.GitResourceConfig;
 import org.concourseci.bundled.git.GitResource;
+import org.concourseci.bundled.git.GitResourceConfig;
 import org.concourseci.bundled.registry.RegistryImageConfig;
 import org.concourseci.bundled.registry.RegistryImageResource;
 import org.concourseci.bundled.registry.RegistryImageResourceType;
@@ -12,8 +12,8 @@ import org.concourseci.bundled.time.TimeResource;
 import org.concourseci.sdk.job.BuildLogRetentionPolicy;
 import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.AnonymousResource;
-import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.resource.Resource;
+import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.*;
 import org.concourseci.sdk.step.task.config.*;
@@ -413,6 +413,52 @@ class PipelineTest {
         Job job = new Job("test").markPublic();
 
         job.addStep(repo.createGetDefinition().enableTrigger()).addStep(task);
+
+        pipeline.addJob(job);
+
+        // Serialize
+        System.out.println(gson.toJson(pipeline));
+    }
+
+    @Test
+    void javaApplication() {
+        // Define Pipeline
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/apache/kafka.git");
+        Resource repo = GitResource.createResource("apache-kafka-git", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        // Task Config
+        AnonymousResource gradle = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("gradle", "jdk8-slim"));
+        String javaTesting = """
+                java -Xmx32m -version
+                javac -J-Xmx32m -version
+                
+                cd apache-kafka-git
+                
+                gradle wrapper
+                ./gradlew rat
+                ./gradlew systemTestLibs
+                """;
+        Command testingCommand = Command.createCommand("/bin/sh")
+                .addArg("-c")
+                .addArg(javaTesting)
+                .setUser("root");
+
+        TaskConfig config = TaskConfig.create(Platform.LINUX, gradle, testingCommand)
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addCache("$HOME/.m2/repository")
+                .addCache("$HOME/.gradle/caches/")
+                .addCache("$HOME/.gradle/wrapper/");
+
+        Task task = new Task("run-tests", config);
+
+        // Job Config
+        Job job = new Job("test")
+                .markPublic()
+                .addStep(repo.createGetDefinition().enableTrigger())
+                .addStep(task);
 
         pipeline.addJob(job);
 
