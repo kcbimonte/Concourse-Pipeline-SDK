@@ -1,4 +1,4 @@
-package org.concourseci.sdk.step.task;
+package org.concourseci.sdk.step.task.config;
 
 import lombok.Getter;
 import org.concourseci.sdk.util.Validator;

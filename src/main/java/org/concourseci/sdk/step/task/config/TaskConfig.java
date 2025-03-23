@@ -1,10 +1,12 @@
-package org.concourseci.sdk.step.task;
+package org.concourseci.sdk.step.task.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.AnonymousResource;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -17,11 +19,15 @@ public class TaskConfig {
     @SerializedName("run")
     private final Command command;
 
-
     private final Set<Input> inputs = new HashSet<>();
     private final Set<Output> outputs = new HashSet<>();
 
-    private JsonObject params = null;
+    private Set<TaskCache> caches;
+
+    @SerializedName("container_limits")
+    private ContainerLimits limits;
+
+    private Map<String, String> params;
 
     private TaskConfig(Platform platform, AnonymousResource anonymousResource, Command command) {
         this.platform = platform;
@@ -54,17 +60,39 @@ public class TaskConfig {
     }
 
     public TaskConfig addParam(String key, String value) {
-        if (params == null) params = new JsonObject();
+        if (params == null) params = new HashMap<>();
 
-        params.addProperty(key, value);
+        params.put(key, value);
 
         return this;
     }
 
-    public TaskConfig addParam(String key, JsonObject value) {
-        if (params == null) params = new JsonObject();
+    public TaskConfig addCache(String cache) {
+        if (this.caches == null) {
+            this.caches = new HashSet<>();
+        }
 
-        params.add(key, value);
+        this.caches.add(new TaskCache(cache));
+
+        return this;
+    }
+
+    public TaskConfig setCPULimit(Integer cpuLimit) {
+        if (this.limits == null) {
+            this.limits = new ContainerLimits();
+        }
+
+        limits.setCPU(cpuLimit);
+
+        return this;
+    }
+
+    public TaskConfig setMemoryLimit(Integer memoryLimit) {
+        if (this.limits == null) {
+            this.limits = new ContainerLimits();
+        }
+
+        limits.setMemory(memoryLimit);
 
         return this;
     }

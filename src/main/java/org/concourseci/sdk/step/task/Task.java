@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.IStep;
+import org.concourseci.sdk.step.task.config.TaskConfig;
 import org.concourseci.sdk.util.Validator;
 
 import java.util.HashMap;

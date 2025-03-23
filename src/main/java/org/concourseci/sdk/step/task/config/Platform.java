@@ -1,4 +1,4 @@
-package org.concourseci.sdk.step.task;
+package org.concourseci.sdk.step.task.config;
 
 import com.google.gson.annotations.SerializedName;
 

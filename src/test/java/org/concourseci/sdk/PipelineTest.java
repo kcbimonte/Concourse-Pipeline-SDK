@@ -16,6 +16,7 @@ import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.*;
+import org.concourseci.sdk.step.task.config.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

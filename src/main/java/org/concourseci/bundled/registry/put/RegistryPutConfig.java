@@ -3,7 +3,7 @@ package org.concourseci.bundled.registry.put;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.bundled.registry.get.RegistryFormat;
 import org.concourseci.sdk.resource.put.IPutConfig;
-import org.concourseci.sdk.step.task.Output;
+import org.concourseci.sdk.step.task.config.Output;
 
 public class RegistryPutConfig implements IPutConfig {
     private final String image;

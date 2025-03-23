@@ -1,4 +1,4 @@
-package org.concourseci.sdk.step.task;
+package org.concourseci.sdk.step.task.config;
 
 import org.concourseci.sdk.resource.get.Get;
 
@@ -9,6 +9,10 @@ public class Command {
     private final String path;
 
     private final List<String> args = new ArrayList<>();
+
+    private String dir;
+
+    private String user;
 
     private Command(String path) {
         this.path = path;
@@ -32,5 +36,17 @@ public class Command {
         path = String.format("%s/%s", get.getIdentifier(), path);
 
         return new Command(path);
+    }
+
+    public Command setUser(String user) {
+        this.user = user;
+
+        return this;
+    }
+
+    public Command setWorkingDirectory(String directory) {
+        this.dir = directory;
+
+        return this;
     }
 }

@@ -1,4 +1,4 @@
-package org.concourseci.sdk.step.task;
+package org.concourseci.sdk.step.task.config;
 
 import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.util.Validator;
