@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import org.concourseci.bundled.registry.get.RegistryFormat;
 import org.concourseci.sdk.resource.put.IPutConfig;
 import org.concourseci.sdk.step.task.config.Output;
+import org.concourseci.sdk.util.Validator;
 
 public class RegistryPutConfig implements IPutConfig {
     private final String image;
@@ -35,6 +36,14 @@ public class RegistryPutConfig implements IPutConfig {
         }
 
         return new RegistryPutConfig(String.format("%s/%s", output.getName(), artifactName));
+    }
+
+    public RegistryPutConfig setVersion(String version) {
+        Validator.validateSemver(version);
+
+        this.version = version;
+
+        return this;
     }
 
     public RegistryPutConfig bumpAliases() {

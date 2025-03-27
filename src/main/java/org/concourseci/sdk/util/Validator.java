@@ -23,4 +23,13 @@ public class Validator {
         }
     }
 
+    public static void validateSemver(String semver) throws RuntimeException {
+        Pattern pattern = Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
+        Matcher matcher = pattern.matcher(semver);
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid semver format: " + semver);
+        }
+    }
+
 }
