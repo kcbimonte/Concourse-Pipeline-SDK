@@ -34,8 +34,9 @@ public class GitResourceConfig implements IResourceConfig {
     @SerializedName("fetch_tags")
     private Boolean fetchTags;
 
-    protected GitResourceConfig(URI uri) {
+    protected GitResourceConfig(URI uri, String branch) {
         this.uri = uri;
+        this.branch = branch;
     }
 
     public static GitResourceConfig create(String uri) {
@@ -43,10 +44,7 @@ public class GitResourceConfig implements IResourceConfig {
     }
 
     public static GitResourceConfig create(String uri, String branch) {
-        GitResourceConfig config = new GitResourceConfig(URI.create(uri));
-        config.branch = branch;
-
-        return config;
+        return new GitResourceConfig(URI.create(uri), branch);
     }
 
     public GitResourceConfig setHttpsCredentials(String username, String passwordVariable) {
