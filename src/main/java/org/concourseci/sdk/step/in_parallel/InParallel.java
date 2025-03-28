@@ -2,10 +2,11 @@ package org.concourseci.sdk.step.in_parallel;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.RequiredArgsConstructor;
+import org.concourseci.sdk.step.AbstractStep;
 import org.concourseci.sdk.step.IStep;
 
 @RequiredArgsConstructor
-public class InParallel implements IStep {
+public class InParallel extends AbstractStep<InParallel> implements IStep {
     @SerializedName("in_parallel")
     private final InParallelConfig config = new InParallelConfig();
 
@@ -21,5 +22,10 @@ public class InParallel implements IStep {
 
     public void setFailFast(Boolean failFast) {
         this.config.setFailFast(failFast);
+    }
+
+    @Override
+    protected InParallel getSelf() {
+        return this;
     }
 }

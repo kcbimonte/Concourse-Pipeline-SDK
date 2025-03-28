@@ -2,12 +2,13 @@ package org.concourseci.sdk.step.var;
 
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.get.Get;
+import org.concourseci.sdk.step.AbstractStep;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 
 import java.util.List;
 
-public class LoadVar implements IStep {
+public class LoadVar extends AbstractStep<LoadVar> implements IStep {
 
     @SerializedName("load_var")
     private final String variableName;
@@ -42,12 +43,17 @@ public class LoadVar implements IStep {
         return String.format("((.:%s))", this.variableName);
     }
 
-    public String getNestedLocalVariable(String ... variable) {
+    public String getNestedLocalVariable(String... variable) {
         if (!List.of(VarFormat.YAML, VarFormat.YML, VarFormat.JSON).contains(this.format))
             throw new RuntimeException("Nested Variables can only be traversed when format is YAML, YML, or JSON");
 
         String argPath = String.format(".%s".repeat(variable.length), (Object[]) variable);
 
         return String.format("((.:%s%s))", this.variableName, argPath);
+    }
+
+    @Override
+    protected LoadVar getSelf() {
+        return null;
     }
 }
