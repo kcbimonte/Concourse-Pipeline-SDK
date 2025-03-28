@@ -3,12 +3,13 @@ package org.concourseci.sdk.step;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.get.Get;
+import org.concourseci.sdk.step.modifier.*;
 import org.concourseci.sdk.util.Validator;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class SetPipeline implements IStep {
+public class SetPipeline implements IStep, IModifier<SetPipeline> {
 
     @SerializedName("set_pipeline")
     private final String name;
@@ -106,5 +107,20 @@ public class SetPipeline implements IStep {
         instanceVars.add(key, value);
 
         return this;
+    }
+
+    @Override
+    public SetPipeline setTimeout(String duration) {
+        return null;
+    }
+
+    @Override
+    public SetPipeline setAttempts(Integer attempts) {
+        return null;
+    }
+
+    @Override
+    public SetPipeline addWorkerTag(String workerTag) {
+        return null;
     }
 }
