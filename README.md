@@ -115,7 +115,7 @@ Which leads to a rendered JSON of:
 
 ## Comparison
 
-Comparing our above Hello World Example to the generated YAML exposes a pretty expected result:
+Comparing our above Hello World Example to the example YAML exposes a pretty expected result:
 
 ```yaml
 ---
