@@ -180,7 +180,7 @@ jobs:
 ```
 
 When trying to re-create this example with the Concourse SDK however, we run into a Validation error. Certain fields
-within the Concourse Schema rely on
+within the Concourse Schema, such as the Job name above, rely on
 an [identifier schema](https://concourse-ci.org/config-basics.html#schema.identifier) that is currently treated as a
 warning when using the set-pipeline commands. When using the Concourse SDK however, this turns into a full-blown error.
 
