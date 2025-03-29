@@ -3,10 +3,11 @@ package org.concourseci.sdk.resource.put;
 import com.google.gson.annotations.SerializedName;
 import org.concourseci.sdk.resource.Resource;
 import org.concourseci.sdk.resource.get.IGetConfig;
+import org.concourseci.sdk.step.AbstractStep;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 
-public abstract class Put implements IStep {
+public abstract class Put extends AbstractStep<Put> implements IStep {
 
     @SerializedName("put")
     private final String identifier;
@@ -35,6 +36,11 @@ public abstract class Put implements IStep {
     public Put disableGet() {
         this.noGet = true;
 
+        return this;
+    }
+
+    @Override
+    protected Put getSelf() {
         return this;
     }
 }

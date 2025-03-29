@@ -29,7 +29,7 @@ public abstract class AbstractStep<T extends IStep> {
     private Set<String> tags;
 
     /**
-     * @return The instance of extending class T
+     * @return <T> The instance of self
      */
     protected abstract T getSelf();
 

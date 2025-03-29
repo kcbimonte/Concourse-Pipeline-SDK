@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import org.concourseci.sdk.job.Job;
 import org.concourseci.sdk.resource.Resource;
+import org.concourseci.sdk.step.AbstractStep;
 import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.util.Validator;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public abstract class Get implements IStep {
+public abstract class Get extends AbstractStep<Get> implements IStep {
 
     @SerializedName("get")
     private final String identifier;
@@ -52,6 +53,11 @@ public abstract class Get implements IStep {
     public Get setConfig(IGetConfig config) {
         this.config = config;
 
+        return this;
+    }
+
+    @Override
+    protected Get getSelf() {
         return this;
     }
 }
