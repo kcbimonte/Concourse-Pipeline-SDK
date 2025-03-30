@@ -1,8 +1,10 @@
 package org.concourseci.bundled.registry;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 import org.concourseci.sdk.resource.IResourceConfig;
 
+@Getter
 public class RegistryImageConfig implements IResourceConfig {
     private final String repository;
 
