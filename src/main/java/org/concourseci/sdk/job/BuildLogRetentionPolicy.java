@@ -1,7 +1,10 @@
 package org.concourseci.sdk.job;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AccessLevel;
+import lombok.Getter;
 
+@Getter(AccessLevel.PACKAGE)
 public class BuildLogRetentionPolicy {
     private Integer days;
     private Integer builds;
