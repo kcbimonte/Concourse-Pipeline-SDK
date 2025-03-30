@@ -52,7 +52,7 @@ public static void main(String[] args) {
     Command command = Command.createCommand("echo").addArg("Hello world!");
 
     //   Specify an Anonymous Resource (Task Container)
-    AnonymousResource busybox = new AnonymousResource(RegistryImageResourceType.getInstance(), RegistryImageConfig.create("busybox"));
+    AnonymousResource busybox = AnonymousResource.create("busybox");
 
     //   Put it all together in a Task Config
     TaskConfig config = TaskConfig.create(Platform.LINUX, busybox, command);
