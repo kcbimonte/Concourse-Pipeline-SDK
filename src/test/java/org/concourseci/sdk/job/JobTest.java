@@ -2,6 +2,11 @@ package org.concourseci.sdk.job;
 
 import org.concourseci.bundled.mock.MockConfig;
 import org.concourseci.bundled.mock.MockResource;
+import org.concourseci.sdk.resource.AnonymousResource;
+import org.concourseci.sdk.step.task.Task;
+import org.concourseci.sdk.step.task.config.Command;
+import org.concourseci.sdk.step.task.config.Platform;
+import org.concourseci.sdk.step.task.config.TaskConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -197,5 +202,25 @@ class JobTest {
         assertEquals(1, job.getBuildLogRetentionPolicy().getDays());
         assertNull(job.getBuildLogRetentionPolicy().getBuilds());
         assertNull(job.getBuildLogRetentionPolicy().getMinimumSucceededBuilds());
+    }
+
+    @Test
+    void addStep() {
+        // Arrange
+        Job job = new Job("name");
+        Task task = new Task("my_task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, World!")));
+
+        // Act
+        job.addStep(task);
+
+        // Assert
+        assertEquals(1, job.getPlan().size());
+
+        assertInstanceOf(Task.class, job.getPlan().getFirst());
+
+        Task myTask = (Task) job.getPlan().getFirst();
+
+        assertNotNull(myTask);
+        assertEquals("my_task", myTask.getTask());
     }
 }
