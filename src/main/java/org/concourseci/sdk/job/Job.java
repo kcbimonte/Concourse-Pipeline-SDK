@@ -19,18 +19,16 @@ import java.util.Set;
  *
  * @see org.concourseci.sdk.step
  */
+@Getter
 public class Job {
 
-    @Getter
     private final String name;
 
     private final List<IStep> plan = new ArrayList<>();
-
-    private Boolean serial = false;
-
     @SerializedName("serial_groups")
     private final Set<String> serialGroups = new HashSet<>();
-
+    @SerializedName("serial")
+    private Boolean isSerial = false;
     @SerializedName("max_in_flight")
     private Integer maxInFlight;
 
@@ -58,8 +56,8 @@ public class Job {
     /**
      * Creates a new Job given a valid identifier.
      *
-     * @see Validator#validateIdentifier(String)
      * @param name The name of the job. This should be short; it will show up in URLs.
+     * @see Validator#validateIdentifier(String)
      */
     public Job(String name) {
         Validator.validateIdentifier(name);
@@ -74,7 +72,7 @@ public class Job {
     }
 
     public Job markSerial() {
-        this.serial = true;
+        this.isSerial = true;
 
         this.maxInFlight = 1;
 
@@ -82,7 +80,9 @@ public class Job {
     }
 
     public Job addSerialGroup(String group) {
-        this.serial = true;
+        Validator.validateIdentifier(group);
+
+        this.isSerial = true;
         this.serialGroups.add(group);
 
         this.maxInFlight = 1;
@@ -91,9 +91,11 @@ public class Job {
     }
 
     public Job setMaxInFlight(Integer maxInFlight) {
+        if (maxInFlight < 0) throw new RuntimeException("Max In Flight cannot be a negative number");
+
         this.maxInFlight = maxInFlight;
 
-        this.serial = false;
+        this.isSerial = false;
         this.serialGroups.clear();
 
         return this;
