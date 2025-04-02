@@ -1,5 +1,6 @@
 package org.concourseci.sdk.step.task;
 
+import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.concourseci.sdk.resource.get.Get;
@@ -8,13 +9,10 @@ import org.concourseci.sdk.step.IStep;
 import org.concourseci.sdk.step.task.config.TaskConfig;
 import org.concourseci.sdk.util.Validator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Getter
 public class Task extends AbstractStep<Task> implements IStep {
     private final String task;
-    private final Map<String, Object> vars = new HashMap<>();
+    private JsonObject vars;
     private TaskConfig config;
     private String file;
     private String image;
@@ -45,8 +43,18 @@ public class Task extends AbstractStep<Task> implements IStep {
         return this;
     }
 
-    public Task addVar(String name, String value) {
-        this.vars.put(name, value);
+    public Task addVar(String key, String value) {
+        if (vars == null) vars = new JsonObject();
+
+        vars.addProperty(key, value);
+
+        return this;
+    }
+
+    public Task addVar(String key, JsonObject value) {
+        if (vars == null) vars = new JsonObject();
+
+        vars.add(key, value);
 
         return this;
     }
