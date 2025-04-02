@@ -5,6 +5,7 @@ import org.concourseci.bundled.git.GitResource;
 import org.concourseci.bundled.git.GitResourceConfig;
 import org.concourseci.bundled.git.get.GitGet;
 import org.concourseci.bundled.registry.RegistryImageConfig;
+import org.concourseci.bundled.registry.RegistryImageResource;
 import org.concourseci.sdk.resource.AnonymousResource;
 import org.concourseci.sdk.step.task.config.Command;
 import org.concourseci.sdk.step.task.config.Platform;
@@ -61,6 +62,22 @@ class TaskTest {
         assertEquals("task", task.getTask());
         assertNull(task.getConfig());
         assertEquals("repo/pipeline/templates/my_second_job.yml", task.getFile());
+    }
+
+    @Test
+    void specifyingTaskImage() {
+        // Arrange
+        RegistryImageConfig config = RegistryImageConfig.create("busybox");
+        RegistryImageResource busyBox = RegistryImageResource.createResource("busy_box", config);
+
+        Task task = new Task("task", TaskConfig.create(Platform.LINUX, Command.createCommand("echo").addArg("Hello World")));
+
+        // Act
+        task.setImage(busyBox.createGetDefinition());
+
+        // Assert
+        assertNotNull(task.getImage());
+        assertEquals("busy_box", task.getImage());
     }
 
     @Test
