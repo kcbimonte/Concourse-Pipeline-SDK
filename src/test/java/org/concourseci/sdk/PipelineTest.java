@@ -36,7 +36,7 @@ class PipelineTest {
 
         Job job = new Job("job").markPublic();
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
@@ -54,7 +54,7 @@ class PipelineTest {
 
         Job job = new Job("serial-job").markPublic().markSerial();
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
@@ -79,7 +79,7 @@ class PipelineTest {
 //        Command command = Command.createCommand("echo");
 //        command.addArg(String.format("Hello, %s", helloVar));
 //
-//        AnonymousResource busyBox = AnonymousResource.create("busybox");
+//        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 //
 //        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
 //
@@ -159,7 +159,7 @@ class PipelineTest {
 
         setRendered.addStep(blockedGet);
 
-        AnonymousResource carvelytt = AnonymousResource.create("taylorsilva/carvel-ytt");
+        AnonymousResource<RegistryImageConfig> carvelytt = AnonymousResource.create("taylorsilva/carvel-ytt");
 
         String yttGen = """
                 ytt -f ./concourse-examples/pipelines/templates/simple > hello-world-rendered.yml
@@ -191,7 +191,7 @@ class PipelineTest {
 
         Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on ${date}\" > ./files/created_file");
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Output filesOutput = Output.create("files");
 
@@ -220,7 +220,7 @@ class PipelineTest {
 
         Job job = new Job("job").markPublic();
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
@@ -241,7 +241,7 @@ class PipelineTest {
 
         Job job = new Job("job").markPublic();
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
 
@@ -260,7 +260,7 @@ class PipelineTest {
         Resource every30Seconds = TimeResource.createResource("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
         pipeline.addResource(every30Seconds);
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
@@ -291,7 +291,7 @@ class PipelineTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        AnonymousResource busyBox = AnonymousResource.create("busybox");
+        AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         // Successful Task Configuration
         Task onSuccessTask = generateTask(busyBox, "task-success", "echo", "This task succeeded!");
@@ -372,7 +372,7 @@ class PipelineTest {
         pipeline.addResource(repo);
 
         // Task Config
-        AnonymousResource ruby = AnonymousResource.create("ruby", "2.6.5");
+        AnonymousResource<RegistryImageConfig> ruby = AnonymousResource.create("ruby", "2.6.5");
         String railsTesting = """
                 echo "=== Setting up Postgres..."
                 apt-get update
@@ -420,7 +420,7 @@ class PipelineTest {
         pipeline.addResource(repo);
 
         // Task Config
-        AnonymousResource gradle = AnonymousResource.create("gradle", "jdk8-slim");
+        AnonymousResource<RegistryImageConfig> gradle = AnonymousResource.create("gradle", "jdk8-slim");
         String javaTesting = """
                 java -Xmx32m -version
                 javac -J-Xmx32m -version
@@ -516,7 +516,7 @@ class PipelineTest {
                 vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
                 """;
         Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
-        AnonymousResource resource = AnonymousResource.create("composer");
+        AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
                 .addInput(Input.create(repo.createGetDefinition()));
         Task task = new Task("run-tests", config);

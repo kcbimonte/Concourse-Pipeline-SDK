@@ -1,20 +1,21 @@
 package org.concourseci.sdk.step.task.config;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 import org.concourseci.sdk.resource.AnonymousResource;
+import org.concourseci.sdk.resource.IResourceConfig;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
+@Getter
 public class TaskConfig {
     private final Platform platform;
 
     @SerializedName("image_resource")
-    private AnonymousResource resource;
+    private final AnonymousResource<? extends IResourceConfig> resource;
 
     @SerializedName("run")
     private final Command command;
@@ -29,13 +30,13 @@ public class TaskConfig {
 
     private Map<String, String> params;
 
-    private TaskConfig(Platform platform, AnonymousResource anonymousResource, Command command) {
+    private TaskConfig(Platform platform, AnonymousResource<? extends IResourceConfig> anonymousResource, Command command) {
         this.platform = platform;
         this.resource = anonymousResource;
         this.command = command;
     }
 
-    public static TaskConfig create(Platform platform, AnonymousResource resource, Command command) {
+    public static TaskConfig create(Platform platform, AnonymousResource<? extends IResourceConfig> resource, Command command) {
         if (!platform.equals(Platform.LINUX))
             resource = null;
 
