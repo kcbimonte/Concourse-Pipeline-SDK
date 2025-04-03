@@ -1,4 +1,4 @@
-# Concourse SDK for Java
+# Concourse Pipeline SDK for Java
 
 Java Library for programmatically generating type safe [Concourse](https://concourse-ci.org) Pipelines.
 
