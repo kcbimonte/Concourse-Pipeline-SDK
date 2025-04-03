@@ -22,12 +22,12 @@ Pipelines can also be set in JSON.
 To get started with developing type safe pipelines, add the following lines to your Maven Dependencies:
 
 ```xml
-<!-- add Concourse SDK to Dependencies -->
+<!-- add Concourse Pipeline to Dependencies -->
 <dependencies>
     <dependency>
-        <groupId>org.concourseci</groupId>
-        <artifactId>ConcourseSDK</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.kevinbimonte.concourse</groupId>
+        <artifactId>pipeline-sdk</artifactId>
+        <version>0.0.1</version>
     </dependency>
 </dependencies>
 ```
