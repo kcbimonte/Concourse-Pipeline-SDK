@@ -4,9 +4,10 @@ import org.concourseci.sdk.resource.AnonymousResource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TaskConfigTest {
+
     @ParameterizedTest
     @EnumSource(value = Platform.class, names = {"DARWIN", "WINDOWS"})
     void platformIsNotLinux(Platform platform) {

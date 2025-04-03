@@ -30,7 +30,11 @@ public class Task extends AbstractStep<Task> implements IStep {
         Validator.validateIdentifier(name);
         this.task = name;
 
-        if (path != null && path.startsWith("/")) {
+        if (path == null) {
+            throw new RuntimeException("Path cannot be null");
+        }
+
+        if (path.startsWith("/")) {
             path = path.trim().substring(1);
         }
 

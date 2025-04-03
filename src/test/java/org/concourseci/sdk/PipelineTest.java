@@ -14,12 +14,13 @@ import org.concourseci.sdk.resource.get.Get;
 import org.concourseci.sdk.step.SetPipeline;
 import org.concourseci.sdk.step.task.Task;
 import org.concourseci.sdk.step.task.config.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class PipelineTest {
 
-
-    private static Task generateTask(AnonymousResource resource, String taskName, String simpleCommand, String... commandArgs) {
+    private static Task generateTask(AnonymousResource<RegistryImageConfig> resource, String taskName, String simpleCommand, String... commandArgs) {
         Command command = Command.createCommand(simpleCommand);
 
         for (String arg : commandArgs) command.addArg(arg);

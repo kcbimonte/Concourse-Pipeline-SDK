@@ -65,6 +65,17 @@ class TaskTest {
     }
 
     @Test
+    void taskWithNullPath() {
+        // Arrange
+        GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
+        GitResource resource = GitResource.createResource("repo", gitConfig);
+        GitGet get = resource.createGetDefinition();
+
+        // Assert
+        assertThrows(RuntimeException.class, () -> new Task("task", get, null));
+    }
+
+    @Test
     void specifyingTaskImage() {
         // Arrange
         RegistryImageConfig config = RegistryImageConfig.create("busybox");
