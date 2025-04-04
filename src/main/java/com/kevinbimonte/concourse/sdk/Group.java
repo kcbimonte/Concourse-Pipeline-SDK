@@ -2,6 +2,7 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
  * <p>
  * Note: once you have added groups to your pipeline, all {@link Job}s must be in a group.
  */
+@Getter
 public class Group {
     private final String name;
 
