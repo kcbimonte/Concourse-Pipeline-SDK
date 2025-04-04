@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-class PipelineTest {
+class ExamplePipelinesTest {
 
     private static Task generateTask(AnonymousResource<RegistryImageConfig> resource, String taskName, String simpleCommand, String... commandArgs) {
         Command command = Command.createCommand(simpleCommand);
