@@ -10,7 +10,7 @@ public class Validator {
         Matcher matcher = pattern.matcher(identifier);
 
         if (!matcher.matches()) {
-            throw new RuntimeException("Not valid identifier");
+            throw new IllegalArgumentException("Not valid identifier: " + identifier);
         }
     }
 
