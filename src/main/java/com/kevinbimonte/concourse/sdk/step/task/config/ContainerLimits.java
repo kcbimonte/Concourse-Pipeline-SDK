@@ -1,6 +1,6 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
-class ContainerLimits {
+public class ContainerLimits {
     private Integer cpu;
     private Integer memory;
 

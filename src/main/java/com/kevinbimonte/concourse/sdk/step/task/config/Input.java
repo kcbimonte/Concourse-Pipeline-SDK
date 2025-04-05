@@ -1,6 +1,7 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
+import com.kevinbimonte.concourse.sdk.step.task.InputMapping;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
 public class Input {
@@ -20,6 +21,10 @@ public class Input {
 
     public static Input create(Output output) {
         return new Input(output.getName());
+    }
+
+    public static Input create(InputMapping mapping) {
+        return new Input(mapping.getMappedName());
     }
 
     public Input setPath(String path) {
