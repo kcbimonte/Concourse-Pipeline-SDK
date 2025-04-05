@@ -48,6 +48,9 @@ public class Job {
     @SerializedName("disable_manual_trigger")
     private Boolean isManualTriggerDisabled;
 
+    @SerializedName("interruptible")
+    private Boolean isInterruptible;
+
     @SerializedName("ensure")
     private IStep ensure;
 
@@ -152,6 +155,12 @@ public class Job {
 
     public Job disableManualTrigger() {
         this.isManualTriggerDisabled = true;
+
+        return this;
+    }
+
+    public Job markInterruptable() {
+        this.isInterruptible = true;
 
         return this;
     }

@@ -294,6 +294,18 @@ class JobTest {
     }
 
     @Test
+    void markInterruptable() {
+        // Arrange
+        Job job = new Job("job");
+
+        // Act
+        job.markInterruptable();
+
+        // Assert
+        assertTrue(job.getIsInterruptible());
+    }
+
+    @Test
     void addStep() {
         // Arrange
         Job job = new Job("name");
