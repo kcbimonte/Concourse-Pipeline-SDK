@@ -17,12 +17,15 @@ import java.util.Set;
  * The most important attribute of a job is its build plan, configured as job.plan. This determines the sequence of
  * Steps to execute in any builds of the job.
  *
- * @see org.concourseci.sdk.step
+ * @see com.kevinbimonte.concourse.sdk.step
  */
 @Getter
 public class Job {
 
-    private final String name;
+    private String name;
+
+    @SerializedName("old_name")
+    private String oldName;
 
     private final List<IStep> plan = new ArrayList<>();
     @SerializedName("serial_groups")
@@ -37,6 +40,13 @@ public class Job {
 
     @SerializedName("build_log_retention")
     private BuildLogRetentionPolicy buildLogRetentionPolicy;
+
+    @Deprecated
+    @SerializedName("build_logs_to_retain")
+    private Integer buildLogsToRetain;
+
+    @SerializedName("disable_manual_trigger")
+    private Boolean isManualTriggerDisabled;
 
     @SerializedName("ensure")
     private IStep ensure;
@@ -109,6 +119,39 @@ public class Job {
 
     public Job setBuildLogRetention(BuildLogRetentionPolicy policy) {
         this.buildLogRetentionPolicy = policy;
+
+        return this;
+    }
+
+    /**
+     * Keep logs for the last specified number of builds.
+     *
+     * @param logsToRetain Positive Number of build logs to keep
+     * @return self
+     * @deprecated
+     */
+    @Deprecated
+    public Job setBuildLogsToRetain(Integer logsToRetain) {
+        if (logsToRetain < 0) {
+            throw new IllegalArgumentException("Build Logs to Retain cannot be negative: " + logsToRetain);
+        }
+
+        this.buildLogsToRetain = logsToRetain;
+
+        return this;
+    }
+
+    public Job changeName(String newName) {
+        Validator.validateIdentifier(newName);
+
+        this.oldName = this.name;
+        this.name = newName;
+
+        return this;
+    }
+
+    public Job disableManualTrigger() {
+        this.isManualTriggerDisabled = true;
 
         return this;
     }
