@@ -1,9 +1,10 @@
 package com.kevinbimonte.concourse.bundled.git.get;
 
 import com.kevinbimonte.concourse.bundled.git.GitResource;
+import com.kevinbimonte.concourse.bundled.git.GitVersion;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 
-public class GitGet extends Get {
+public class GitGet extends Get<GitVersion> {
 
     private GitGet(GitResource resource, String name) {
         super(resource, name);
@@ -19,5 +20,13 @@ public class GitGet extends Get {
 
     public static GitGet create(GitResource resource, String name) {
         return new GitGet(resource, name);
+    }
+
+    @Override
+    public GitGet setSpecificVersion(GitVersion version) {
+        this.strVersion = null;
+        this.specificVersion = version;
+
+        return this;
     }
 }

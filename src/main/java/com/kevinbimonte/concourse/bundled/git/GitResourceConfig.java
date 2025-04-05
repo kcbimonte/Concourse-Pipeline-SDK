@@ -10,7 +10,7 @@ import java.util.Set;
 public class GitResourceConfig implements IResourceConfig {
     private final URI uri;
 
-    private String branch = null;
+    private final String branch;
 
     private String username;
 

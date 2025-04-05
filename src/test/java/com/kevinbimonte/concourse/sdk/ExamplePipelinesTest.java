@@ -17,7 +17,7 @@ import com.kevinbimonte.concourse.sdk.step.task.config.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
+//@Disabled
 class ExamplePipelinesTest {
 
     private static Task generateTask(AnonymousResource<RegistryImageConfig> resource, String taskName, String simpleCommand, String... commandArgs) {
