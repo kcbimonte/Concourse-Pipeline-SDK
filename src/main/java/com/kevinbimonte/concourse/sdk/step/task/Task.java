@@ -74,7 +74,9 @@ public class Task extends AbstractStep<Task> implements IStep {
     }
 
     public Task addVar(String key, String value) {
-        if (vars == null) vars = new JsonObject();
+        if (vars == null) {
+            vars = new JsonObject();
+        }
 
         vars.addProperty(key, value);
 
@@ -82,7 +84,9 @@ public class Task extends AbstractStep<Task> implements IStep {
     }
 
     public Task addVar(String key, JsonObject value) {
-        if (vars == null) vars = new JsonObject();
+        if (vars == null) {
+            vars = new JsonObject();
+        }
 
         vars.add(key, value);
 

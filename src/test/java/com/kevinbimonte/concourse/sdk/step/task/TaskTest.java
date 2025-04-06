@@ -90,6 +90,32 @@ class TaskTest {
     }
 
     @Test
+    void markPrivileged() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.markPrivileged();
+
+        // Assert
+        assertTrue(task.getPrivileged());
+    }
+
+    @Test
+    void markHermetic() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.markHermetic();
+
+        // Assert
+        assertTrue(task.getIsHermetic());
+    }
+
+    @Test
     void addUnstructuredVariables() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
@@ -116,6 +142,48 @@ class TaskTest {
         assertEquals("sub_value", task.getVars().get("complex").getAsJsonObject().get("sub_key").getAsString());
 
         assertTrue(task.getVars().has("second"));
+    }
+
+    @Test
+    void setCPULimit() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setCPULimit(2);
+
+        // Assert
+        assertEquals(2, task.getLimits().getCpu());
+        assertNull(task.getLimits().getMemory());
+    }
+
+    @Test
+    void setMemoryLimits() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setMemoryLimit(1024);
+
+        // Assert
+        assertEquals(1024, task.getLimits().getMemory());
+        assertNull(task.getLimits().getCpu());
+    }
+
+    @Test
+    void chainContainerLimits() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setMemoryLimit(1024).setCPULimit(2);
+
+        // Assert
+        assertEquals(1024, task.getLimits().getMemory());
+        assertEquals(2, task.getLimits().getCpu());
     }
 
     @Test
