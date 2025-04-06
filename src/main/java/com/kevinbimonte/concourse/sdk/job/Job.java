@@ -1,6 +1,7 @@
 package com.kevinbimonte.concourse.sdk.job;
 
 import com.google.gson.annotations.SerializedName;
+import com.kevinbimonte.concourse.sdk.AbstractHook;
 import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
@@ -20,7 +21,7 @@ import java.util.Set;
  * @see com.kevinbimonte.concourse.sdk.step
  */
 @Getter
-public class Job {
+public class Job extends AbstractHook<Job> {
 
     private String name;
 
@@ -50,21 +51,6 @@ public class Job {
 
     @SerializedName("interruptible")
     private Boolean isInterruptible;
-
-    @SerializedName("ensure")
-    private IStep ensure;
-
-    @SerializedName("on_abort")
-    private IStep onAbort;
-
-    @SerializedName("on_error")
-    private IStep onError;
-
-    @SerializedName("on_failure")
-    private IStep onFailure;
-
-    @SerializedName("on_success")
-    private IStep onSuccess;
 
     /**
      * Creates a new Job given a valid identifier.
@@ -165,41 +151,16 @@ public class Job {
         return this;
     }
 
-    public Job setEnsure(IStep step) {
-        this.ensure = step;
-
-        return this;
-    }
-
-    public Job setOnAbort(IStep step) {
-        this.onAbort = step;
-
-        return this;
-    }
-
-    public Job setOnError(IStep step) {
-        this.onError = step;
-
-        return this;
-    }
-
-    public Job setOnFailure(IStep step) {
-        this.onFailure = step;
-
-        return this;
-    }
-
-    public Job setOnSuccess(IStep step) {
-        this.onSuccess = step;
-
-        return this;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
         return ((Job) obj).name.equals(this.name);
+    }
+
+    @Override
+    protected Job getSelf() {
+        return this;
     }
 }
