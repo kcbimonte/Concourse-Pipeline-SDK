@@ -48,7 +48,6 @@ class JobTest {
 
         // Assert
         assertEquals(jobName, job.getName());
-        assertFalse(job.getIsPublic());
     }
 
     @ParameterizedTest
@@ -124,7 +123,7 @@ class JobTest {
 
         // Assert
         assertEquals(maxInFlight, job.getMaxInFlight());
-        assertEquals(0, job.getSerialGroups().size());
+        assertNull(job.getSerialGroups());
         assertFalse(job.getIsSerial());
     }
 

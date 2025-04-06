@@ -28,16 +28,16 @@ public class Job extends AbstractHook<Job> {
     @SerializedName("old_name")
     private String oldName;
 
-    private final List<IStep> plan = new ArrayList<>();
+    private List<IStep> plan;
     @SerializedName("serial_groups")
-    private final Set<String> serialGroups = new HashSet<>();
+    private Set<String> serialGroups;
     @SerializedName("serial")
-    private Boolean isSerial = false;
+    private Boolean isSerial;
     @SerializedName("max_in_flight")
     private Integer maxInFlight;
 
     @SerializedName("public")
-    private Boolean isPublic = false;
+    private Boolean isPublic;
 
     @SerializedName("build_log_retention")
     private BuildLogRetentionPolicy buildLogRetentionPolicy;
@@ -65,6 +65,10 @@ public class Job extends AbstractHook<Job> {
     }
 
     public Job addStep(IStep step) {
+        if (this.plan == null) {
+            this.plan = new ArrayList<>();
+        }
+
         this.plan.add(step);
 
         return this;
@@ -81,6 +85,10 @@ public class Job extends AbstractHook<Job> {
     public Job addSerialGroup(String group) {
         Validator.validateIdentifier(group);
 
+        if (this.serialGroups == null) {
+            this.serialGroups = new HashSet<>();
+        }
+
         this.isSerial = true;
         this.serialGroups.add(group);
 
@@ -90,12 +98,17 @@ public class Job extends AbstractHook<Job> {
     }
 
     public Job setMaxInFlight(Integer maxInFlight) {
-        if (maxInFlight < 0) throw new RuntimeException("Max In Flight cannot be a negative number");
+        if (maxInFlight < 0) {
+            throw new RuntimeException("Max In Flight cannot be a negative number");
+        }
 
         this.maxInFlight = maxInFlight;
 
         this.isSerial = false;
-        this.serialGroups.clear();
+
+        if (this.serialGroups != null) {
+            this.serialGroups.clear();
+        }
 
         return this;
     }

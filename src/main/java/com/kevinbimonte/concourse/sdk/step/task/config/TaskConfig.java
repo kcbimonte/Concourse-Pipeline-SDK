@@ -40,9 +40,9 @@ public class TaskConfig {
     }
 
     public static <T extends IResourceConfig> TaskConfig create(Platform platform, AnonymousResource<T> resource, Command command) {
-        if (!platform.equals(Platform.LINUX))
+        if (!platform.equals(Platform.LINUX)) {
             resource = null;
-
+        }
 
         return new TaskConfig(platform, resource, command);
     }
