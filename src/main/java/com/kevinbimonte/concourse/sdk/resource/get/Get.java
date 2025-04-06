@@ -75,7 +75,7 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
         return this;
     }
 
-    public Get setVersion(IVersion version) {
+    protected Get setVersion(IVersion version) {
         this.version = gson.toJsonTree(version);
 
         return this;
