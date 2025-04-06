@@ -15,7 +15,7 @@ public class TaskConfig {
     private final Platform platform;
 
     @SerializedName("image_resource")
-    private final AnonymousResource<? extends IResourceConfig> resource;
+    private final AnonymousResource<?> resource;
 
     private Set<Input> inputs;
     private Set<Output> outputs;
@@ -33,13 +33,13 @@ public class TaskConfig {
     @SerializedName("container_limits")
     private ContainerLimits limits;
 
-    private TaskConfig(Platform platform, AnonymousResource<? extends IResourceConfig> anonymousResource, Command command) {
+    private <T extends IResourceConfig> TaskConfig(Platform platform, AnonymousResource<T> anonymousResource, Command command) {
         this.platform = platform;
         this.resource = anonymousResource;
         this.command = command;
     }
 
-    public static TaskConfig create(Platform platform, AnonymousResource<? extends IResourceConfig> resource, Command command) {
+    public static <T extends IResourceConfig> TaskConfig create(Platform platform, AnonymousResource<T> resource, Command command) {
         if (!platform.equals(Platform.LINUX))
             resource = null;
 
