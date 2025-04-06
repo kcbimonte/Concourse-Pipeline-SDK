@@ -187,6 +187,20 @@ class TaskTest {
     }
 
     @Test
+    void addEnvVarParameters() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.addParam("ECHO_ME", "Eat your fruits").addParam("ALSO_ME", "veggies");
+
+        // Assert
+        assertEquals(2, task.getParams().size());
+        assertEquals("Eat your fruits", task.getParams().get("ECHO_ME"));
+    }
+
+    @Test
     void addInputMappingFromGet() {
         // Arrange
         GitResource resource = GitResource.createResource("repo", GitResourceConfig.create("https://git.website.com/group/repo.git"));
