@@ -1,6 +1,7 @@
 package com.kevinbimonte.concourse.bundled.registry.get;
 
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
+import com.kevinbimonte.concourse.bundled.registry.RegistryVersion;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 
 public class RegistryGet extends Get {
@@ -19,5 +20,9 @@ public class RegistryGet extends Get {
 
     public static RegistryGet create(RegistryImageResource resource, String name) {
         return new RegistryGet(resource, name);
+    }
+
+    public Get setVersion(RegistryVersion version) {
+        return super.setVersion(version);
     }
 }
