@@ -1,5 +1,6 @@
 package com.kevinbimonte.concourse.sdk.resource.get;
 
+import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.IVersion;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public abstract class Get<T extends IVersion> extends AbstractStep<Get<T>> implements IStep {
+public abstract class Get extends AbstractStep<Get> implements IStep {
 
     @SerializedName("get")
     private final String identifier;
@@ -29,10 +30,9 @@ public abstract class Get<T extends IVersion> extends AbstractStep<Get<T>> imple
     private Boolean trigger = false;
 
     @SerializedName("version")
-    protected String strVersion;
+    private JsonElement version;
 
-    @SerializedName("version")
-    protected T specificVersion;
+    private final transient Gson gson = new GsonBuilder().create();
 
     public Get(Resource resource) {
         this.identifier = resource.getName();
@@ -45,42 +45,44 @@ public abstract class Get<T extends IVersion> extends AbstractStep<Get<T>> imple
         this.resource = resource.getName();
     }
 
-    public Get<T> enableTrigger() {
+    public Get enableTrigger() {
         this.trigger = true;
 
         return this;
     }
 
-    public Get<T> addPassedRequirement(Job job) {
+    public Get addPassedRequirement(Job job) {
         this.passedJobs.add(job.getName());
 
         return this;
     }
 
-    public Get<T> setConfig(IGetConfig config) {
+    public Get setConfig(IGetConfig config) {
         this.config = config;
 
         return this;
     }
 
-    public Get<T> setLatestVersion() {
-        this.strVersion = "latest";
-        this.specificVersion = null;
+    public Get setLatestVersion() {
+        this.version = new JsonPrimitive("latest");
 
         return this;
     }
 
-    public Get<T> setEveryVersion() {
-        this.strVersion = "every";
-        this.specificVersion = null;
+    public Get setEveryVersion() {
+        this.version = new JsonPrimitive("every");
 
         return this;
     }
 
-    public abstract Get<T> setSpecificVersion(T version);
+    public Get setVersion(IVersion version) {
+        this.version = gson.toJsonTree(version);
+
+        return this;
+    }
 
     @Override
-    protected Get<T> getSelf() {
+    protected Get getSelf() {
         return this;
     }
 }
