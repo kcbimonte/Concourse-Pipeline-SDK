@@ -1,8 +1,8 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
 import com.kevinbimonte.concourse.sdk.step.task.OutputMapping;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 public class Output {
     @Getter

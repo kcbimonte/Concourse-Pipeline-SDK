@@ -7,7 +7,8 @@ public class ContainerLimits {
     private Integer cpu;
     private Integer memory;
 
-    public ContainerLimits() { }
+    public ContainerLimits() {
+    }
 
     public ContainerLimits setCPU(Integer cpu) {
         this.cpu = cpu;

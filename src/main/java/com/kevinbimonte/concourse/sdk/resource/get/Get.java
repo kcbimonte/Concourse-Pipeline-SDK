@@ -1,14 +1,17 @@
 package com.kevinbimonte.concourse.sdk.resource.get;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
-import com.kevinbimonte.concourse.sdk.resource.IVersion;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.job.Job;
+import com.kevinbimonte.concourse.sdk.resource.IVersion;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.step.AbstractStep;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;

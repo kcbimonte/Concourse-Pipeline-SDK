@@ -2,9 +2,9 @@ package com.kevinbimonte.concourse.sdk.resource;
 
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.resource.put.Put;
+import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
 import lombok.Setter;
-import com.kevinbimonte.concourse.sdk.util.Validator;
 
 /**
  * Each resource in a pipeline has a type. The resource's type determines what versions are detected, the bits

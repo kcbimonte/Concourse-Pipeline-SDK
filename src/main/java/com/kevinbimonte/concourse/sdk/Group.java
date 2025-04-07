@@ -22,9 +22,9 @@ public class Group {
     /**
      * Creates a new group given a valid name.
      *
-     * @see Validator#validateIdentifier(String)
      * @param name A unique name for the group. This should be short and simple as
      *             it will be used as the tab name for navigation.
+     * @see Validator#validateIdentifier(String)
      */
     public Group(String name) {
         Validator.validateIdentifier(name);

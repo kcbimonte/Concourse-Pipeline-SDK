@@ -1,8 +1,8 @@
 package com.kevinbimonte.concourse.bundled.registry;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
+import lombok.Getter;
 
 @Getter
 public class RegistryImageConfig implements IResourceConfig {

@@ -1,9 +1,9 @@
 package com.kevinbimonte.concourse.sdk.step.in_parallel;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.RequiredArgsConstructor;
 import com.kevinbimonte.concourse.sdk.step.AbstractStep;
 import com.kevinbimonte.concourse.sdk.step.IStep;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class InParallel extends AbstractStep<InParallel> implements IStep {

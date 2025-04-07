@@ -49,7 +49,7 @@ class GitGetTest {
 
         // Assert
         assertInstanceOf(JsonObject.class, get.getVersion());
-        assertTrue( get.getVersion().getAsJsonObject().has("ref"));
+        assertTrue(get.getVersion().getAsJsonObject().has("ref"));
         assertEquals("12345", get.getVersion().getAsJsonObject().get("ref").getAsString());
     }
 }

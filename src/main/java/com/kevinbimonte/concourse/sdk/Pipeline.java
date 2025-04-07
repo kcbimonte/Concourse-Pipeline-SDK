@@ -2,10 +2,10 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;

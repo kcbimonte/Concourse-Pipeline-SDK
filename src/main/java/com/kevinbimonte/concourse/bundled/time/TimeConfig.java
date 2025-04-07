@@ -28,7 +28,9 @@ public class TimeConfig implements IResourceConfig {
     }
 
     public TimeConfig setLocation(String location) {
-        if(!isValidTimezone(location)) throw new RuntimeException("Not a valid timezone");
+        if (!isValidTimezone(location)) {
+            throw new RuntimeException("Not a valid timezone");
+        }
 
         this.location = location;
 

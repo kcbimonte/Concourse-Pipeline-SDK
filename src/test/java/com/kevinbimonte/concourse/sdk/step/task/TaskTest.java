@@ -7,7 +7,10 @@ import com.kevinbimonte.concourse.bundled.git.get.GitGet;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
-import com.kevinbimonte.concourse.sdk.step.task.config.*;
+import com.kevinbimonte.concourse.sdk.step.task.config.Command;
+import com.kevinbimonte.concourse.sdk.step.task.config.Output;
+import com.kevinbimonte.concourse.sdk.step.task.config.Platform;
+import com.kevinbimonte.concourse.sdk.step.task.config.TaskConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
