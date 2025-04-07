@@ -6,10 +6,7 @@ import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Jobs determine the actions of your pipeline. They determine how resources progress through it, and how the pipeline
@@ -66,7 +63,7 @@ public class Job extends AbstractHook<Job> {
 
     public Job addStep(IStep step) {
         if (this.plan == null) {
-            this.plan = new ArrayList<>();
+            this.plan = new LinkedList<>();
         }
 
         this.plan.add(step);
@@ -77,7 +74,7 @@ public class Job extends AbstractHook<Job> {
     public Job markSerial() {
         this.isSerial = true;
 
-        this.maxInFlight = 1;
+        this.maxInFlight = null;
 
         return this;
     }
@@ -86,13 +83,13 @@ public class Job extends AbstractHook<Job> {
         Validator.validateIdentifier(group);
 
         if (this.serialGroups == null) {
-            this.serialGroups = new HashSet<>();
+            this.serialGroups = new LinkedHashSet<>();
         }
 
         this.isSerial = true;
         this.serialGroups.add(group);
 
-        this.maxInFlight = 1;
+        this.maxInFlight = null;
 
         return this;
     }
@@ -104,11 +101,9 @@ public class Job extends AbstractHook<Job> {
 
         this.maxInFlight = maxInFlight;
 
-        this.isSerial = false;
+        this.isSerial = null;
 
-        if (this.serialGroups != null) {
-            this.serialGroups.clear();
-        }
+        this.serialGroups = null;
 
         return this;
     }

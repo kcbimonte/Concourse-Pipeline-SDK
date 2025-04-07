@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
 
 import java.net.URI;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GitResourceConfig implements IResourceConfig {
@@ -56,7 +56,7 @@ public class GitResourceConfig implements IResourceConfig {
 
     public GitResourceConfig addPath(String path) {
         if (this.paths == null) {
-            this.paths = new HashSet<>();
+            this.paths = new LinkedHashSet<>();
         }
 
         this.paths.add(path);
@@ -66,7 +66,7 @@ public class GitResourceConfig implements IResourceConfig {
 
     public GitResourceConfig setIgnorePaths(String path) {
         if (this.ignorePaths == null) {
-            this.ignorePaths = new HashSet<>();
+            this.ignorePaths = new LinkedHashSet<>();
         }
 
         this.ignorePaths.add(path);

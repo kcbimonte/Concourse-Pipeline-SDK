@@ -1,0 +1,178 @@
+{
+  "resources": [
+    {
+      "name": "concourse-examples",
+      "type": "git",
+      "icon": "github",
+      "check_every": "30m",
+      "source": {
+        "uri": "https://github.com/concourse/examples"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "name": "set-self",
+      "public": true,
+      "plan": [
+        {
+          "get": "concourse-examples",
+          "trigger": true
+        },
+        {
+          "set_pipeline": "self",
+          "file": "concourse-examples/pipelines/set-pipelines.yml"
+        }
+      ]
+    },
+    {
+      "name": "set-example-pipelines",
+      "public": true,
+      "plan": [
+        {
+          "get": "concourse-examples",
+          "trigger": true,
+          "passed": [
+            "set-self"
+          ]
+        },
+        {
+          "set_pipeline": "job",
+          "file": "concourse-examples/pipelines/hello-world.yml"
+        },
+        {
+          "set_pipeline": "separate-task-config",
+          "file": "concourse-examples/pipelines/separate-task-config.yml"
+        },
+        {
+          "set_pipeline": "serial-job",
+          "file": "concourse-examples/pipelines/serial-job.yml"
+        },
+        {
+          "set_pipeline": "pipeline-vars",
+          "file": "concourse-examples/pipelines/pipeline-vars.yml",
+          "vars": {
+            "first": "initial",
+            "number": "9000",
+            "hello": "HAL"
+          }
+        },
+        {
+          "set_pipeline": "pipeline-vars-file",
+          "file": "concourse-examples/pipelines/pipeline-vars.yml",
+          "var_files": [
+            "concourse-examples/pipelines/vars-file.yml"
+          ]
+        },
+        {
+          "set_pipeline": "instance-groups",
+          "file": "concourse-examples/pipelines/pipeline-vars.yml",
+          "instance_vars": {
+            "first": "initial",
+            "number": "9000",
+            "hello": "HAL"
+          }
+        },
+        {
+          "set_pipeline": "instance-groups",
+          "file": "concourse-examples/pipelines/pipeline-vars.yml",
+          "instance_vars": {
+            "first": "second",
+            "number": "3000",
+            "hello": "WALLY-E"
+          }
+        },
+        {
+          "set_pipeline": "task-passing-artifact",
+          "file": "concourse-examples/pipelines/task-passing-artifact.yml"
+        },
+        {
+          "set_pipeline": "time-triggered",
+          "file": "concourse-examples/pipelines/time-triggered.yml"
+        },
+        {
+          "set_pipeline": "git-triggered",
+          "file": "concourse-examples/pipelines/git-triggered.yml"
+        },
+        {
+          "set_pipeline": "manual-trigger",
+          "file": "concourse-examples/pipelines/manually-triggered.yml"
+        },
+        {
+          "set_pipeline": "hooks",
+          "file": "concourse-examples/pipelines/job-and-task-hooks.yml"
+        },
+        {
+          "set_pipeline": "golang-lib",
+          "file": "concourse-examples/pipelines/golang-lib.yml"
+        },
+        {
+          "set_pipeline": "rails",
+          "file": "concourse-examples/pipelines/rails-app-testing.yml"
+        },
+        {
+          "set_pipeline": "nodejs",
+          "file": "concourse-examples/pipelines/nodejs-app-testing.yml"
+        },
+        {
+          "set_pipeline": "php",
+          "file": "concourse-examples/pipelines/php-larvel-app-testing.yml"
+        },
+        {
+          "set_pipeline": "java",
+          "file": "concourse-examples/pipelines/java.yml"
+        }
+      ]
+    },
+    {
+      "name": "set-rendered-pipelines",
+      "public": true,
+      "plan": [
+        {
+          "get": "concourse-examples",
+          "trigger": true,
+          "passed": [
+            "set-self"
+          ]
+        },
+        {
+          "task": "render-pipelines",
+          "config": {
+            "platform": "linux",
+            "image_resource": {
+              "type": "registry-image",
+              "source": {
+                "repository": "taylorsilva/carvel-ytt"
+              }
+            },
+            "inputs": [
+              {
+                "name": "concourse-examples"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "pipeline"
+              }
+            ],
+            "run": {
+              "path": "sh",
+              "args": [
+                "-cx",
+                "ytt -f ./concourse-examples/pipelines/templates/simple > hello-world-rendered.yml\nytt -f ./concourse-examples/pipelines/templates/multiple-files > multi-files-rendered.yml\nmv *.yml ./pipeline/\n"
+              ]
+            }
+          }
+        },
+        {
+          "set_pipeline": "hello-world-rendered",
+          "file": "pipeline/hello-world-rendered.yml"
+        },
+        {
+          "set_pipeline": "multi-files-rendered",
+          "file": "pipeline/multi-files-rendered.yml"
+        }
+      ]
+    }
+  ]
+}

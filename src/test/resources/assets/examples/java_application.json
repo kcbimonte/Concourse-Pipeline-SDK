@@ -1,0 +1,62 @@
+{
+  "jobs": [
+    {
+      "name": "test",
+      "plan": [
+        {
+          "get": "apache-kafka-git",
+          "trigger": true
+        },
+        {
+          "config": {
+            "caches": [
+              {
+                "path": "$HOME/.m2/repository"
+              },
+              {
+                "path": "$HOME/.gradle/caches/"
+              },
+              {
+                "path": "$HOME/.gradle/wrapper/"
+              }
+            ],
+            "image_resource": {
+              "name": "",
+              "source": {
+                "repository": "gradle",
+                "tag": "jdk8-slim"
+              },
+              "type": "registry-image"
+            },
+            "inputs": [
+              {
+                "name": "apache-kafka-git"
+              }
+            ],
+            "platform": "linux",
+            "run": {
+              "args": [
+                "-c",
+                "java -Xmx32m -version\njavac -J-Xmx32m -version\n\ncd apache-kafka-git\n\ngradle wrapper\n./gradlew rat\n./gradlew systemTestLibs\n"
+              ],
+              "path": "/bin/sh",
+              "user": "root"
+            }
+          },
+          "task": "run-tests"
+        }
+      ],
+      "public": true
+    }
+  ],
+  "resources": [
+    {
+      "icon": "github",
+      "name": "apache-kafka-git",
+      "source": {
+        "uri": "https://github.com/apache/kafka.git"
+      },
+      "type": "git"
+    }
+  ]
+}

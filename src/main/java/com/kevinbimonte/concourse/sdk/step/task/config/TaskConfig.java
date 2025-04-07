@@ -5,10 +5,7 @@ import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class TaskConfig {
@@ -53,7 +50,7 @@ public class TaskConfig {
 
     public TaskConfig addInput(Input input) {
         if (this.inputs == null) {
-            this.inputs = new HashSet<>();
+            this.inputs = new LinkedHashSet<>();
         }
 
         this.inputs.add(input);
@@ -63,7 +60,7 @@ public class TaskConfig {
 
     public TaskConfig addOutput(Output output) {
         if (this.outputs == null) {
-            this.outputs = new HashSet<>();
+            this.outputs = new LinkedHashSet<>();
         }
 
         this.outputs.add(output);
@@ -81,7 +78,7 @@ public class TaskConfig {
 
     public TaskConfig addCache(String cache) {
         if (this.caches == null) {
-            this.caches = new HashSet<>();
+            this.caches = new LinkedHashSet<>();
         }
 
         this.caches.add(new TaskCache(cache));

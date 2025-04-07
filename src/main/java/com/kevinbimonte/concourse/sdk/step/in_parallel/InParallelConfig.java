@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import lombok.Setter;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 class InParallelConfig {
-    private final Set<IStep> steps = new HashSet<>();
+    private Set<IStep> steps;
 
     @Setter
     private Integer limit = null;
@@ -19,6 +19,10 @@ class InParallelConfig {
 
 
     public void addStep(IStep step) {
+        if (this.steps == null) {
+            this.steps = new LinkedHashSet<>();
+        }
+
         this.steps.add(step);
     }
 }
