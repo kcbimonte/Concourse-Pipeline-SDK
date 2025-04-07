@@ -21,10 +21,10 @@ class PipelineTest {
         Pipeline pipeline = new Pipeline();
 
         // Assert
-        assertTrue(pipeline.getGroups().isEmpty());
-        assertTrue(pipeline.getResources().isEmpty());
-        assertTrue(pipeline.getJobs().isEmpty());
-        assertTrue(pipeline.getResourceTypes().isEmpty());
+        assertNull(pipeline.getGroups());
+        assertNull(pipeline.getResources());
+        assertNull(pipeline.getJobs());
+        assertNull(pipeline.getResourceTypes());
     }
 
     @Test
@@ -41,9 +41,9 @@ class PipelineTest {
         assertFalse(pipeline.getJobs().isEmpty());
         assertEquals(2, pipeline.getJobs().size());
 
-        assertTrue(pipeline.getGroups().isEmpty());
-        assertTrue(pipeline.getResources().isEmpty());
-        assertTrue(pipeline.getResourceTypes().isEmpty());
+        assertNull(pipeline.getGroups());
+        assertNull(pipeline.getResources());
+        assertNull(pipeline.getResourceTypes());
     }
 
     @Test
@@ -60,9 +60,9 @@ class PipelineTest {
         assertFalse(pipeline.getGroups().isEmpty());
         assertEquals(2, pipeline.getGroups().size());
 
-        assertTrue(pipeline.getJobs().isEmpty());
-        assertTrue(pipeline.getResources().isEmpty());
-        assertTrue(pipeline.getResourceTypes().isEmpty());
+        assertNull(pipeline.getJobs());
+        assertNull(pipeline.getResources());
+        assertNull(pipeline.getResourceTypes());
     }
 
     @Test
@@ -79,9 +79,9 @@ class PipelineTest {
         assertFalse(pipeline.getResources().isEmpty());
         assertEquals(2, pipeline.getResources().size());
 
-        assertTrue(pipeline.getJobs().isEmpty());
-        assertTrue(pipeline.getGroups().isEmpty());
-        assertTrue(pipeline.getResourceTypes().isEmpty());
+        assertNull(pipeline.getJobs());
+        assertNull(pipeline.getGroups());
+        assertNull(pipeline.getResourceTypes());
     }
 
     @Test
@@ -98,8 +98,8 @@ class PipelineTest {
         assertFalse(pipeline.getResourceTypes().isEmpty());
         assertEquals(2, pipeline.getResourceTypes().size());
 
-        assertTrue(pipeline.getGroups().isEmpty());
-        assertTrue(pipeline.getJobs().isEmpty());
-        assertTrue(pipeline.getResources().isEmpty());
+        assertNull(pipeline.getGroups());
+        assertNull(pipeline.getJobs());
+        assertNull(pipeline.getResources());
     }
 }

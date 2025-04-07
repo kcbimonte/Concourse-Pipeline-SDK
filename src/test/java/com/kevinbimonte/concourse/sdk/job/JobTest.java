@@ -10,11 +10,33 @@ import com.kevinbimonte.concourse.sdk.step.task.config.TaskConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JobTest {
+
+    private static Stream<Arguments> validNamePairings() {
+        return Stream.of(
+                Arguments.of("job", "new_job"),
+                Arguments.of("my_job", "new_my_job"),
+                Arguments.of("the-job", "new_the-job"),
+                Arguments.of("job_123", "new_job_123"),
+                Arguments.of("job.12", "new_job.12")
+        );
+    }
+
+    private static Stream<Arguments> invalidNamePairings() {
+        return Stream.of(
+                Arguments.of("job", "123_job"),
+                Arguments.of("my_job", "((my_var))-job"),
+                Arguments.of("the-job", "MY_JOB")
+        );
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {"job", "my_job", "the-job", "job_123", "job.12"})
@@ -26,7 +48,38 @@ class JobTest {
 
         // Assert
         assertEquals(jobName, job.getName());
-        assertFalse(job.getIsPublic());
+    }
+
+    @ParameterizedTest
+    @MethodSource("validNamePairings")
+    void validNewName(String initialName, String newName) {
+        // Arrange
+
+        // Act
+        Job job = assertDoesNotThrow(() -> new Job(initialName));
+
+        // Assert
+        assertEquals(initialName, job.getName());
+
+        // Act
+        job.changeName(newName);
+
+        // Assert
+        assertEquals(newName, job.getName());
+        assertEquals(initialName, job.getOldName());
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidNamePairings")
+    void invalidNewName(String initialName, String newName) {
+        // Arrange
+
+        // Act
+        Job job = assertDoesNotThrow(() -> new Job(initialName));
+
+        // Assert
+        assertEquals(initialName, job.getName());
+        assertThrows(IllegalArgumentException.class, () -> job.changeName(newName));
     }
 
     @ParameterizedTest
@@ -70,7 +123,7 @@ class JobTest {
 
         // Assert
         assertEquals(maxInFlight, job.getMaxInFlight());
-        assertEquals(0, job.getSerialGroups().size());
+        assertNull(job.getSerialGroups());
         assertFalse(job.getIsSerial());
     }
 
@@ -202,6 +255,53 @@ class JobTest {
         assertEquals(1, job.getBuildLogRetentionPolicy().getDays());
         assertNull(job.getBuildLogRetentionPolicy().getBuilds());
         assertNull(job.getBuildLogRetentionPolicy().getMinimumSucceededBuilds());
+    }
+
+    @Test
+    @Deprecated
+    void legacyBuildLogRetention() {
+        // Arrange
+        Job job = new Job("job");
+
+        // Act
+        job.setBuildLogsToRetain(1);
+
+        // Assert
+        assertEquals(1, job.getBuildLogsToRetain());
+    }
+
+    @Test
+    @Deprecated
+    void invalidLegacyBuildLogRetention() {
+        // Arrange
+        Job job = new Job("job");
+
+        // Act / Assert
+        assertThrows(IllegalArgumentException.class, () -> job.setBuildLogsToRetain(-1));
+    }
+
+    @Test
+    void disableManualTrigger() {
+        // Arrange
+        Job job = new Job("job");
+
+        // Act
+        job.disableManualTrigger();
+
+        // Assert
+        assertTrue(job.getIsManualTriggerDisabled());
+    }
+
+    @Test
+    void markInterruptable() {
+        // Arrange
+        Job job = new Job("job");
+
+        // Act
+        job.markInterruptable();
+
+        // Assert
+        assertTrue(job.getIsInterruptible());
     }
 
     @Test

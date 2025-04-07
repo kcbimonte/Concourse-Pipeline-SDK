@@ -18,10 +18,10 @@ import java.util.Set;
 @Getter
 public class Pipeline {
 
-    private final Set<ResourceType> resourceTypes = new HashSet<>();
-    private final Set<Resource> resources = new HashSet<>();
-    private final Set<Group> groups = new HashSet<>();
-    private final Set<Job> jobs = new HashSet<>();
+    private Set<ResourceType> resourceTypes;
+    private Set<Resource> resources;
+    private Set<Group> groups;
+    private Set<Job> jobs;
 
     /**
      * Adds a Job to the list of Pipeline Jobs. Each Job must have a unique name.
@@ -32,6 +32,10 @@ public class Pipeline {
      * @return itself to support chaining
      */
     public Pipeline addJob(Job job) {
+        if (this.jobs == null) {
+            this.jobs = new HashSet<>();
+        }
+
         jobs.add(job);
 
         return this;
@@ -46,6 +50,10 @@ public class Pipeline {
      * @return itself to support chaining
      */
     public Pipeline addResourceType(ResourceType resourceType) {
+        if (this.resourceTypes == null) {
+            this.resourceTypes = new HashSet<>();
+        }
+
         resourceTypes.add(resourceType);
 
         return this;
@@ -60,6 +68,10 @@ public class Pipeline {
      * @return itself to support chaining
      */
     public Pipeline addResource(Resource resource) {
+        if (this.resources == null) {
+            this.resources = new HashSet<>();
+        }
+
         resources.add(resource);
 
         return this;
@@ -76,6 +88,10 @@ public class Pipeline {
      * @return itself to support chaining
      */
     public Pipeline addGroup(Group group) {
+        if (this.groups == null) {
+            this.groups = new HashSet<>();
+        }
+
         groups.add(group);
 
         return this;

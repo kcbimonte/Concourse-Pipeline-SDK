@@ -1,5 +1,6 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
+import com.kevinbimonte.concourse.sdk.step.task.OutputMapping;
 import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
@@ -17,6 +18,10 @@ public class Output {
 
     public static Output create(String name) {
         return new Output(name);
+    }
+
+    public static Output create(OutputMapping mapping) {
+        return new Output(mapping.getMappedName());
     }
 
     public Output setPath(String path) {

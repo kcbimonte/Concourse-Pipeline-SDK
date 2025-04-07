@@ -15,31 +15,34 @@ public class TaskConfig {
     private final Platform platform;
 
     @SerializedName("image_resource")
-    private final AnonymousResource<? extends IResourceConfig> resource;
+    private final AnonymousResource<?> resource;
+
+    private Set<Input> inputs;
+    private Set<Output> outputs;
+
+    private Set<TaskCache> caches;
+
+    private Map<String, String> params;
 
     @SerializedName("run")
     private final Command command;
 
-    private final Set<Input> inputs = new HashSet<>();
-    private final Set<Output> outputs = new HashSet<>();
-
-    private Set<TaskCache> caches;
+    @SerializedName("rootfs_uri")
+    private String rootfsURI;
 
     @SerializedName("container_limits")
     private ContainerLimits limits;
 
-    private Map<String, String> params;
-
-    private TaskConfig(Platform platform, AnonymousResource<? extends IResourceConfig> anonymousResource, Command command) {
+    private <T extends IResourceConfig> TaskConfig(Platform platform, AnonymousResource<T> anonymousResource, Command command) {
         this.platform = platform;
         this.resource = anonymousResource;
         this.command = command;
     }
 
-    public static TaskConfig create(Platform platform, AnonymousResource<? extends IResourceConfig> resource, Command command) {
-        if (!platform.equals(Platform.LINUX))
+    public static <T extends IResourceConfig> TaskConfig create(Platform platform, AnonymousResource<T> resource, Command command) {
+        if (!platform.equals(Platform.LINUX)) {
             resource = null;
-
+        }
 
         return new TaskConfig(platform, resource, command);
     }
@@ -49,12 +52,20 @@ public class TaskConfig {
     }
 
     public TaskConfig addInput(Input input) {
+        if (this.inputs == null) {
+            this.inputs = new HashSet<>();
+        }
+
         this.inputs.add(input);
 
         return this;
     }
 
     public TaskConfig addOutput(Output output) {
+        if (this.outputs == null) {
+            this.outputs = new HashSet<>();
+        }
+
         this.outputs.add(output);
 
         return this;
@@ -74,6 +85,20 @@ public class TaskConfig {
         }
 
         this.caches.add(new TaskCache(cache));
+
+        return this;
+    }
+
+    /**
+     * Specify the rootfs uri of the container, as interpreted by your worker's Garden backend
+     *
+     * @param uri A string specifying the rootfs uri of the container, as interpreted by your worker's Garden backend.
+     * @implNote {@link TaskConfig#resource} is the preferred way to specify base image. You should only use this
+     *              if you have no other option, and you really know what you're doing.
+     * @return Self
+     */
+    public TaskConfig setRootFSUri(String uri) {
+        this.rootfsURI = uri;
 
         return this;
     }

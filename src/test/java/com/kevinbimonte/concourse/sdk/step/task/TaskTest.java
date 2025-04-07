@@ -7,9 +7,7 @@ import com.kevinbimonte.concourse.bundled.git.get.GitGet;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
-import com.kevinbimonte.concourse.sdk.step.task.config.Command;
-import com.kevinbimonte.concourse.sdk.step.task.config.Platform;
-import com.kevinbimonte.concourse.sdk.step.task.config.TaskConfig;
+import com.kevinbimonte.concourse.sdk.step.task.config.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,6 +90,32 @@ class TaskTest {
     }
 
     @Test
+    void markPrivileged() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.markPrivileged();
+
+        // Assert
+        assertTrue(task.getPrivileged());
+    }
+
+    @Test
+    void markHermetic() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.markHermetic();
+
+        // Assert
+        assertTrue(task.getIsHermetic());
+    }
+
+    @Test
     void addUnstructuredVariables() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
@@ -118,5 +142,119 @@ class TaskTest {
         assertEquals("sub_value", task.getVars().get("complex").getAsJsonObject().get("sub_key").getAsString());
 
         assertTrue(task.getVars().has("second"));
+    }
+
+    @Test
+    void setCPULimit() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setCPULimit(2);
+
+        // Assert
+        assertEquals(2, task.getLimits().getCpu());
+        assertNull(task.getLimits().getMemory());
+    }
+
+    @Test
+    void setMemoryLimits() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setMemoryLimit(1024);
+
+        // Assert
+        assertEquals(1024, task.getLimits().getMemory());
+        assertNull(task.getLimits().getCpu());
+    }
+
+    @Test
+    void chainContainerLimits() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.setMemoryLimit(1024).setCPULimit(2);
+
+        // Assert
+        assertEquals(1024, task.getLimits().getMemory());
+        assertEquals(2, task.getLimits().getCpu());
+    }
+
+    @Test
+    void addEnvVarParameters() {
+        // Arrange
+        TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
+        Task task = new Task("task", config);
+
+        // Act
+        task.addParam("ECHO_ME", "Eat your fruits").addParam("ALSO_ME", "veggies");
+
+        // Assert
+        assertEquals(2, task.getParams().size());
+        assertEquals("Eat your fruits", task.getParams().get("ECHO_ME"));
+    }
+
+    @Test
+    void addInputMappingFromGet() {
+        // Arrange
+        GitResource resource = GitResource.createResource("repo", GitResourceConfig.create("https://git.website.com/group/repo.git"));
+        GitGet get = resource.createGetDefinition();
+
+        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+
+        // Act
+        InputMapping mapping = task.addInputMapping(get, "main");
+
+        // Assert
+        assertEquals(1, task.getInputMapping().size());
+
+        assertEquals("main", task.getInputMapping().get("repo"));
+
+        assertEquals("repo", mapping.getName());
+        assertEquals("main", mapping.getMappedName());
+    }
+
+    @Test
+    void addInputMappingFromOutput() {
+        // Arrange
+        Output output = Output.create("repo");
+
+        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+
+        // Act
+        InputMapping mapping = task.addInputMapping(output, "main");
+
+        // Assert
+        assertEquals(1, task.getInputMapping().size());
+
+        assertEquals("main", task.getInputMapping().get("repo"));
+
+        assertEquals("repo", mapping.getName());
+        assertEquals("main", mapping.getMappedName());
+    }
+
+    @Test
+    void addOutputMapping() {
+        // Arrange
+        Output output = Output.create("repo");
+
+        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+
+        // Act
+        OutputMapping mapping = task.addOutputMapping(output, "main");
+
+        // Assert
+        assertEquals(1, task.getOutputMapping().size());
+
+        assertEquals("main", task.getOutputMapping().get("repo"));
+
+        assertEquals("repo", mapping.getName());
+        assertEquals("main", mapping.getMappedName());
     }
 }

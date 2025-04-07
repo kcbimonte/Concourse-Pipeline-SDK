@@ -1,6 +1,9 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
-class ContainerLimits {
+import lombok.Getter;
+
+@Getter
+public class ContainerLimits {
     private Integer cpu;
     private Integer memory;
 

@@ -1,6 +1,7 @@
 package com.kevinbimonte.concourse.sdk.job;
 
 import com.google.gson.annotations.SerializedName;
+import com.kevinbimonte.concourse.sdk.AbstractHook;
 import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
@@ -17,41 +18,39 @@ import java.util.Set;
  * The most important attribute of a job is its build plan, configured as job.plan. This determines the sequence of
  * Steps to execute in any builds of the job.
  *
- * @see org.concourseci.sdk.step
+ * @see com.kevinbimonte.concourse.sdk.step
  */
 @Getter
-public class Job {
+public class Job extends AbstractHook<Job> {
 
-    private final String name;
+    private String name;
 
-    private final List<IStep> plan = new ArrayList<>();
+    @SerializedName("old_name")
+    private String oldName;
+
+    private List<IStep> plan;
     @SerializedName("serial_groups")
-    private final Set<String> serialGroups = new HashSet<>();
+    private Set<String> serialGroups;
     @SerializedName("serial")
-    private Boolean isSerial = false;
+    private Boolean isSerial;
     @SerializedName("max_in_flight")
     private Integer maxInFlight;
 
     @SerializedName("public")
-    private Boolean isPublic = false;
+    private Boolean isPublic;
 
     @SerializedName("build_log_retention")
     private BuildLogRetentionPolicy buildLogRetentionPolicy;
 
-    @SerializedName("ensure")
-    private IStep ensure;
+    @Deprecated
+    @SerializedName("build_logs_to_retain")
+    private Integer buildLogsToRetain;
 
-    @SerializedName("on_abort")
-    private IStep onAbort;
+    @SerializedName("disable_manual_trigger")
+    private Boolean isManualTriggerDisabled;
 
-    @SerializedName("on_error")
-    private IStep onError;
-
-    @SerializedName("on_failure")
-    private IStep onFailure;
-
-    @SerializedName("on_success")
-    private IStep onSuccess;
+    @SerializedName("interruptible")
+    private Boolean isInterruptible;
 
     /**
      * Creates a new Job given a valid identifier.
@@ -66,6 +65,10 @@ public class Job {
     }
 
     public Job addStep(IStep step) {
+        if (this.plan == null) {
+            this.plan = new ArrayList<>();
+        }
+
         this.plan.add(step);
 
         return this;
@@ -82,6 +85,10 @@ public class Job {
     public Job addSerialGroup(String group) {
         Validator.validateIdentifier(group);
 
+        if (this.serialGroups == null) {
+            this.serialGroups = new HashSet<>();
+        }
+
         this.isSerial = true;
         this.serialGroups.add(group);
 
@@ -91,12 +98,17 @@ public class Job {
     }
 
     public Job setMaxInFlight(Integer maxInFlight) {
-        if (maxInFlight < 0) throw new RuntimeException("Max In Flight cannot be a negative number");
+        if (maxInFlight < 0) {
+            throw new RuntimeException("Max In Flight cannot be a negative number");
+        }
 
         this.maxInFlight = maxInFlight;
 
         this.isSerial = false;
-        this.serialGroups.clear();
+
+        if (this.serialGroups != null) {
+            this.serialGroups.clear();
+        }
 
         return this;
     }
@@ -113,32 +125,41 @@ public class Job {
         return this;
     }
 
-    public Job setEnsure(IStep step) {
-        this.ensure = step;
+    /**
+     * Keep logs for the last specified number of builds.
+     *
+     * @param logsToRetain Positive Number of build logs to keep
+     * @return self
+     * @deprecated
+     */
+    @Deprecated
+    public Job setBuildLogsToRetain(Integer logsToRetain) {
+        if (logsToRetain < 0) {
+            throw new IllegalArgumentException("Build Logs to Retain cannot be negative: " + logsToRetain);
+        }
+
+        this.buildLogsToRetain = logsToRetain;
 
         return this;
     }
 
-    public Job setOnAbort(IStep step) {
-        this.onAbort = step;
+    public Job changeName(String newName) {
+        Validator.validateIdentifier(newName);
+
+        this.oldName = this.name;
+        this.name = newName;
 
         return this;
     }
 
-    public Job setOnError(IStep step) {
-        this.onError = step;
+    public Job disableManualTrigger() {
+        this.isManualTriggerDisabled = true;
 
         return this;
     }
 
-    public Job setOnFailure(IStep step) {
-        this.onFailure = step;
-
-        return this;
-    }
-
-    public Job setOnSuccess(IStep step) {
-        this.onSuccess = step;
+    public Job markInterruptable() {
+        this.isInterruptible = true;
 
         return this;
     }
@@ -149,5 +170,10 @@ public class Job {
         if (getClass() != obj.getClass()) return false;
 
         return ((Job) obj).name.equals(this.name);
+    }
+
+    @Override
+    protected Job getSelf() {
+        return this;
     }
 }
