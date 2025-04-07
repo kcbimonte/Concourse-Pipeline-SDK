@@ -11,7 +11,8 @@ public class BuildLogRetentionPolicy {
     @SerializedName("minimum_succeeded_builds")
     private Integer minimumSucceededBuilds;
 
-    private BuildLogRetentionPolicy() {}
+    private BuildLogRetentionPolicy() {
+    }
 
     public static BuildLogRetentionPolicy create() {
         return new BuildLogRetentionPolicy();

@@ -1,12 +1,12 @@
 package com.kevinbimonte.concourse.sdk.resource;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.resource.get.NoOpGet;
 import com.kevinbimonte.concourse.sdk.resource.put.NoOpPut;
 import com.kevinbimonte.concourse.sdk.resource.put.Put;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 /**
  * Resources are the heart and soul of Concourse. They represent all external inputs to and outputs of jobs in the

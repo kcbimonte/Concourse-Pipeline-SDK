@@ -2,9 +2,9 @@ package com.kevinbimonte.concourse.sdk.job;
 
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.AbstractHook;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashSet;

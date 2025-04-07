@@ -1,9 +1,9 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,9 +93,9 @@ public class TaskConfig {
      * Specify the rootfs uri of the container, as interpreted by your worker's Garden backend
      *
      * @param uri A string specifying the rootfs uri of the container, as interpreted by your worker's Garden backend.
-     * @implNote {@link TaskConfig#resource} is the preferred way to specify base image. You should only use this
-     *              if you have no other option, and you really know what you're doing.
      * @return Self
+     * @implNote {@link TaskConfig#resource} is the preferred way to specify base image. You should only use this
+     * if you have no other option, and you really know what you're doing.
      */
     public TaskConfig setRootFSUri(String uri) {
         this.rootfsURI = uri;

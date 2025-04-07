@@ -9,7 +9,8 @@ public class RegistryGetConfig implements IGetConfig {
     @SerializedName("skip_download")
     private Boolean skipDownload;
 
-    private RegistryGetConfig() {}
+    private RegistryGetConfig() {
+    }
 
     public static RegistryGetConfig create() {
         return new RegistryGetConfig();

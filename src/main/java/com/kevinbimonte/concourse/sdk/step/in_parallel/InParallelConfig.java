@@ -1,8 +1,8 @@
 package com.kevinbimonte.concourse.sdk.step.in_parallel;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Setter;
 import com.kevinbimonte.concourse.sdk.step.IStep;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;

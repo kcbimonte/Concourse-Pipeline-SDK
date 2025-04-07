@@ -1,10 +1,10 @@
 package com.kevinbimonte.concourse.sdk.resource;
 
 import com.google.gson.annotations.SerializedName;
-import com.kevinbimonte.concourse.sdk.step.task.config.TaskConfig;
-import lombok.Getter;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
+import com.kevinbimonte.concourse.sdk.step.task.config.TaskConfig;
+import lombok.Getter;
 
 /**
  * An Anonymous Resource Type is used for specifying container images for running tasks
@@ -21,8 +21,8 @@ public class AnonymousResource<T extends IResourceConfig> {
     /**
      * Creates an Anonymous Resource given the Resource Type and corresponding Resource Configuration
      *
-     * @param type Resource Type. Note: If not a bundled resource type, then the type needs to be added to the Pipeline
-     *             Resource Types array.
+     * @param type   Resource Type. Note: If not a bundled resource type, then the type needs to be added to the Pipeline
+     *               Resource Types array.
      * @param config Configuration for the Resource Type
      */
     private AnonymousResource(ResourceType type, T config) {
@@ -44,7 +44,7 @@ public class AnonymousResource<T extends IResourceConfig> {
      * Creates an Anonymous Resource of type Registry Image given the repository and tag.
      *
      * @param repository Repository of the Registry Image
-     * @param tag Tag of the Registry Image
+     * @param tag        Tag of the Registry Image
      * @return An Anonymous Resource of type Registry Image targeting the specified repository and tag
      */
     public static AnonymousResource<RegistryImageConfig> create(String repository, String tag) {
@@ -66,8 +66,8 @@ public class AnonymousResource<T extends IResourceConfig> {
     /**
      * Creates an Anonymous Resource given the Resource Type and corresponding Resource Configuration
      *
-     * @param type Resource Type. Note: If not a bundled resource type, then the type needs to be added to the Pipeline
-     *             Resource Types array.
+     * @param type   Resource Type. Note: If not a bundled resource type, then the type needs to be added to the Pipeline
+     *               Resource Types array.
      * @param config Configuration for the Resource Type
      * @return An Anonymous Resource of specified type and config
      */

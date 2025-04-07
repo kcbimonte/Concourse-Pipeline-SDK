@@ -2,7 +2,7 @@ package com.kevinbimonte.concourse.sdk.variable;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VariableTest {
     @Test
