@@ -1,13 +1,4 @@
 {
-  "task-config": {
-    "platform": "linux",
-    "image_resource": {
-      "type": "registry-image",
-      "source": {
-        "repository": "busybox"
-      }
-    }
-  },
   "jobs": [
     {
       "name": "job",

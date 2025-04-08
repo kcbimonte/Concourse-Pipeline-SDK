@@ -9,25 +9,6 @@
       }
     }
   ],
-  "task-config": {
-    "platform": "linux",
-    "inputs": [
-      {
-        "name": "rails-contributors-git"
-      }
-    ],
-    "params": {
-      "RAILS_ENV": "test",
-      "DATABASE_URL": "postgresql://postgres@localhost"
-    },
-    "run": {
-      "path": "/bin/bash",
-      "args": [
-        "-c",
-        "echo \"=== Setting up Postgres...\"\napt-get update\napt-get install -y postgresql libpq-dev cmake nodejs\ncat > /etc/postgresql/*/main/pg_hba.conf <<-EOF\nhost   all   postgres   localhost   trust\nEOF\nservice postgresql restart\necho \"=== Project requires that we clone rails... \"\ncd rails-contributors-git\ngit clone --mirror https://github.com/rails/rails\necho \"=== Installing Gems...\"\ngem install -N bundler\nbundle install\necho \"=== Running Tests...\"\nbundle exec rails db:setup\nbundle exec rails test\n"
-      ]
-    }
-  },
   "jobs": [
     {
       "name": "test",
