@@ -30,7 +30,7 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     @SerializedName("params")
     private IGetConfig config;
 
-    private Boolean trigger = false;
+    private Boolean trigger;
 
     @SerializedName("version")
     private JsonElement version;

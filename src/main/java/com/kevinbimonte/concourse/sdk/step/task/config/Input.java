@@ -7,7 +7,7 @@ import com.kevinbimonte.concourse.sdk.util.Validator;
 public class Input {
     private final String name;
     private String path;
-    private Boolean optional = false;
+    private Boolean optional;
 
     private Input(String name) {
         Validator.validateIdentifier(name);
