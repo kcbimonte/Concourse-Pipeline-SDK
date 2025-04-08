@@ -229,7 +229,7 @@ class ExamplePipelinesTest {
 
         Job createAndConsume = new Job("create-and-consume").markPublic();
 
-        Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on ${date}\" > ./files/created_file");
+        Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on $(date)\" > ./files/created_file");
 
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
@@ -290,6 +290,7 @@ class ExamplePipelinesTest {
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
+        simpleTask.getConfig().addInput(Input.create(concourseDocs.createGetDefinition()));
 
         job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(simpleTask);
 
@@ -330,7 +331,7 @@ class ExamplePipelinesTest {
                 .addStep(every30Seconds.createGetDefinition().addPassedRequirement(triggeredFirst).enableTrigger())
                 .addStep(simpleTask);
 
-        pipeline.addJob(triggeredFirst).addJob(triggeredSecond).addJob(notTriggered);
+        pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
         JsonElement expected = loadFromAssets("manually_triggered.json");
@@ -575,10 +576,9 @@ class ExamplePipelinesTest {
         // Task Config
         String phpTest = """
                 cd larvel-websockets-git
-                                
+                
                 composer install
-                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
-                """;
+                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover""";
         Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
