@@ -25,12 +25,12 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     private String resource = null;
 
     @SerializedName("passed")
-    private final List<String> passedJobs = new ArrayList<>();
+    private List<String> passedJobs;
 
     @SerializedName("params")
     private IGetConfig config;
 
-    private Boolean trigger = false;
+    private Boolean trigger;
 
     @SerializedName("version")
     private JsonElement version;
@@ -55,6 +55,10 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     }
 
     public Get addPassedRequirement(Job job) {
+        if (this.passedJobs == null) {
+            this.passedJobs = new ArrayList<>();
+        }
+
         this.passedJobs.add(job.getName());
 
         return this;

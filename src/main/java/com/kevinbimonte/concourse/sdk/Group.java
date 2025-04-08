@@ -4,7 +4,7 @@ import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -17,7 +17,7 @@ import java.util.Set;
 public class Group {
     private final String name;
 
-    private final Set<String> jobs = new HashSet<>();
+    private Set<String> jobs;
 
     /**
      * Creates a new group given a valid name.
@@ -41,6 +41,10 @@ public class Group {
      * @return Itself to support chaining
      */
     public Group addJob(Job job) {
+        if (this.jobs == null) {
+            this.jobs = new LinkedHashSet<>();
+        }
+
         this.jobs.add(job.getName());
 
         return this;
@@ -55,6 +59,10 @@ public class Group {
      * @return Itself to support chaining
      */
     public Group addJobFilter(String jobFilter) {
+        if (this.jobs == null) {
+            this.jobs = new LinkedHashSet<>();
+        }
+
         this.jobs.add(jobFilter);
 
         return this;

@@ -1,5 +1,8 @@
 package com.kevinbimonte.concourse.sdk;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
@@ -14,10 +17,14 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.step.SetPipeline;
 import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.step.task.config.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class ExamplePipelinesTest {
 
     private static Task generateTask(AnonymousResource<RegistryImageConfig> resource, String taskName, String simpleCommand, String... commandArgs) {
@@ -30,6 +37,24 @@ class ExamplePipelinesTest {
         return new Task(taskName, config);
     }
 
+    private static JsonElement loadFromAssets(String filename) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream(String.format("assets/examples/%s", filename));
+
+        JsonElement expected;
+
+        try {
+            assert is != null;
+            try (InputStreamReader reader = new InputStreamReader(is)) {
+                expected = new Gson().fromJson(reader, JsonElement.class);
+
+                return expected;
+            }
+        } catch (IOException ignored) {
+            throw new RuntimeException("File not found");
+        }
+    }
+
     @Test
     void helloWorld() {
         // Define Pipeline
@@ -39,13 +64,16 @@ class ExamplePipelinesTest {
 
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
-        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
+        Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello world!");
 
         job.addStep(simpleTask);
 
         pipeline.addJob(job);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("hello_world.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -63,7 +91,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("serial_job.json");
+
+        assertEquals(expected, generated);
     }
 
 //    @Test
@@ -97,7 +128,10 @@ class ExamplePipelinesTest {
 //        pipeline.addJob(levelJob);
 //        pipeline.addJob(job);
 //
-//        System.out.println(pipeline.render());
+//        JsonElement generated = JsonParser.parseString(pipeline.render());
+//        JsonElement expected = loadFromAssets("pipeline_vars.json");
+//
+//        assertEquals(expected, generated);
 //    }
 
     @Test
@@ -180,7 +214,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("set_pipeline.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -190,7 +227,7 @@ class ExamplePipelinesTest {
 
         Job createAndConsume = new Job("create-and-consume").markPublic();
 
-        Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on ${date}\" > ./files/created_file");
+        Command makeFileCommand = Command.createCommand("sh").addArg("-exc").addArg("ls -la; echo \"Created a file on $(date)\" > ./files/created_file");
 
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
@@ -208,7 +245,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(createAndConsume);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("task_inputs_outputs.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -229,7 +269,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("time_triggered.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -245,12 +288,16 @@ class ExamplePipelinesTest {
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
 
         Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
+        simpleTask.getConfig().addInput(Input.create(concourseDocs.createGetDefinition()));
 
         job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(simpleTask);
 
         pipeline.addJob(job);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("git_triggered.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -282,9 +329,12 @@ class ExamplePipelinesTest {
                 .addStep(every30Seconds.createGetDefinition().addPassedRequirement(triggeredFirst).enableTrigger())
                 .addStep(simpleTask);
 
-        pipeline.addJob(triggeredFirst).addJob(triggeredSecond).addJob(notTriggered);
+        pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("manually_triggered.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -321,7 +371,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("hooks.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -360,7 +413,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("golang_library.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -407,8 +463,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        // Serialize
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("rails_application.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -453,8 +511,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        // Serialize
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("java_application.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -496,8 +556,10 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        // Serialize
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("nodejs_application.json");
+
+        assertEquals(expected, generated);
     }
 
     @Test
@@ -514,8 +576,7 @@ class ExamplePipelinesTest {
                 cd larvel-websockets-git
                 
                 composer install
-                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
-                """;
+                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover""";
         Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
@@ -529,7 +590,9 @@ class ExamplePipelinesTest {
 
         pipeline.addJob(job);
 
-        // Serialize
-        System.out.println(pipeline.render());
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = loadFromAssets("php_application.json");
+
+        assertEquals(expected, generated);
     }
 }

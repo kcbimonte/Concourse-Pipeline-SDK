@@ -7,7 +7,7 @@ import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 import lombok.Getter;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -33,7 +33,7 @@ public class Pipeline {
      */
     public Pipeline addJob(Job job) {
         if (this.jobs == null) {
-            this.jobs = new HashSet<>();
+            this.jobs = new LinkedHashSet<>();
         }
 
         jobs.add(job);
@@ -51,7 +51,7 @@ public class Pipeline {
      */
     public Pipeline addResourceType(ResourceType resourceType) {
         if (this.resourceTypes == null) {
-            this.resourceTypes = new HashSet<>();
+            this.resourceTypes = new LinkedHashSet<>();
         }
 
         resourceTypes.add(resourceType);
@@ -69,7 +69,7 @@ public class Pipeline {
      */
     public Pipeline addResource(Resource resource) {
         if (this.resources == null) {
-            this.resources = new HashSet<>();
+            this.resources = new LinkedHashSet<>();
         }
 
         resources.add(resource);
@@ -89,7 +89,7 @@ public class Pipeline {
      */
     public Pipeline addGroup(Group group) {
         if (this.groups == null) {
-            this.groups = new HashSet<>();
+            this.groups = new LinkedHashSet<>();
         }
 
         groups.add(group);

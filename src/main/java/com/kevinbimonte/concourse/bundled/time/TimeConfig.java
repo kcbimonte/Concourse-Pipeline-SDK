@@ -15,7 +15,7 @@ public class TimeConfig implements IResourceConfig {
     private String start;
     private String end;
 
-    private final List<String> days = new ArrayList<>();
+    private List<String> days;
 
     @SerializedName("initial_version")
     private Boolean initialVersion;
@@ -45,6 +45,10 @@ public class TimeConfig implements IResourceConfig {
     }
 
     public TimeConfig addDay(DayOfWeek dayOfWeek) {
+        if (this.days == null) {
+            this.days = new ArrayList<>();
+        }
+
         this.days.add(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
 
         return this;

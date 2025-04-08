@@ -99,7 +99,7 @@ class JobTest {
 
         // Assert
         assertEquals(1, job.getSerialGroups().size());
-        assertEquals(1, job.getMaxInFlight());
+        assertNull(job.getMaxInFlight());
         assertTrue(job.getSerialGroups().contains(groupName));
         assertTrue(job.getIsSerial());
     }
@@ -124,7 +124,7 @@ class JobTest {
         // Assert
         assertEquals(maxInFlight, job.getMaxInFlight());
         assertNull(job.getSerialGroups());
-        assertFalse(job.getIsSerial());
+        assertNull(job.getIsSerial());
     }
 
     @ParameterizedTest
@@ -157,7 +157,7 @@ class JobTest {
 
         // Assert
         assertTrue(job.getIsSerial());
-        assertEquals(1, job.getMaxInFlight());
+        assertNull(job.getMaxInFlight());
     }
 
     @Test
@@ -170,8 +170,8 @@ class JobTest {
         job.addSerialGroup("group").setMaxInFlight(4);
 
         // Assert
-        assertEquals(0, job.getSerialGroups().size());
-        assertFalse(job.getIsSerial());
+        assertNull(job.getSerialGroups());
+        assertNull(job.getIsSerial());
         assertEquals(4, job.getMaxInFlight());
     }
 
@@ -188,7 +188,7 @@ class JobTest {
         assertEquals(1, job.getSerialGroups().size());
         assertTrue(job.getSerialGroups().contains("group"));
         assertTrue(job.getIsSerial());
-        assertEquals(1, job.getMaxInFlight());
+        assertNull(job.getMaxInFlight());
     }
 
     @Test

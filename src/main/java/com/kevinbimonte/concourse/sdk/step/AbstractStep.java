@@ -3,7 +3,7 @@ package com.kevinbimonte.concourse.sdk.step;
 import com.kevinbimonte.concourse.sdk.AbstractHook;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class AbstractStep<T extends IStep> extends AbstractHook<T> {
@@ -29,7 +29,7 @@ public abstract class AbstractStep<T extends IStep> extends AbstractHook<T> {
      */
     public T addWorkerTag(String workerTag) {
         if (this.tags == null) {
-            this.tags = new HashSet<>();
+            this.tags = new LinkedHashSet<>();
         }
 
         this.tags.add(workerTag);

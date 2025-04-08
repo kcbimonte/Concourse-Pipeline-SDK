@@ -1,0 +1,53 @@
+{
+  "resources": [
+    {
+      "name": "rails-contributors-git",
+      "type": "git",
+      "icon": "github",
+      "source": {
+        "uri": "https://github.com/rails/rails-contributors.git"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "name": "test",
+      "public": true,
+      "plan": [
+        {
+          "get": "rails-contributors-git",
+          "trigger": true
+        },
+        {
+          "task": "run-tests",
+          "config": {
+            "image_resource": {
+              "type": "registry-image",
+              "source": {
+                "repository": "ruby",
+                "tag": "2.6.5"
+              }
+            },
+            "platform": "linux",
+            "inputs": [
+              {
+                "name": "rails-contributors-git"
+              }
+            ],
+            "params": {
+              "RAILS_ENV": "test",
+              "DATABASE_URL": "postgresql://postgres@localhost"
+            },
+            "run": {
+              "path": "/bin/bash",
+              "args": [
+                "-c",
+                "echo \"=== Setting up Postgres...\"\napt-get update\napt-get install -y postgresql libpq-dev cmake nodejs\ncat > /etc/postgresql/*/main/pg_hba.conf <<-EOF\nhost   all   postgres   localhost   trust\nEOF\nservice postgresql restart\necho \"=== Project requires that we clone rails... \"\ncd rails-contributors-git\ngit clone --mirror https://github.com/rails/rails\necho \"=== Installing Gems...\"\ngem install -N bundler\nbundle install\necho \"=== Running Tests...\"\nbundle exec rails db:setup\nbundle exec rails test\n"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

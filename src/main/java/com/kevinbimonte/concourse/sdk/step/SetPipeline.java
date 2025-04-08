@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class SetPipeline extends AbstractStep<SetPipeline> implements IStep {
@@ -15,15 +15,15 @@ public class SetPipeline extends AbstractStep<SetPipeline> implements IStep {
 
     private final String file;
 
-    private String team = null;
+    private String team;
 
     @SerializedName("var_files")
-    private Set<String> varFiles = null;
+    private Set<String> varFiles;
 
-    private JsonObject vars = null;
+    private JsonObject vars;
 
     @SerializedName("instance_vars")
-    private JsonObject instanceVars = null;
+    private JsonObject instanceVars;
 
     private SetPipeline(String name, String file) {
         this.name = name;
@@ -63,7 +63,9 @@ public class SetPipeline extends AbstractStep<SetPipeline> implements IStep {
     }
 
     public SetPipeline addVarFile(Get repo, String path) {
-        if (varFiles == null) varFiles = new HashSet<>();
+        if (varFiles == null) {
+            varFiles = new LinkedHashSet<>();
+        }
 
         if (path != null && path.startsWith("/")) {
             path = path.trim().substring(1);
