@@ -59,6 +59,10 @@ public class Group {
      * @return Itself to support chaining
      */
     public Group addJobFilter(String jobFilter) {
+        if (this.jobs == null) {
+            this.jobs = new LinkedHashSet<>();
+        }
+
         this.jobs.add(jobFilter);
 
         return this;
