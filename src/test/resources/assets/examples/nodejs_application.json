@@ -13,7 +13,7 @@
       "type": "registry-image",
       "source": {
         "repository": "node",
-        "tag": 18
+        "tag": "18"
       }
     }
   ],
