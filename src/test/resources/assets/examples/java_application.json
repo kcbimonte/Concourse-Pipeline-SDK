@@ -21,7 +21,6 @@
               }
             ],
             "image_resource": {
-              "name": "",
               "source": {
                 "repository": "gradle",
                 "tag": "jdk8-slim"
