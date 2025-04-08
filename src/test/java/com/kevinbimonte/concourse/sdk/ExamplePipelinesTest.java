@@ -17,7 +17,6 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.step.SetPipeline;
 import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.step.task.config.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.io.InputStreamReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@Disabled
 class ExamplePipelinesTest {
 
     private static Task generateTask(AnonymousResource<RegistryImageConfig> resource, String taskName, String simpleCommand, String... commandArgs) {
@@ -37,6 +35,24 @@ class ExamplePipelinesTest {
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
 
         return new Task(taskName, config);
+    }
+
+    private static JsonElement loadFromAssets(String filename) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream(String.format("assets/examples/%s", filename));
+
+        JsonElement expected;
+
+        try {
+            assert is != null;
+            try (InputStreamReader reader = new InputStreamReader(is)) {
+                expected = new Gson().fromJson(reader, JsonElement.class);
+
+                return expected;
+            }
+        } catch (IOException ignored) {
+            throw new RuntimeException("File not found");
+        }
     }
 
     @Test
@@ -58,24 +74,6 @@ class ExamplePipelinesTest {
         JsonElement expected = loadFromAssets("hello_world.json");
 
         assertEquals(expected, generated);
-    }
-
-    private static JsonElement loadFromAssets(String filename) {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(String.format("assets/examples/%s", filename));
-
-        JsonElement expected;
-
-        try {
-            assert is != null;
-            try (InputStreamReader reader = new InputStreamReader(is)) {
-                expected = new Gson().fromJson(reader, JsonElement.class);
-
-                return expected;
-            }
-        } catch (IOException ignored) {
-            throw new RuntimeException("File not found");
-        }
     }
 
     @Test
@@ -397,7 +395,7 @@ class ExamplePipelinesTest {
 
         String goTest = """
                 GOPATH=$PWD/go
-                                
+                
                 go version
                 """;
 
@@ -485,9 +483,9 @@ class ExamplePipelinesTest {
         String javaTesting = """
                 java -Xmx32m -version
                 javac -J-Xmx32m -version
-                                
+                
                 cd apache-kafka-git
-                                
+                
                 gradle wrapper
                 ./gradlew rat
                 ./gradlew systemTestLibs
