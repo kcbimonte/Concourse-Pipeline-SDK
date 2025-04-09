@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
+import com.kevinbimonte.concourse.sdk.varsource.AbstractVarSource;
 import lombok.Getter;
 
 import java.util.LinkedHashSet;
@@ -23,7 +24,10 @@ public class Pipeline {
     private Set<Resource> resources;
     @SerializedName("resource_types")
     private Set<ResourceType> resourceTypes;
-    private Set<Resource> resources;
+
+    @SerializedName("var_sources")
+    private Set<AbstractVarSource> varSources;
+
     private Set<Group> groups;
     @SerializedName("display_config")
     private DisplayConfig displayConfig;
@@ -47,6 +51,24 @@ public class Pipeline {
     }
 
     /**
+     * Adds a new Resource for the pipeline to continuously check to the list of Pipeline Resources.
+     * <p>
+     * If the resource is not part of the bundled resources, the type must be added as well.
+     *
+     * @param resource {@link Resource} to add to the pipeline
+     * @return itself to support chaining
+     */
+    public Pipeline addResource(Resource resource) {
+        if (this.resources == null) {
+            this.resources = new LinkedHashSet<>();
+        }
+
+        resources.add(resource);
+
+        return this;
+    }
+
+    /**
      * Adds a new Resource Type to the list of Pipeline Resource Types.
      * <p>
      * Resource Types found in {@link com.kevinbimonte.concourse.bundled} are included by default
@@ -64,20 +86,12 @@ public class Pipeline {
         return this;
     }
 
-    /**
-     * Adds a new Resource for the pipeline to continuously check to the list of Pipeline Resources.
-     * <p>
-     * If the resource is not part of the bundled resources, the type must be added as well.
-     *
-     * @param resource {@link Resource} to add to the pipeline
-     * @return itself to support chaining
-     */
-    public Pipeline addResource(Resource resource) {
-        if (this.resources == null) {
-            this.resources = new LinkedHashSet<>();
+    public Pipeline addVarSource(AbstractVarSource varSource) {
+        if (this.varSources == null) {
+            this.varSources = new LinkedHashSet<>();
         }
 
-        resources.add(resource);
+        varSources.add(varSource);
 
         return this;
     }
