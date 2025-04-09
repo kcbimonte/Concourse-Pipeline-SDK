@@ -10,7 +10,7 @@ import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.job.Job;
-import com.kevinbimonte.concourse.sdk.varsource.SSMVarSource;
+import com.kevinbimonte.concourse.sdk.varsource.ssm.SSMVarSource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

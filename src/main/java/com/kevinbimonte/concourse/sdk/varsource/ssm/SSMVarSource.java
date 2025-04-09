@@ -1,8 +1,10 @@
-package com.kevinbimonte.concourse.sdk.varsource;
+package com.kevinbimonte.concourse.sdk.varsource.ssm;
 
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import com.kevinbimonte.concourse.sdk.varsource.AbstractVarSource;
+import com.kevinbimonte.concourse.sdk.varsource.VarSourceType;
 
-public class SSMVarSource extends AbstractVarSource<SSMVarSource.SSMVarConfig> {
+public class SSMVarSource extends AbstractVarSource<SSMVarConfig> {
     private SSMVarSource(String name, SSMVarConfig config) {
         super(name, VarSourceType.SSM, config);
     }
@@ -17,8 +19,5 @@ public class SSMVarSource extends AbstractVarSource<SSMVarSource.SSMVarConfig> {
         SSMVarConfig config = new SSMVarConfig(region);
 
         return new SSMVarSource(name, config);
-    }
-
-    protected record SSMVarConfig(String region) implements IVarSourceConfig {
     }
 }

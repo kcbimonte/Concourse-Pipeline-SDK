@@ -1,5 +1,7 @@
-package com.kevinbimonte.concourse.sdk.varsource;
+package com.kevinbimonte.concourse.sdk.varsource.ssm;
 
+import com.kevinbimonte.concourse.sdk.varsource.VarSourceType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +15,7 @@ class SSMVarSourceTest {
         SSMVarSource varSource = SSMVarSource.create("ssm", "us-east-1");
 
         // Assert
-        assertEquals(VarSourceType.SSM, varSource.getType());
+        Assertions.assertEquals(VarSourceType.SSM, varSource.getType());
         assertEquals("us-east-1", varSource.getConfig().region());
     }
 
