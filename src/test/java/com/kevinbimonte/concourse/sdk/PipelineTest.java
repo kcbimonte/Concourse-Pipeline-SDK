@@ -1,5 +1,8 @@
 package com.kevinbimonte.concourse.sdk;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.git.GitResourceType;
@@ -112,7 +115,18 @@ class PipelineTest {
         SSMVarSource varSource = SSMVarSource.create("ssm", "us-east-1");
 
         // Act
+        pipeline.addVarSource(varSource);
 
         // Assert
+        JsonElement render = JsonParser.parseString(pipeline.render());
+
+        assertEquals(1, pipeline.getVarSources().size());
+        assertTrue(render.getAsJsonObject().has("var_sources"));
+
+        JsonObject entry = render.getAsJsonObject().get("var_sources").getAsJsonArray().get(0).getAsJsonObject();
+
+        assertTrue(entry.has("config"));
+        assertTrue(entry.getAsJsonObject("config").has("region"));
+        assertEquals("us-east-1", entry.getAsJsonObject("config").getAsJsonPrimitive("region").getAsString());
     }
 }

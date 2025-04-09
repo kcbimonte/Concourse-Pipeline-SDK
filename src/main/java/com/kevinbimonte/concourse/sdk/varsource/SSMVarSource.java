@@ -2,7 +2,7 @@ package com.kevinbimonte.concourse.sdk.varsource;
 
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
-public class SSMVarSource extends AbstractVarSource {
+public class SSMVarSource extends AbstractVarSource<SSMVarSource.SSMVarConfig> {
     private SSMVarSource(String name, SSMVarConfig config) {
         super(name, VarSourceType.SSM, config);
     }
@@ -19,6 +19,6 @@ public class SSMVarSource extends AbstractVarSource {
         return new SSMVarSource(name, config);
     }
 
-    private record SSMVarConfig(String region) implements IVarSourceConfig {
+    protected record SSMVarConfig(String region) implements IVarSourceConfig {
     }
 }

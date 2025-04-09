@@ -3,12 +3,12 @@ package com.kevinbimonte.concourse.sdk.varsource;
 import lombok.Getter;
 
 @Getter
-public abstract class AbstractVarSource {
+public abstract class AbstractVarSource<T extends IVarSourceConfig> {
     private final String name;
     private final VarSourceType type;
-    private final IVarSourceConfig config;
+    private final T config;
 
-    protected AbstractVarSource(String name, VarSourceType type, IVarSourceConfig config) {
+    protected AbstractVarSource(String name, VarSourceType type, T config) {
         this.name = name;
         this.type = type;
         this.config = config;
