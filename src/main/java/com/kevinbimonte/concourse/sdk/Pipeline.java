@@ -2,6 +2,7 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
@@ -18,10 +19,14 @@ import java.util.Set;
 @Getter
 public class Pipeline {
 
+    private Set<Job> jobs;
+    private Set<Resource> resources;
+    @SerializedName("resource_types")
     private Set<ResourceType> resourceTypes;
     private Set<Resource> resources;
     private Set<Group> groups;
-    private Set<Job> jobs;
+    @SerializedName("display_config")
+    private DisplayConfig displayConfig;
 
     /**
      * Adds a Job to the list of Pipeline Jobs. Each Job must have a unique name.
@@ -93,6 +98,26 @@ public class Pipeline {
         }
 
         groups.add(group);
+
+        return this;
+    }
+
+    public Pipeline setBackgroundImage(String backgroundImage) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundImage(backgroundImage);
+
+        return this;
+    }
+
+    public Pipeline setBackgroundFilter(String backgroundFilter) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundFilter(backgroundFilter);
 
         return this;
     }
