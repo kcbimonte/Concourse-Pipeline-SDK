@@ -2,9 +2,11 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
+import com.kevinbimonte.concourse.sdk.varsource.AbstractVarSource;
 import lombok.Getter;
 
 import java.util.LinkedHashSet;
@@ -18,10 +20,17 @@ import java.util.Set;
 @Getter
 public class Pipeline {
 
-    private Set<ResourceType> resourceTypes;
-    private Set<Resource> resources;
-    private Set<Group> groups;
     private Set<Job> jobs;
+    private Set<Resource> resources;
+    @SerializedName("resource_types")
+    private Set<ResourceType> resourceTypes;
+
+    @SerializedName("var_sources")
+    private Set<AbstractVarSource> varSources;
+
+    private Set<Group> groups;
+    @SerializedName("display_config")
+    private DisplayConfig displayConfig;
 
     /**
      * Adds a Job to the list of Pipeline Jobs. Each Job must have a unique name.
@@ -37,24 +46,6 @@ public class Pipeline {
         }
 
         jobs.add(job);
-
-        return this;
-    }
-
-    /**
-     * Adds a new Resource Type to the list of Pipeline Resource Types.
-     * <p>
-     * Resource Types found in {@link com.kevinbimonte.concourse.bundled} are included by default
-     *
-     * @param resourceType {@link ResourceType} to add to the pipeline
-     * @return itself to support chaining
-     */
-    public Pipeline addResourceType(ResourceType resourceType) {
-        if (this.resourceTypes == null) {
-            this.resourceTypes = new LinkedHashSet<>();
-        }
-
-        resourceTypes.add(resourceType);
 
         return this;
     }
@@ -78,6 +69,34 @@ public class Pipeline {
     }
 
     /**
+     * Adds a new Resource Type to the list of Pipeline Resource Types.
+     * <p>
+     * Resource Types found in {@link com.kevinbimonte.concourse.bundled} are included by default
+     *
+     * @param resourceType {@link ResourceType} to add to the pipeline
+     * @return itself to support chaining
+     */
+    public Pipeline addResourceType(ResourceType resourceType) {
+        if (this.resourceTypes == null) {
+            this.resourceTypes = new LinkedHashSet<>();
+        }
+
+        resourceTypes.add(resourceType);
+
+        return this;
+    }
+
+    public Pipeline addVarSource(AbstractVarSource varSource) {
+        if (this.varSources == null) {
+            this.varSources = new LinkedHashSet<>();
+        }
+
+        varSources.add(varSource);
+
+        return this;
+    }
+
+    /**
      * Adds a new Group to the list of Pipeline Groups.
      * <p>
      * Groups have no functional effect on your pipeline. They are purely for making it easier to grok large pipelines in the web UI.
@@ -93,6 +112,26 @@ public class Pipeline {
         }
 
         groups.add(group);
+
+        return this;
+    }
+
+    public Pipeline setBackgroundImage(String backgroundImage) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundImage(backgroundImage);
+
+        return this;
+    }
+
+    public Pipeline setBackgroundFilter(String backgroundFilter) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundFilter(backgroundFilter);
 
         return this;
     }
