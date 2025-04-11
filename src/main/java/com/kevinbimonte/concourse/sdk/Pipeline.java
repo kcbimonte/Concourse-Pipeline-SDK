@@ -2,6 +2,8 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
@@ -142,7 +144,14 @@ public class Pipeline {
      * @return rendered JSON Pipeline
      */
     public String render() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonSerializer<ISerializableEnum> enumJsonSerializer = (src, typeOfSrc, context) -> {
+            return new JsonPrimitive(src.getDisplayName());
+        };
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeHierarchyAdapter(ISerializableEnum.class, enumJsonSerializer)
+                .create();
 
         return gson.toJson(this);
     }

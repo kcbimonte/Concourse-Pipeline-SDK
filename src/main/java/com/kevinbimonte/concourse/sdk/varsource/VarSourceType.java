@@ -1,12 +1,18 @@
 package com.kevinbimonte.concourse.sdk.varsource;
 
-import com.google.gson.annotations.SerializedName;
+import com.kevinbimonte.concourse.sdk.ISerializableEnum;
+import lombok.Getter;
 
-public enum VarSourceType {
-    @SerializedName("vault")
-    VAULT,
-    @SerializedName("ssm")
-    SSM,
-    @SerializedName("dummy")
-    DUMMY;
+@Getter
+public enum VarSourceType implements ISerializableEnum {
+
+    VAULT("vault"),
+    SSM("ssm"),
+    DUMMY("dummy");
+
+    private final String displayName;
+
+    VarSourceType(String displayName) {
+        this.displayName = displayName;
+    }
 }
