@@ -129,4 +129,18 @@ class PipelineTest {
         assertTrue(entry.getAsJsonObject("config").has("region"));
         assertEquals("us-east-1", entry.getAsJsonObject("config").getAsJsonPrimitive("region").getAsString());
     }
+
+    @Test
+    void setBackgroundProperties() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+        pipeline.setBackgroundImage("https://static.concourse-ci.org/assets/my_image.jpg")
+                .setBackgroundFilter("opacity(40%) grayscale(90%)");
+
+        // Assert
+        assertEquals("https://static.concourse-ci.org/assets/my_image.jpg", pipeline.getDisplayConfig().getBackgroundImage());
+        assertEquals("opacity(40%) grayscale(90%)", pipeline.getDisplayConfig().getBackgroundFilter());
+    }
 }
