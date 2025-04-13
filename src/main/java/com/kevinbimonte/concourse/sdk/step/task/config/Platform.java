@@ -1,12 +1,18 @@
 package com.kevinbimonte.concourse.sdk.step.task.config;
 
-import com.google.gson.annotations.SerializedName;
+import com.kevinbimonte.concourse.sdk.ISerializableEnum;
+import lombok.Getter;
 
-public enum Platform {
-    @SerializedName("linux")
-    LINUX,
-    @SerializedName("darwin")
-    DARWIN,
-    @SerializedName("windows")
-    WINDOWS
+@Getter
+public enum Platform implements ISerializableEnum {
+
+    LINUX("linux"),
+    DARWIN("darwin"),
+    WINDOWS("windows");
+
+    private final String displayName;
+
+    Platform(String displayName) {
+        this.displayName = displayName;
+    }
 }

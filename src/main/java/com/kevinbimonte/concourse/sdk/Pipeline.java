@@ -2,9 +2,13 @@ package com.kevinbimonte.concourse.sdk;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
+import com.kevinbimonte.concourse.sdk.varsource.AbstractVarSource;
 import lombok.Getter;
 
 import java.util.LinkedHashSet;
@@ -18,10 +22,17 @@ import java.util.Set;
 @Getter
 public class Pipeline {
 
-    private Set<ResourceType> resourceTypes;
-    private Set<Resource> resources;
-    private Set<Group> groups;
     private Set<Job> jobs;
+    private Set<Resource> resources;
+    @SerializedName("resource_types")
+    private Set<ResourceType> resourceTypes;
+
+    @SerializedName("var_sources")
+    private Set<AbstractVarSource> varSources;
+
+    private Set<Group> groups;
+    @SerializedName("display_config")
+    private DisplayConfig displayConfig;
 
     /**
      * Adds a Job to the list of Pipeline Jobs. Each Job must have a unique name.
@@ -37,6 +48,24 @@ public class Pipeline {
         }
 
         jobs.add(job);
+
+        return this;
+    }
+
+    /**
+     * Adds a new Resource for the pipeline to continuously check to the list of Pipeline Resources.
+     * <p>
+     * If the resource is not part of the bundled resources, the type must be added as well.
+     *
+     * @param resource {@link Resource} to add to the pipeline
+     * @return itself to support chaining
+     */
+    public Pipeline addResource(Resource resource) {
+        if (this.resources == null) {
+            this.resources = new LinkedHashSet<>();
+        }
+
+        resources.add(resource);
 
         return this;
     }
@@ -59,20 +88,12 @@ public class Pipeline {
         return this;
     }
 
-    /**
-     * Adds a new Resource for the pipeline to continuously check to the list of Pipeline Resources.
-     * <p>
-     * If the resource is not part of the bundled resources, the type must be added as well.
-     *
-     * @param resource {@link Resource} to add to the pipeline
-     * @return itself to support chaining
-     */
-    public Pipeline addResource(Resource resource) {
-        if (this.resources == null) {
-            this.resources = new LinkedHashSet<>();
+    public Pipeline addVarSource(AbstractVarSource varSource) {
+        if (this.varSources == null) {
+            this.varSources = new LinkedHashSet<>();
         }
 
-        resources.add(resource);
+        varSources.add(varSource);
 
         return this;
     }
@@ -97,13 +118,40 @@ public class Pipeline {
         return this;
     }
 
+    public Pipeline setBackgroundImage(String backgroundImage) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundImage(backgroundImage);
+
+        return this;
+    }
+
+    public Pipeline setBackgroundFilter(String backgroundFilter) {
+        if (this.displayConfig == null) {
+            this.displayConfig = new DisplayConfig();
+        }
+
+        this.displayConfig.setBackgroundFilter(backgroundFilter);
+
+        return this;
+    }
+
     /**
      * Renders the pipeline to JSON.
      *
      * @return rendered JSON Pipeline
      */
     public String render() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonSerializer<ISerializableEnum> enumJsonSerializer = (src, typeOfSrc, context) -> {
+            return new JsonPrimitive(src.getDisplayName());
+        };
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeHierarchyAdapter(ISerializableEnum.class, enumJsonSerializer)
+                .create();
 
         return gson.toJson(this);
     }

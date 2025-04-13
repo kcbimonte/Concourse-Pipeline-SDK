@@ -1,5 +1,8 @@
 package com.kevinbimonte.concourse.sdk;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.git.GitResourceType;
@@ -7,6 +10,7 @@ import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.job.Job;
+import com.kevinbimonte.concourse.sdk.varsource.ssm.SSMVarSource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,5 +105,42 @@ class PipelineTest {
         assertNull(pipeline.getGroups());
         assertNull(pipeline.getJobs());
         assertNull(pipeline.getResources());
+    }
+
+    @Test
+    void varSource() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        SSMVarSource varSource = SSMVarSource.create("ssm", "us-east-1");
+
+        // Act
+        pipeline.addVarSource(varSource);
+
+        // Assert
+        JsonElement render = JsonParser.parseString(pipeline.render());
+
+        assertEquals(1, pipeline.getVarSources().size());
+        assertTrue(render.getAsJsonObject().has("var_sources"));
+
+        JsonObject entry = render.getAsJsonObject().get("var_sources").getAsJsonArray().get(0).getAsJsonObject();
+
+        assertTrue(entry.has("config"));
+        assertTrue(entry.getAsJsonObject("config").has("region"));
+        assertEquals("us-east-1", entry.getAsJsonObject("config").getAsJsonPrimitive("region").getAsString());
+    }
+
+    @Test
+    void setBackgroundProperties() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+        pipeline.setBackgroundImage("https://static.concourse-ci.org/assets/my_image.jpg")
+                .setBackgroundFilter("opacity(40%) grayscale(90%)");
+
+        // Assert
+        assertEquals("https://static.concourse-ci.org/assets/my_image.jpg", pipeline.getDisplayConfig().getBackgroundImage());
+        assertEquals("opacity(40%) grayscale(90%)", pipeline.getDisplayConfig().getBackgroundFilter());
     }
 }
