@@ -75,16 +75,12 @@ Which leads to a rendered JSON of:
 
 ```json
 {
-  "resourceTypes": [],
-  "resources": [],
-  "groups": [],
   "jobs": [
     {
       "name": "job",
       "plan": [
         {
           "task": "simple-task",
-          "vars": {},
           "config": {
             "platform": "linux",
             "image_resource": {
@@ -96,17 +92,12 @@ Which leads to a rendered JSON of:
             "run": {
               "path": "echo",
               "args": [
-                "Hello, world!"
+                "Hello world!"
               ]
-            },
-            "inputs": [],
-            "outputs": []
-          },
-          "privileged": false
+            }
+          }
         }
       ],
-      "serial": false,
-      "serial_groups": [],
       "public": true
     }
   ]
