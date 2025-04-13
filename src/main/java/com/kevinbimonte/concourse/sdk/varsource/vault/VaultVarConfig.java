@@ -134,7 +134,7 @@ public class VaultVarConfig implements IVarSourceConfig {
         return this;
     }
 
-    public VaultVarConfig addParam(String key, String value) {
+    public VaultVarConfig addAuthParam(String key, String value) {
         if (this.authParams == null) {
             this.authParams = new HashMap<>();
         }
