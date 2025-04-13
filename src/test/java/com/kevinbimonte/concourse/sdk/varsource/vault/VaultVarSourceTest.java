@@ -34,4 +34,17 @@ class VaultVarSourceTest {
 
         assertEquals("Not valid identifier: VAULT", vault.getMessage());
     }
+
+    @Test
+    void referenceVariable() {
+        // Arrange
+        VaultVarSource source = VaultVarSource.create("vault", "https://vault.concourse-ci.org");
+
+        // Act
+        String var = source.referenceVariable("my_var");
+
+
+        // Assert
+        assertEquals("((vault:my_var))", var);
+    }
 }
