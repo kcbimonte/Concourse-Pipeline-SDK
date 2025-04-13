@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VaultVarSourceTest {
+class VaultVarConfigTest {
 
     @Test
     void setCaCert() {
