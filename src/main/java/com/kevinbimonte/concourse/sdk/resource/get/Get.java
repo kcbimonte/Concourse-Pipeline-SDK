@@ -11,6 +11,7 @@ import com.kevinbimonte.concourse.sdk.resource.Resource;
 import com.kevinbimonte.concourse.sdk.step.AbstractStep;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     @SerializedName("get")
     private final String identifier;
 
-    private String resource = null;
+    private String resource;
 
     @SerializedName("passed")
     private List<String> passedJobs;
@@ -35,6 +36,7 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     @SerializedName("version")
     private JsonElement version;
 
+    @Getter(AccessLevel.NONE)
     private final transient Gson gson = new GsonBuilder().create();
 
     public Get(Resource resource) {
