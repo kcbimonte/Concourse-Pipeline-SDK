@@ -2,14 +2,16 @@ package com.kevinbimonte.concourse.sdk.step;
 
 import com.kevinbimonte.concourse.sdk.AbstractHook;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Getter
 public abstract class AbstractStep<T extends IStep> extends AbstractHook<T> {
     private Integer attempts;
 
-    private String duration;
+    private String timeout;
 
     private Set<String> tags;
 
@@ -18,6 +20,10 @@ public abstract class AbstractStep<T extends IStep> extends AbstractHook<T> {
      * @return
      */
     public T setAttempts(Integer attempts) {
+        if (attempts < 1) {
+            throw new IllegalArgumentException("Attempts cannot be less than 1");
+        }
+
         this.attempts = attempts;
 
         return getSelf();
@@ -44,7 +50,7 @@ public abstract class AbstractStep<T extends IStep> extends AbstractHook<T> {
     public T setTimeout(String duration) {
         Validator.validateDuration(duration);
 
-        this.duration = duration;
+        this.timeout = duration;
 
         return getSelf();
     }
