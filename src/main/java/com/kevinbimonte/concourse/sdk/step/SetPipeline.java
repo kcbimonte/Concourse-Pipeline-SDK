@@ -8,7 +8,7 @@ import com.kevinbimonte.concourse.sdk.util.Validator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class SetPipeline extends AbstractStep<SetPipeline> implements IStep {
+public class SetPipeline extends AbstractAcrossStep<SetPipeline> implements IStep {
 
     @SerializedName("set_pipeline")
     private final String name;

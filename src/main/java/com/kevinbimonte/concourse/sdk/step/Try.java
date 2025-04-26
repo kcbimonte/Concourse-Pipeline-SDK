@@ -2,7 +2,7 @@ package com.kevinbimonte.concourse.sdk.step;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Try extends AbstractStep<Try> implements IStep {
+public class Try extends AbstractAcrossStep<Try> implements IStep {
     @SerializedName("try")
     private final IStep step;
 

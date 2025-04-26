@@ -3,7 +3,7 @@ package com.kevinbimonte.concourse.sdk.step.task;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
-import com.kevinbimonte.concourse.sdk.step.AbstractStep;
+import com.kevinbimonte.concourse.sdk.step.AbstractAcrossStep;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.step.task.config.ContainerLimits;
 import com.kevinbimonte.concourse.sdk.step.task.config.Output;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Task extends AbstractStep<Task> implements IStep {
+public class Task extends AbstractAcrossStep<Task> implements IStep {
     private final String task;
 
     private TaskConfig config;

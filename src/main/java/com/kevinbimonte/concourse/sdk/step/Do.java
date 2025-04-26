@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Do extends AbstractStep<Do> implements IStep {
+public class Do extends AbstractAcrossStep<Do> implements IStep {
 
     @SerializedName("do")
     private Set<IStep> steps;
