@@ -1,10 +1,12 @@
 package com.kevinbimonte.concourse.sdk.step;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Getter
 public class Do extends AbstractAcrossStep<Do> implements IStep {
 
     @SerializedName("do")

@@ -1,6 +1,5 @@
 package com.kevinbimonte.concourse.sdk;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
@@ -19,10 +18,6 @@ import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.step.task.config.*;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExamplePipelinesTest {
@@ -35,24 +30,6 @@ class ExamplePipelinesTest {
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
 
         return new Task(taskName, config);
-    }
-
-    private static JsonElement loadFromAssets(String filename) {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(String.format("assets/examples/%s", filename));
-
-        JsonElement expected;
-
-        try {
-            assert is != null;
-            try (InputStreamReader reader = new InputStreamReader(is)) {
-                expected = new Gson().fromJson(reader, JsonElement.class);
-
-                return expected;
-            }
-        } catch (IOException ignored) {
-            throw new RuntimeException("File not found");
-        }
     }
 
     @Test
@@ -71,7 +48,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hello_world.json");
+        JsonElement expected = TestUtils.loadFromAssets("hello_world.json");
 
         assertEquals(expected, generated);
     }
@@ -92,7 +69,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("serial_job.json");
+        JsonElement expected = TestUtils.loadFromAssets("serial_job.json");
 
         assertEquals(expected, generated);
     }
@@ -215,7 +192,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("set_pipeline.json");
+        JsonElement expected = TestUtils.loadFromAssets("set_pipeline.json");
 
         assertEquals(expected, generated);
     }
@@ -246,7 +223,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(createAndConsume);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("task_inputs_outputs.json");
+        JsonElement expected = TestUtils.loadFromAssets("task_inputs_outputs.json");
 
         assertEquals(expected, generated);
     }
@@ -270,7 +247,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("time_triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("time_triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -295,7 +272,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("git_triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("git_triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -332,7 +309,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("manually_triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("manually_triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -372,7 +349,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hooks.json");
+        JsonElement expected = TestUtils.loadFromAssets("hooks.json");
 
         assertEquals(expected, generated);
     }
@@ -414,7 +391,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("golang_library.json");
+        JsonElement expected = TestUtils.loadFromAssets("golang_library.json");
 
         assertEquals(expected, generated);
     }
@@ -464,7 +441,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("rails_application.json");
+        JsonElement expected = TestUtils.loadFromAssets("rails_application.json");
 
         assertEquals(expected, generated);
     }
@@ -512,7 +489,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("java_application.json");
+        JsonElement expected = TestUtils.loadFromAssets("java_application.json");
 
         assertEquals(expected, generated);
     }
@@ -557,7 +534,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("nodejs_application.json");
+        JsonElement expected = TestUtils.loadFromAssets("nodejs_application.json");
 
         assertEquals(expected, generated);
     }
@@ -591,7 +568,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("php_application.json");
+        JsonElement expected = TestUtils.loadFromAssets("php_application.json");
 
         assertEquals(expected, generated);
     }
