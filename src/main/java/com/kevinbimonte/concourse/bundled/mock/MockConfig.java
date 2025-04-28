@@ -1,5 +1,7 @@
 package com.kevinbimonte.concourse.bundled.mock;
 
+import com.google.gson.*;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
@@ -7,6 +9,10 @@ import com.kevinbimonte.concourse.sdk.resource.IVersion;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class MockConfig implements IResourceConfig {
@@ -23,11 +29,18 @@ public class MockConfig implements IResourceConfig {
     @SerializedName("force_version")
     private Boolean forceVersion;
 
+    @SerializedName("create_files")
+    private HashMap<String, String> createFiles;
+
     @SerializedName("check_delay")
     private String checkDelay;
 
     @SerializedName("check_failure")
     private String checkFailure;
+
+    @JsonAdapter(MetadataSerializer.class)
+    @SerializedName("metadata")
+    private HashMap<String, String> metadata;
 
     private String log;
 
@@ -100,11 +113,32 @@ public class MockConfig implements IResourceConfig {
     }
 
     /**
+     * Creates a new file to be consumed by the mock resource.
+     *
+     * @param fileName The name of the file (e.g. file1.yml)
+     * @param content  The content of the file. Should be a multi-line string.
+     * @return self
+     */
+    public MockConfig createNewFile(String fileName, String content) {
+        if (this.createFiles == null) {
+            this.createFiles = new HashMap<>();
+        }
+
+        if (this.createFiles.containsKey(fileName)) {
+            throw new IllegalArgumentException("Filename already exists in the map");
+        }
+
+        this.createFiles.put(fileName, content);
+
+        return this;
+    }
+
+    /**
      * Sets the check delay.
      *
-     * @implNote Check Delay must conform to {@link Validator#validateDuration(String)}
      * @param checkDelay A valid check delay
      * @return self
+     * @implNote Check Delay must conform to {@link Validator#validateDuration(String)}
      */
     public MockConfig setCheckDelay(String checkDelay) {
         Validator.validateDuration(checkDelay);
@@ -127,6 +161,28 @@ public class MockConfig implements IResourceConfig {
     }
 
     /**
+     * Adds an entry to the list of metadata to be returned on every get and put.
+     *
+     * @param name Name
+     * @param value Value
+     * @return self
+     */
+    public MockConfig addNewMetadataEntry(String name, String value) {
+        if (this.metadata == null) {
+            this.metadata = new HashMap<>();
+        }
+
+        if (this.metadata.containsKey(name)) {
+            throw new IllegalArgumentException("Metadata name already exists in the map");
+        }
+
+        metadata.put(name, value);
+
+        return this;
+    }
+
+
+    /**
      * Sets the log message. Prints the message on every action.
      *
      * @param message Log Message
@@ -136,5 +192,24 @@ public class MockConfig implements IResourceConfig {
         this.log = message;
 
         return this;
+    }
+
+    private static class MetadataSerializer implements JsonSerializer<Map<String, String>> {
+
+        @Override
+        public JsonElement serialize(Map<String, String> src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray arr = new JsonArray();
+
+            for (Map.Entry<String, String> entry : src.entrySet()) {
+                JsonObject obj = new JsonObject();
+
+                obj.addProperty("name", entry.getKey());
+                obj.addProperty("value", entry.getValue());
+
+                arr.add(obj);
+            }
+
+            return arr;
+        }
     }
 }
