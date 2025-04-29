@@ -5,7 +5,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
-import com.kevinbimonte.concourse.sdk.resource.IVersion;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class MockConfig implements IResourceConfig {
     private Boolean mirrorSelf;
 
     @SerializedName("initial_version")
-    private IVersion initialVersion;
+    private JsonElement initialVersion;
 
     @SerializedName("no_initial_version")
     private Boolean noInitialVersion;
@@ -84,7 +83,11 @@ public class MockConfig implements IResourceConfig {
      * @param version The initial version to emit
      * @return self
      */
-    public MockConfig setInitialVersion(IVersion version) {
+    public MockConfig setInitialVersion(JsonElement version) {
+        if (this.noInitialVersion != null && this.noInitialVersion) {
+            throw new IllegalArgumentException("Cannot set version when Initial Version is Disabled");
+        }
+
         this.initialVersion = version;
 
         return this;
@@ -96,6 +99,10 @@ public class MockConfig implements IResourceConfig {
      * @return self
      */
     public MockConfig disableInitialVersion() {
+        if (this.initialVersion != null) {
+            throw new IllegalArgumentException("Cannot disable Initial Version when Initial Version is set");
+        }
+
         this.noInitialVersion = true;
 
         return this;
