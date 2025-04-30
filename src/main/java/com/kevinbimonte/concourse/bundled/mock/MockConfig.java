@@ -135,7 +135,7 @@ public class MockConfig implements IResourceConfig {
             throw new IllegalArgumentException("Filename already exists in the map");
         }
 
-        this.createFiles.put(fileName, content);
+        this.createFiles.put(fileName, content.trim());
 
         return this;
     }
