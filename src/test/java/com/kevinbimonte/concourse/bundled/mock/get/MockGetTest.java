@@ -59,7 +59,6 @@ class MockGetTest {
         // Assert
         assertInstanceOf(MockGetConfig.class, get.getConfig());
 
-        System.out.println(gson.toJson(get));
         String expectedOutput = """
                 {"get":"mock","params":{"mirror_self_via_params":true}}
                 """;
@@ -82,7 +81,6 @@ class MockGetTest {
         // Assert
         assertInstanceOf(MockGetConfig.class, get.getConfig());
 
-        System.out.println(gson.toJson(get));
         String expectedOutput = """
                 {"get":"new_get","resource":"mock","params":{"mirror_self_via_params":true}}
                 """;

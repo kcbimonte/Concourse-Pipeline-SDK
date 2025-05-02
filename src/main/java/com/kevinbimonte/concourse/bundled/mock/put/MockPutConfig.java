@@ -1,14 +1,14 @@
 package com.kevinbimonte.concourse.bundled.mock.put;
 
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
-import com.kevinbimonte.concourse.sdk.resource.IVersion;
 import com.kevinbimonte.concourse.sdk.resource.put.IPutConfig;
 import lombok.Getter;
 
 @Getter
 public class MockPutConfig implements IPutConfig {
 
-    private IVersion version;
+    private JsonElement version;
 
     @SerializedName("print_env")
     private Boolean printEnv;
@@ -28,7 +28,7 @@ public class MockPutConfig implements IPutConfig {
      * @param version The version to create
      * @return self
      */
-    public MockPutConfig setVersion(IVersion version) {
+    public MockPutConfig setVersion(JsonElement version) {
         if (file != null) {
             throw new UnsupportedOperationException("Cannot specify both version and file for version");
         }
@@ -39,7 +39,7 @@ public class MockPutConfig implements IPutConfig {
     }
 
     public MockPutConfig togglePrintEnv() {
-        this.printEnv =true;
+        this.printEnv = true;
 
         return this;
     }
