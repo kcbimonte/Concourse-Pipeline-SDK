@@ -56,12 +56,12 @@ class DoTest {
         AcrossVariable variable = AcrossVariable.create("name");
         Do doStep = Do.create().addAcrossVariable(variable);
 
-        Command helloVariable = Command.createCommand("echo").addArg(String.format("Hello %s", variable.getVariable()));
-        TaskConfig sayHello = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), new MockConfig()), helloVariable);
+        Command helloVariable = Command.createCommand("echo").addArg(String.format("Hello %s!", variable.getVariable()));
+        TaskConfig sayHello = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), helloVariable);
         Task hello = new Task("saying-hello", sayHello);
 
-        Command byeVariable = Command.createCommand("echo").addArg(String.format("Bye %s", variable.getVariable()));
-        TaskConfig sayBye = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), new MockConfig()), byeVariable);
+        Command byeVariable = Command.createCommand("echo").addArg(String.format("Bye %s!", variable.getVariable()));
+        TaskConfig sayBye = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), byeVariable);
         Task bye = new Task("saying-bye", sayBye);
 
         // Act
