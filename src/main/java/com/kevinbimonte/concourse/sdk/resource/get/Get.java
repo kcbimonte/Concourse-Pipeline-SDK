@@ -22,7 +22,7 @@ public abstract class Get extends AbstractStep<Get> implements IStep {
     @SerializedName("get")
     private final String identifier;
 
-    private String resource = null;
+    private String resource;
 
     @SerializedName("passed")
     private List<String> passedJobs;
