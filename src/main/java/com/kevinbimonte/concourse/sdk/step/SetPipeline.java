@@ -25,33 +25,41 @@ public class SetPipeline extends AbstractAcrossStep<SetPipeline> implements ISte
     @SerializedName("instance_vars")
     private JsonObject instanceVars;
 
-    private SetPipeline(String name, String file) {
+    private SetPipeline(String name, String file, AcrossVariable variable) {
+        if (variable != null) {
+            this.addAcrossVariable(variable);
+        }
+
+        Validator.validateIdentifier(name, this);
+
         this.name = name;
         this.file = file;
     }
 
     public static SetPipeline create(String name, String path) {
-        Validator.validateIdentifier(name);
+       return SetPipeline.createAcrossPipeline(name, path, null);
+    }
 
+    public static SetPipeline create(String name, Get repo, String path) {
+        return SetPipeline.createAcrossPipeline(name, repo, path, null);
+    }
+
+    public static SetPipeline createAcrossPipeline(String name, String path, AcrossVariable variable) {
         if (path != null && path.startsWith("/")) {
             path = path.trim().substring(1);
         }
 
-        String file = String.format("%s", path);
-
-        return new SetPipeline(name, file);
+        return new SetPipeline(name, path, variable);
     }
 
-    public static SetPipeline create(String name, Get repo, String path) {
-        Validator.validateIdentifier(name);
-
+    public static SetPipeline createAcrossPipeline(String name, Get repo, String path, AcrossVariable variable) {
         if (path != null && path.startsWith("/")) {
             path = path.trim().substring(1);
         }
 
         String file = String.format("%s/%s", repo.getIdentifier(), path);
 
-        return new SetPipeline(name, file);
+        return new SetPipeline(name, file, variable);
     }
 
     public SetPipeline setTeam(String team) {

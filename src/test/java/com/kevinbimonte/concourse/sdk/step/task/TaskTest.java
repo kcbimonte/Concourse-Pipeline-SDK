@@ -6,11 +6,15 @@ import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.git.get.GitGet;
+import com.kevinbimonte.concourse.bundled.mock.MockConfig;
+import com.kevinbimonte.concourse.bundled.mock.MockResourceType;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
 import com.kevinbimonte.concourse.sdk.Pipeline;
 import com.kevinbimonte.concourse.sdk.TestUtils;
+import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
+import com.kevinbimonte.concourse.sdk.step.AcrossVariable;
 import com.kevinbimonte.concourse.sdk.step.task.config.Command;
 import com.kevinbimonte.concourse.sdk.step.task.config.Output;
 import com.kevinbimonte.concourse.sdk.step.task.config.Platform;
@@ -26,7 +30,7 @@ class TaskTest {
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
 
         // Act
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Assert
         assertEquals("task", task.getTask());
@@ -45,7 +49,7 @@ class TaskTest {
         GitGet get = resource.createGetDefinition();
 
         // Act
-        Task task = new Task("task", get, "pipeline/templates/my_job.yml");
+        Task task = Task.create("task", get, "pipeline/templates/my_job.yml");
 
         // Assert
         assertEquals("task", task.getTask());
@@ -61,7 +65,7 @@ class TaskTest {
         GitGet get = resource.createGetDefinition();
 
         // Act
-        Task task = new Task("task", get, "/pipeline/templates/my_second_job.yml");
+        Task task = Task.create("task", get, "/pipeline/templates/my_second_job.yml");
 
         // Assert
         assertEquals("task", task.getTask());
@@ -77,7 +81,7 @@ class TaskTest {
         GitGet get = resource.createGetDefinition();
 
         // Assert
-        assertThrows(RuntimeException.class, () -> new Task("task", get, null));
+        assertThrows(RuntimeException.class, () -> Task.create("task", get, null));
     }
 
     @Test
@@ -86,7 +90,7 @@ class TaskTest {
         RegistryImageConfig config = RegistryImageConfig.create("busybox");
         RegistryImageResource busyBox = RegistryImageResource.createResource("busy_box", config);
 
-        Task task = new Task("task", TaskConfig.create(Platform.LINUX, Command.createCommand("echo").addArg("Hello World")));
+        Task task = Task.create("task", TaskConfig.create(Platform.LINUX, Command.createCommand("echo").addArg("Hello World")));
 
         // Act
         task.setImage(busyBox.createGetDefinition());
@@ -100,7 +104,7 @@ class TaskTest {
     void markPrivileged() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.markPrivileged();
@@ -113,7 +117,7 @@ class TaskTest {
     void markHermetic() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.markHermetic();
@@ -128,7 +132,7 @@ class TaskTest {
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
         GitResource resource = GitResource.createResource("repo", gitConfig);
         GitGet get = resource.createGetDefinition();
-        Task task = new Task("task", get, "/pipeline/templates/my_second_job.yml");
+        Task task = Task.create("task", get, "/pipeline/templates/my_second_job.yml");
 
         // Act
         JsonObject object = new JsonObject();
@@ -155,7 +159,7 @@ class TaskTest {
     void setCPULimit() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.setCPULimit(2);
@@ -169,7 +173,7 @@ class TaskTest {
     void setMemoryLimits() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.setMemoryLimit(1024);
@@ -183,7 +187,7 @@ class TaskTest {
     void chainContainerLimits() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.setMemoryLimit(1024).setCPULimit(2);
@@ -197,7 +201,7 @@ class TaskTest {
     void addEnvVarParameters() {
         // Arrange
         TaskConfig config = TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("sh").addArg("hello"));
-        Task task = new Task("task", config);
+        Task task = Task.create("task", config);
 
         // Act
         task.addParam("ECHO_ME", "Eat your fruits").addParam("ALSO_ME", "veggies");
@@ -213,7 +217,7 @@ class TaskTest {
         GitResource resource = GitResource.createResource("repo", GitResourceConfig.create("https://git.website.com/group/repo.git"));
         GitGet get = resource.createGetDefinition();
 
-        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+        Task task = Task.create("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
 
         // Act
         InputMapping mapping = task.addInputMapping(get, "main");
@@ -232,7 +236,7 @@ class TaskTest {
         // Arrange
         Output output = Output.create("repo");
 
-        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+        Task task = Task.create("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
 
         // Act
         InputMapping mapping = task.addInputMapping(output, "main");
@@ -251,7 +255,7 @@ class TaskTest {
         // Arrange
         Output output = Output.create("repo");
 
-        Task task = new Task("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
+        Task task = Task.create("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
 
         // Act
         OutputMapping mapping = task.addOutputMapping(output, "main");
@@ -269,8 +273,17 @@ class TaskTest {
     void taskAcross() {
         // Arrange
         Pipeline pipeline = new Pipeline();
+        Job job = new Job("job");
+
+        AcrossVariable acrossVariable = AcrossVariable.create("some-text").addValue("hello-world").addValue("hello-concourse");
+
+        AnonymousResource<MockConfig> resource = AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf());
+        TaskConfig config = TaskConfig.create(resource, Command.createCommand("echo").addArg(acrossVariable.getVariable()));
+        Task task = Task.createAcrossTask(String.format("running-%s", acrossVariable.getVariable()), config, acrossVariable);
 
         // Act
+        job.addStep(task);
+        pipeline.addJob(job);
 
         // Assert
         JsonElement generated = JsonParser.parseString(pipeline.render());

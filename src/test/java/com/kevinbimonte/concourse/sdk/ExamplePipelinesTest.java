@@ -29,7 +29,7 @@ class ExamplePipelinesTest {
 
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
 
-        return new Task(taskName, config);
+        return Task.create(taskName, config);
     }
 
     @Test
@@ -92,7 +92,7 @@ class ExamplePipelinesTest {
 //
 //        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
 //
-//        Task task = new Task("simple-task", config);
+//        Task task = Task.create("simple-task", config);
 //
 //        job.addStep(task);
 //
@@ -182,7 +182,7 @@ class ExamplePipelinesTest {
         Command renderCommand = Command.createCommand("sh").addArg("-cx").addArg(yttGen);
 
         TaskConfig renderConfig = TaskConfig.create(Platform.LINUX, carvelytt, renderCommand).addInput(Input.create(blockedGet)).addOutput(Output.create("pipeline"));
-        Task renderTask = new Task("render-pipelines", renderConfig);
+        Task renderTask = Task.create("render-pipelines", renderConfig);
 
         setRendered.addStep(renderTask);
 
@@ -212,13 +212,13 @@ class ExamplePipelinesTest {
 
         TaskConfig makeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, makeFileCommand).addOutput(filesOutput);
 
-        createAndConsume.addStep(new Task("make-a-file", makeFileConfig));
+        createAndConsume.addStep(Task.create("make-a-file", makeFileConfig));
 
         Command consumeFileCommand = Command.createCommand("cat").addArg("./files/created_file");
 
         TaskConfig consumeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, consumeFileCommand).addInput(Input.create(filesOutput));
 
-        createAndConsume.addStep(new Task("consume-the-file", consumeFileConfig));
+        createAndConsume.addStep(Task.create("consume-the-file", consumeFileConfig));
 
         pipeline.addJob(createAndConsume);
 
@@ -380,13 +380,13 @@ class ExamplePipelinesTest {
 
         Job v120 = new Job("golang-1.20").markPublic()
                 .addStep(v120Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()));
+                .addStep(Task.create("run-tests", config).setImage(v120Image.createGetDefinition()));
         Job v121 = new Job("golang-1.21").markPublic()
                 .addStep(v121Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()));
+                .addStep(Task.create("run-tests", config).setImage(v121Image.createGetDefinition()));
         Job v122 = new Job("golang-1.22").markPublic()
                 .addStep(v122Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()));
+                .addStep(Task.create("run-tests", config).setImage(v122Image.createGetDefinition()));
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
@@ -431,7 +431,7 @@ class ExamplePipelinesTest {
                 .addParam("RAILS_ENV", "test")
                 .addParam("DATABASE_URL", "postgresql://postgres@localhost");
 
-        Task task = new Task("run-tests", taskConfig);
+        Task task = Task.create("run-tests", taskConfig);
 
         // Job
         Job job = new Job("test").markPublic();
@@ -478,7 +478,7 @@ class ExamplePipelinesTest {
                 .addCache("$HOME/.gradle/caches/")
                 .addCache("$HOME/.gradle/wrapper/");
 
-        Task task = new Task("run-tests", config);
+        Task task = Task.create("run-tests", config);
 
         // Job Config
         Job job = new Job("test")
@@ -513,14 +513,14 @@ class ExamplePipelinesTest {
         TaskConfig installConfig = TaskConfig.create(Platform.LINUX, installCommand)
                 .addInput(Input.create(repo.createGetDefinition()))
                 .addOutput(dependencies);
-        Task install = new Task("install", installConfig);
+        Task install = Task.create("install", installConfig);
         install.setImage(image.createGetDefinition());
 
         Command testCommand = Command.createCommand("npm").addArg("run").addArg("test").setWorkingDirectory("repo");
         TaskConfig testConfig = TaskConfig.create(Platform.LINUX, testCommand)
                 .addInput(Input.create(repo.createGetDefinition()))
                 .addInput(Input.create(dependencies).setPath("repo/node_modules"));
-        Task test = new Task("test", testConfig);
+        Task test = Task.create("test", testConfig);
         test.setImage(image.createGetDefinition());
 
         // Job Config
@@ -558,7 +558,7 @@ class ExamplePipelinesTest {
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
                 .addInput(Input.create(repo.createGetDefinition()));
-        Task task = new Task("run-tests", config);
+        Task task = Task.create("run-tests", config);
 
         // Job Config
         Job job = new Job("test").markPublic()

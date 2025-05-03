@@ -58,11 +58,11 @@ class DoTest {
 
         Command helloVariable = Command.createCommand("echo").addArg(String.format("Hello %s!", variable.getVariable()));
         TaskConfig sayHello = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), helloVariable);
-        Task hello = new Task("saying-hello", sayHello);
+        Task hello = Task.create("saying-hello", sayHello);
 
         Command byeVariable = Command.createCommand("echo").addArg(String.format("Bye %s!", variable.getVariable()));
         TaskConfig sayBye = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), byeVariable);
-        Task bye = new Task("saying-bye", sayBye);
+        Task bye = Task.create("saying-bye", sayBye);
 
         // Act
         doStep.addStep(hello).addStep(bye);

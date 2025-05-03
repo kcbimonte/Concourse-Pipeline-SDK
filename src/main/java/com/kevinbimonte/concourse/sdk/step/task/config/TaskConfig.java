@@ -44,6 +44,10 @@ public class TaskConfig {
         return new TaskConfig(platform, resource, command);
     }
 
+    public static <T extends IResourceConfig> TaskConfig create(AnonymousResource<T> resource, Command command) {
+        return TaskConfig.create(Platform.LINUX, resource, command);
+    }
+
     public static TaskConfig create(Platform platform, Command command) {
         return new TaskConfig(platform, null, command);
     }
