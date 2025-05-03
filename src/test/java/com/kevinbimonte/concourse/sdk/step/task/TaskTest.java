@@ -1,11 +1,15 @@
 package com.kevinbimonte.concourse.sdk.step.task;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.git.get.GitGet;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
+import com.kevinbimonte.concourse.sdk.Pipeline;
+import com.kevinbimonte.concourse.sdk.TestUtils;
 import com.kevinbimonte.concourse.sdk.resource.AnonymousResource;
 import com.kevinbimonte.concourse.sdk.step.task.config.Command;
 import com.kevinbimonte.concourse.sdk.step.task.config.Output;
@@ -260,4 +264,19 @@ class TaskTest {
         assertEquals("repo", mapping.getName());
         assertEquals("main", mapping.getMappedName());
     }
+
+    @Test
+    void taskAcross() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+
+        // Assert
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = TestUtils.loadFromAssets("across/task_across.json");
+
+        assertEquals(expected, generated);
+    }
+
 }
