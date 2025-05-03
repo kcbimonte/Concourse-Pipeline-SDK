@@ -53,7 +53,7 @@ class DoTest {
         Pipeline pipeline = new Pipeline();
         Job job = new Job("job");
 
-        AcrossVariable variable = AcrossVariable.create("name");
+        AcrossVariable variable = AcrossVariable.create("name").addValue("Kaladin").addValue("Jasnah");
         Do doStep = Do.create().addAcrossVariable(variable);
 
         Command helloVariable = Command.createCommand("echo").addArg(String.format("Hello %s!", variable.getVariable()));
