@@ -48,7 +48,7 @@ class DoTest {
     }
 
     @Test
-    void acrossWithMultipleSteps() {
+    void doAcross() {
         // Arrange
         Pipeline pipeline = new Pipeline();
         Job job = new Job("job");
@@ -74,6 +74,48 @@ class DoTest {
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
         JsonElement expected = TestUtils.loadFromAssets("across/do_across.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void inputOutputAcross() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+
+        // Assert
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = TestUtils.loadFromAssets("across/input_output_across.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void setPipelineAcross() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+
+        // Assert
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = TestUtils.loadFromAssets("across/set_pipeline_across.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void taskAcross() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        // Act
+
+        // Assert
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+        JsonElement expected = TestUtils.loadFromAssets("across/task_across.json");
 
         assertEquals(expected, generated);
     }
