@@ -13,7 +13,6 @@ import com.kevinbimonte.concourse.sdk.util.Validator;
 import lombok.Getter;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 @Getter
@@ -40,14 +39,14 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
 
     @SerializedName("output_mapping")
     private Map<String, String> outputMapping;
-    
+
     private Task(String name, TaskConfig config, AcrossVariable variable) {
         if (variable != null) {
             this.addAcrossVariable(variable);
         }
 
         Validator.validateIdentifier(name, this);
-       
+
         this.task = name;
         this.config = config;
     }
@@ -58,21 +57,39 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
         }
 
         Validator.validateIdentifier(name, this);
-        
+
         this.task = name;
         this.file = file;
     }
-    
-    public static Task create(String name, TaskConfig config) {
-        return Task.createAcrossTask(name, config, null);
+
+    private Task(String name, TaskConfig config) {
+        this.task = name;
+        this.config = config;
     }
-    
-    public static Task create(String name, Get get, String path) {
-        return Task.createAcrossTask(name, get, path, null);
+
+    private Task(String name, String file) {
+        this.task = name;
+        this.file = file;
+    }
+
+    public static Task create(String name, TaskConfig config) {
+        return new Task(name, config, null);
     }
 
     public static Task createAcrossTask(String name, TaskConfig config, AcrossVariable acrossVariable) {
         return new Task(name, config, acrossVariable);
+    }
+
+    public static Task createUsingParent(String name, TaskConfig config, AbstractAcrossStep<? extends IStep> parentStep) {
+        if (parentStep.getAcross() == null || parentStep.getAcross().isEmpty()) {
+            return Task.create(name, config);
+        }
+
+        return new Task(name, config);
+    }
+
+    public static Task create(String name, Get get, String path) {
+        return Task.createAcrossTask(name, get, path, null);
     }
 
     public static Task createAcrossTask(String name, Get get, String path, AcrossVariable acrossVariable) {
@@ -87,6 +104,24 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
         String file = String.format("%s/%s", get.getIdentifier(), path);
 
         return new Task(name, file, acrossVariable);
+    }
+
+    public static Task createUsingParent(String name, Get get, String path, AbstractAcrossStep<? extends IStep> parentStep) {
+        if (parentStep.getAcross() == null || parentStep.getAcross().isEmpty()) {
+            return Task.create(name, get, path);
+        }
+
+        if (path == null) {
+            throw new RuntimeException("Path cannot be null");
+        }
+
+        if (path.startsWith("/")) {
+            path = path.trim().substring(1);
+        }
+
+        String file = String.format("%s/%s", get.getIdentifier(), path);
+
+        return new Task(name, file);
     }
 
     public Task setImage(Get image) {
@@ -173,9 +208,7 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
             this.inputMapping = new HashMap<>();
         }
 
-        Validator.validateIdentifier(mappedName);
-
-        this.inputMapping.put(get.getIdentifier(), mappedName);
+        this.inputMapping.put(mappedName, get.getIdentifier());
 
         return new InputMapping(get.getIdentifier(), mappedName);
     }
@@ -184,8 +217,6 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
         if (this.inputMapping == null) {
             this.inputMapping = new HashMap<>();
         }
-
-        Validator.validateIdentifier(mappedName);
 
         this.inputMapping.put(output.getName(), mappedName);
 
@@ -196,8 +227,6 @@ public class Task extends AbstractAcrossStep<Task> implements IStep {
         if (this.outputMapping == null) {
             this.outputMapping = new HashMap<>();
         }
-
-        Validator.validateIdentifier(mappedName);
 
         this.outputMapping.put(output.getName(), mappedName);
 

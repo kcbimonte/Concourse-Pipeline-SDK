@@ -225,7 +225,7 @@ class TaskTest {
         // Assert
         assertEquals(1, task.getInputMapping().size());
 
-        assertEquals("main", task.getInputMapping().get("repo"));
+        assertEquals("repo", task.getInputMapping().get("main"));
 
         assertEquals("repo", mapping.getName());
         assertEquals("main", mapping.getMappedName());

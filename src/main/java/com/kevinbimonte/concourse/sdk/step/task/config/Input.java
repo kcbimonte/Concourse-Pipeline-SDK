@@ -2,7 +2,7 @@ package com.kevinbimonte.concourse.sdk.step.task.config;
 
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.step.task.InputMapping;
-import com.kevinbimonte.concourse.sdk.util.Validator;
+import com.kevinbimonte.concourse.sdk.step.task.OutputMapping;
 
 public class Input {
     private final String name;
@@ -10,8 +10,6 @@ public class Input {
     private Boolean optional;
 
     private Input(String name) {
-        Validator.validateIdentifier(name);
-
         this.name = name;
     }
 
@@ -24,6 +22,10 @@ public class Input {
     }
 
     public static Input create(InputMapping mapping) {
+        return new Input(mapping.getMappedName());
+    }
+
+    public static Input create(OutputMapping mapping) {
         return new Input(mapping.getMappedName());
     }
 
