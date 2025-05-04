@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GroupTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12"})
+    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12", "123_group"})
     void validGroupName(String groupName) {
         // Arrange
 
@@ -22,7 +22,7 @@ class GroupTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_group", "((my_var))-group", "MY_GROUP"})
+    @ValueSource(strings = {"123", "((my_var))-group", "MY_GROUP"})
     void invalidGroupName(String groupName) {
         assertThrows(RuntimeException.class, () -> new Group(groupName));
     }
