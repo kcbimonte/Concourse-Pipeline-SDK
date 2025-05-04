@@ -2,13 +2,13 @@ package com.kevinbimonte.concourse.sdk.step.var;
 
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
-import com.kevinbimonte.concourse.sdk.step.AbstractStep;
+import com.kevinbimonte.concourse.sdk.step.AbstractAcrossStep;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.util.Validator;
 
 import java.util.List;
 
-public class LoadVar extends AbstractStep<LoadVar> implements IStep {
+public class LoadVar extends AbstractAcrossStep<LoadVar> implements IStep {
 
     @SerializedName("load_var")
     private final String variableName;

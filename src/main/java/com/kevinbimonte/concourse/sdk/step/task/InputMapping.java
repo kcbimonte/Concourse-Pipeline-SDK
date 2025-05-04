@@ -1,10 +1,7 @@
 package com.kevinbimonte.concourse.sdk.step.task;
 
-import lombok.Getter;
-
-@Getter
+@SuppressWarnings("LombokGetterMayBeUsed")
 public class InputMapping implements ITaskMapping {
-
 
     private final String name;
     private final String mappedName;
@@ -14,4 +11,21 @@ public class InputMapping implements ITaskMapping {
         this.mappedName = mappedName;
     }
 
+    /**
+     * The name that is available within the task.
+     *
+     * @return Input.name
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * The mapped name from the plan context. This name comes from Get or Output
+     *
+     * @return The identifier from Get or Output
+     */
+    public String getMappedName() {
+        return this.mappedName;
+    }
 }

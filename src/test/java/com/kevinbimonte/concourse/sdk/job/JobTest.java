@@ -308,7 +308,7 @@ class JobTest {
     void addStep() {
         // Arrange
         Job job = new Job("name");
-        Task task = new Task("my_task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, World!")));
+        Task task = Task.create("my_task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, World!")));
 
         // Act
         job.addStep(task);

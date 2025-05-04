@@ -1,5 +1,10 @@
 package com.kevinbimonte.concourse.sdk.util;
 
+import com.kevinbimonte.concourse.sdk.step.AbstractAcrossStep;
+import com.kevinbimonte.concourse.sdk.step.IStep;
+import com.kevinbimonte.concourse.sdk.step.SetPipeline;
+import com.kevinbimonte.concourse.sdk.step.task.Task;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +17,13 @@ public class Validator {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Not valid identifier: " + identifier);
         }
+    }
+
+    public static void validateIdentifier(String identifier, AbstractAcrossStep<?> a) {
+        if ((a instanceof SetPipeline || a instanceof Task) && a.getAcross() != null && !a.getAcross().isEmpty()) {
+            return;
+        }
+        Validator.validateIdentifier(identifier);
     }
 
     public static void validateDuration(String duration) throws RuntimeException {

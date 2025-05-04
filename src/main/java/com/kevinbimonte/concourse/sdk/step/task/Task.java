@@ -3,7 +3,8 @@ package com.kevinbimonte.concourse.sdk.step.task;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.get.Get;
-import com.kevinbimonte.concourse.sdk.step.AbstractStep;
+import com.kevinbimonte.concourse.sdk.step.AbstractAcrossStep;
+import com.kevinbimonte.concourse.sdk.step.AcrossVariable;
 import com.kevinbimonte.concourse.sdk.step.IStep;
 import com.kevinbimonte.concourse.sdk.step.task.config.ContainerLimits;
 import com.kevinbimonte.concourse.sdk.step.task.config.Output;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Task extends AbstractStep<Task> implements IStep {
+public class Task extends AbstractAcrossStep<Task> implements IStep {
     private final String task;
 
     private TaskConfig config;
@@ -39,16 +40,76 @@ public class Task extends AbstractStep<Task> implements IStep {
     @SerializedName("output_mapping")
     private Map<String, String> outputMapping;
 
-    public Task(String name, TaskConfig config) {
-        Validator.validateIdentifier(name);
-        this.task = name;
+    private Task(String name, TaskConfig config, AcrossVariable variable) {
+        if (variable != null) {
+            this.addAcrossVariable(variable);
+        }
 
+        Validator.validateIdentifier(name, this);
+
+        this.task = name;
         this.config = config;
     }
 
-    public Task(String name, Get get, String path) {
-        Validator.validateIdentifier(name);
+    private Task(String name, String file, AcrossVariable variable) {
+        if (variable != null) {
+            this.addAcrossVariable(variable);
+        }
+
+        Validator.validateIdentifier(name, this);
+
         this.task = name;
+        this.file = file;
+    }
+
+    private Task(String name, TaskConfig config) {
+        this.task = name;
+        this.config = config;
+    }
+
+    private Task(String name, String file) {
+        this.task = name;
+        this.file = file;
+    }
+
+    public static Task create(String name, TaskConfig config) {
+        return new Task(name, config, null);
+    }
+
+    public static Task createAcrossTask(String name, TaskConfig config, AcrossVariable acrossVariable) {
+        return new Task(name, config, acrossVariable);
+    }
+
+    public static Task createUsingParent(String name, TaskConfig config, AbstractAcrossStep<? extends IStep> parentStep) {
+        if (parentStep.getAcross() == null || parentStep.getAcross().isEmpty()) {
+            return Task.create(name, config);
+        }
+
+        return new Task(name, config);
+    }
+
+    public static Task create(String name, Get get, String path) {
+        return Task.createAcrossTask(name, get, path, null);
+    }
+
+    public static Task createAcrossTask(String name, Get get, String path, AcrossVariable acrossVariable) {
+        if (path == null) {
+            throw new RuntimeException("Path cannot be null");
+        }
+
+        if (path.startsWith("/")) {
+            path = path.trim().substring(1);
+        }
+
+        String file = String.format("%s/%s", get.getIdentifier(), path);
+
+        return new Task(name, file, acrossVariable);
+    }
+
+    public static Task createUsingParent(String name, Get get, String path, AbstractAcrossStep<? extends IStep> parentStep) {
+        if (parentStep.getAcross() == null || parentStep.getAcross().isEmpty()) {
+            return Task.create(name, get, path);
+        }
 
         if (path == null) {
             throw new RuntimeException("Path cannot be null");
@@ -58,7 +119,9 @@ public class Task extends AbstractStep<Task> implements IStep {
             path = path.trim().substring(1);
         }
 
-        this.file = String.format("%s/%s", get.getIdentifier(), path);
+        String file = String.format("%s/%s", get.getIdentifier(), path);
+
+        return new Task(name, file);
     }
 
     public Task setImage(Get image) {
@@ -151,9 +214,7 @@ public class Task extends AbstractStep<Task> implements IStep {
             this.inputMapping = new HashMap<>();
         }
 
-        Validator.validateIdentifier(mappedName);
-
-        this.inputMapping.put(get.getIdentifier(), mappedName);
+        this.inputMapping.put(mappedName, get.getIdentifier());
 
         return new InputMapping(get.getIdentifier(), mappedName);
     }
@@ -162,8 +223,6 @@ public class Task extends AbstractStep<Task> implements IStep {
         if (this.inputMapping == null) {
             this.inputMapping = new HashMap<>();
         }
-
-        Validator.validateIdentifier(mappedName);
 
         this.inputMapping.put(output.getName(), mappedName);
 
@@ -174,8 +233,6 @@ public class Task extends AbstractStep<Task> implements IStep {
         if (this.outputMapping == null) {
             this.outputMapping = new HashMap<>();
         }
-
-        Validator.validateIdentifier(mappedName);
 
         this.outputMapping.put(output.getName(), mappedName);
 

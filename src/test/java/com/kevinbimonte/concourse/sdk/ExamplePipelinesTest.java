@@ -1,6 +1,5 @@
 package com.kevinbimonte.concourse.sdk;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.git.GitResource;
@@ -22,10 +21,6 @@ import com.kevinbimonte.concourse.sdk.step.task.config.*;
 import com.kevinbimonte.concourse.sdk.variable.Variable;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExamplePipelinesTest {
@@ -37,25 +32,7 @@ class ExamplePipelinesTest {
 
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command);
 
-        return new Task(taskName, config);
-    }
-
-    private static JsonElement loadFromAssets(String filename) {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(String.format("assets/examples/%s", filename));
-
-        JsonElement expected;
-
-        try {
-            assert is != null;
-            try (InputStreamReader reader = new InputStreamReader(is)) {
-                expected = new Gson().fromJson(reader, JsonElement.class);
-
-                return expected;
-            }
-        } catch (IOException ignored) {
-            throw new RuntimeException("File not found");
-        }
+        return Task.create(taskName, config);
     }
 
     @Test
@@ -74,7 +51,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hello-world.json");
+        JsonElement expected = TestUtils.loadFromAssets("hello-world.json");
 
         assertEquals(expected, generated);
     }
@@ -95,7 +72,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("serial-job.json");
+        JsonElement expected = TestUtils.loadFromAssets("serial-job.json");
 
         assertEquals(expected, generated);
     }
@@ -118,7 +95,7 @@ class ExamplePipelinesTest {
 //
 //        TaskConfig config = TaskConfig.create(Platform.LINUX, anonResource, command);
 //
-//        Task task = new Task("simple-task", config);
+//        Task task = Task.create("simple-task", config);
 //
 //        job.addStep(task);
 //
@@ -212,7 +189,7 @@ class ExamplePipelinesTest {
         Command renderCommand = Command.createCommand("sh").addArg("-cx").addArg(yttGen);
 
         TaskConfig renderConfig = TaskConfig.create(Platform.LINUX, carvelytt, renderCommand).addInput(Input.create(blockedGet)).addOutput(Output.create("pipeline"));
-        Task renderTask = new Task("render-pipelines", renderConfig);
+        Task renderTask = Task.create("render-pipelines", renderConfig);
 
         setRendered.addStep(renderTask);
 
@@ -223,7 +200,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("set-pipelines.json");
+        JsonElement expected = TestUtils.loadFromAssets("set-pipelines.json");
 
         assertEquals(expected, generated);
     }
@@ -243,18 +220,18 @@ class ExamplePipelinesTest {
 
         TaskConfig makeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, makeFileCommand).addOutput(filesOutput);
 
-        createAndConsume.addStep(new Task("make-a-file", makeFileConfig));
+        createAndConsume.addStep(Task.create("make-a-file", makeFileConfig));
 
         Command consumeFileCommand = Command.createCommand("cat").addArg("./files/created_file");
 
         TaskConfig consumeFileConfig = TaskConfig.create(Platform.LINUX, busyBox, consumeFileCommand).addInput(Input.create(filesOutput));
 
-        createAndConsume.addStep(new Task("consume-the-file", consumeFileConfig));
+        createAndConsume.addStep(Task.create("consume-the-file", consumeFileConfig));
 
         pipeline.addJob(createAndConsume);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("task-passing-artifact.json");
+        JsonElement expected = TestUtils.loadFromAssets("task-passing-artifact.json");
 
         assertEquals(expected, generated);
     }
@@ -280,7 +257,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("time-triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("time-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -307,7 +284,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("git-triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("git-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -344,7 +321,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("manually-triggered.json");
+        JsonElement expected = TestUtils.loadFromAssets("manually-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -384,7 +361,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("job-and-task-hooks.json");
+        JsonElement expected = TestUtils.loadFromAssets("job-and-task-hooks.json");
 
         assertEquals(expected, generated);
     }
@@ -416,21 +393,21 @@ class ExamplePipelinesTest {
 
         Job v120 = new Job("golang-1.20").markPublic()
                 .addStep(v120Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()))
+                .addStep(Task.create("run-tests", config).setImage(v120Image.createGetDefinition()))
                 .setBuildLogRetention(policy);
         Job v121 = new Job("golang-1.21").markPublic()
                 .addStep(v121Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()))
+                .addStep(Task.create("run-tests", config).setImage(v121Image.createGetDefinition()))
                 .setBuildLogRetention(policy);
         Job v122 = new Job("golang-1.22").markPublic()
                 .addStep(v122Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()))
+                .addStep(Task.create("run-tests", config).setImage(v122Image.createGetDefinition()))
                 .setBuildLogRetention(policy);
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("golang-lib.json");
+        JsonElement expected = TestUtils.loadFromAssets("golang-lib.json");
 
         assertEquals(expected, generated);
     }
@@ -470,7 +447,7 @@ class ExamplePipelinesTest {
                 .addParam("RAILS_ENV", "test")
                 .addParam("DATABASE_URL", "postgresql://postgres@localhost");
 
-        Task task = new Task("run-tests", taskConfig);
+        Task task = Task.create("run-tests", taskConfig);
 
         // Job
         Job job = new Job("test").markPublic();
@@ -482,7 +459,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("rails-app-testing.json");
+        JsonElement expected = TestUtils.loadFromAssets("rails-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -514,7 +491,7 @@ class ExamplePipelinesTest {
                 .addCache("$HOME/.gradle/caches/")
                 .addCache("$HOME/.gradle/wrapper/");
 
-        Task task = new Task("run-tests", config);
+        Task task = Task.create("run-tests", config);
 
         // Job Config
         Job job = new Job("test")
@@ -526,7 +503,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("java.json");
+        JsonElement expected = TestUtils.loadFromAssets("java.json");
 
         assertEquals(expected, generated);
     }
@@ -554,7 +531,7 @@ class ExamplePipelinesTest {
         TaskConfig installConfig = TaskConfig.create(Platform.LINUX, installCommand)
                 .addInput(Input.create(repo.createGetDefinition()))
                 .addOutput(workspace);
-        Task install = new Task("install", installConfig);
+        Task install = Task.create("install", installConfig);
         install.setImage(image.createGetDefinition());
 
         Command testCommand = Command.createCommand("npm")
@@ -563,7 +540,7 @@ class ExamplePipelinesTest {
                 .setWorkingDirectory("repo");
         TaskConfig testConfig = TaskConfig.create(Platform.LINUX, testCommand)
                 .addInput(Input.create(workspace).setPath("repo"));
-        Task test = new Task("test", testConfig);
+        Task test = Task.create("test", testConfig);
         test.setImage(image.createGetDefinition());
 
         // Job Config
@@ -578,7 +555,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("nodejs-app-testing.json");
+        JsonElement expected = TestUtils.loadFromAssets("nodejs-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -609,7 +586,7 @@ class ExamplePipelinesTest {
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
                 .addInput(Input.create(repo.createGetDefinition()));
-        Task task = new Task("run-tests", config);
+        Task task = Task.create("run-tests", config);
 
         // Job Config
         Job job = new Job("test").markPublic()
@@ -620,7 +597,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("php-larvel-app-testing.json");
+        JsonElement expected = TestUtils.loadFromAssets("php-larvel-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -643,11 +620,11 @@ class ExamplePipelinesTest {
                 .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
                 .addParam("UNPACK_ROOTFS", "true");
 
-        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+        Task build = Task.create("build-task-image", buildConfig).markPrivileged();
 
         TaskConfig useConfig = TaskConfig.create(Platform.LINUX, Command.createCommand("cat").addArg("/stranger"));
 
-        Task use = new Task("use-built-image-in-task", useConfig).setImage(buildImageOutput);
+        Task use = Task.create("use-built-image-in-task", useConfig).setImage(buildImageOutput);
 
         job.addStep(build).addStep(use);
 
@@ -657,7 +634,7 @@ class ExamplePipelinesTest {
         JsonElement generated = JsonParser.parseString(pipeline.render());
 
         // Assert
-        JsonElement expected = loadFromAssets("build-and-use-image.json");
+        JsonElement expected = TestUtils.loadFromAssets("build-and-use-image.json");
 
         assertEquals(expected, generated);
     }
@@ -685,7 +662,7 @@ class ExamplePipelinesTest {
                 .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
                 .addParam("UNPACK_ROOTFS", "true");
 
-        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+        Task build = Task.create("build-task-image", buildConfig).markPrivileged();
 
         job.addStep(build)
                 .addStep(image.createPutDefinition().setParams(RegistryPutConfig.create(output, RegistryFormat.OCI)));
@@ -696,7 +673,7 @@ class ExamplePipelinesTest {
         JsonElement generated = JsonParser.parseString(pipeline.render());
 
         // Assert
-        JsonElement expected = loadFromAssets("build-and-push-simple-image.json");
+        JsonElement expected = TestUtils.loadFromAssets("build-and-push-simple-image.json");
 
         assertEquals(expected, generated);
     }
@@ -713,7 +690,7 @@ class ExamplePipelinesTest {
         Job job = new Job("job")
                 .markPublic()
                 .addStep(repo.createGetDefinition())
-                .addStep(new Task("simple-task", repo.createGetDefinition(), "tasks/hello-world.yml"));
+                .addStep(Task.create("simple-task", repo.createGetDefinition(), "tasks/hello-world.yml"));
 
         pipeline.addJob(job);
 
@@ -721,7 +698,7 @@ class ExamplePipelinesTest {
         JsonElement generated = JsonParser.parseString(pipeline.render());
 
         // Assert
-        JsonElement expected = loadFromAssets("separate-task-config.json");
+        JsonElement expected = TestUtils.loadFromAssets("separate-task-config.json");
 
         assertEquals(expected, generated);
     }

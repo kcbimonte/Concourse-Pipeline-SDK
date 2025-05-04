@@ -1,0 +1,91 @@
+{
+  "resources": [
+    {
+      "name": "ci",
+      "type": "git",
+      "source": {
+        "uri": "https://github.com/concourse/examples.git"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "name": "job",
+      "plan": [
+        {
+          "get": "ci"
+        },
+        {
+          "across": [
+            {
+              "var": "pipeline",
+              "values": [
+                "hello-world",
+                "time-triggered"
+              ]
+            }
+          ],
+          "do": [
+            {
+              "task": "running-((.:pipeline))",
+              "input_mapping": {
+                "((.:pipeline))": "ci"
+              },
+              "output_mapping": {
+                "((.:pipeline))": "newci"
+              },
+              "config": {
+                "platform": "linux",
+                "image_resource": {
+                  "type": "mock",
+                  "source": {
+                    "mirror_self": true
+                  }
+                },
+                "inputs": [
+                  {
+                    "name": "((.:pipeline))"
+                  }
+                ],
+                "outputs": [
+                  {
+                    "name": "((.:pipeline))"
+                  }
+                ],
+                "run": {
+                  "path": "cat",
+                  "args": [
+                    "((.:pipeline))/pipelines/((.:pipeline)).yml"
+                  ]
+                }
+              }
+            },
+            {
+              "task": "newci-((.:pipeline))",
+              "config": {
+                "platform": "linux",
+                "image_resource": {
+                  "type": "mock",
+                  "source": {
+                    "mirror_self": true
+                  }
+                },
+                "inputs": [
+                  {
+                    "name": "newci"
+                  }
+                ],
+                "run": {
+                  "path": "cat",
+                  "args": [
+                    "newci/pipelines/((.:pipeline)).yml"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
