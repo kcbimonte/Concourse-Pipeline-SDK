@@ -621,4 +621,41 @@ class ExamplePipelinesTest {
 
         assertEquals(expected, generated);
     }
+
+    @Test
+    void buildAndUseImage() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        Job job = new Job("build-and-use-image").addStep(repo.createGetDefinition());
+
+        Output buildImageOutput = Output.create("image");
+        TaskConfig buildConfig = TaskConfig.create(Platform.LINUX, AnonymousResource.create("concourse/oci-build-task"), Command.createCommand("build"))
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addOutput(buildImageOutput)
+                .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
+                .addParam("UNPACK_ROOTFS", "true");
+
+        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+
+        TaskConfig useConfig = TaskConfig.create(Platform.LINUX, Command.createCommand("cat").addArg("/stranger"));
+
+        Task use = new Task("use-built-image-in-task", useConfig).setImage(buildImageOutput);
+
+        job.addStep(build).addStep(use);
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("build-and-use-image.json");
+
+        assertEquals(expected, generated);
+    }
 }

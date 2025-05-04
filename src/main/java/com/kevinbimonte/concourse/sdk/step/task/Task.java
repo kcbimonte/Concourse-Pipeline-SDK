@@ -67,6 +67,12 @@ public class Task extends AbstractStep<Task> implements IStep {
         return this;
     }
 
+    public Task setImage(Output output) {
+        this.image = output.getName();
+
+        return this;
+    }
+
     public Task markPrivileged() {
         this.privileged = true;
 
