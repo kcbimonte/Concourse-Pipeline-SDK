@@ -8,7 +8,7 @@ import java.util.List;
 public class Command {
     private final String path;
 
-    private final List<String> args = new ArrayList<>();
+    private List<String> args;
 
     private String dir;
 
@@ -19,6 +19,10 @@ public class Command {
     }
 
     public Command addArg(String arg) {
+        if (this.args == null) {
+            this.args = new ArrayList<>();
+        }
+
         this.args.add(arg);
 
         return this;

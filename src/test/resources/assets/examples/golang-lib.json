@@ -32,6 +32,9 @@
     {
       "name": "golang-1.20",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "golang-1.20.x-image",
@@ -56,6 +59,9 @@
     {
       "name": "golang-1.21",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "golang-1.21.x-image",
@@ -80,6 +86,9 @@
     {
       "name": "golang-1.22",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "golang-1.22.x-image",

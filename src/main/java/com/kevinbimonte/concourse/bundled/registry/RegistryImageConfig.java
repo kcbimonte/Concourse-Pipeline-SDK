@@ -11,10 +11,10 @@ public class RegistryImageConfig implements IResourceConfig {
     private final String tag;
 
     @SerializedName("username")
-    private String usernameVariable;
+    private String username;
 
     @SerializedName("password")
-    private String passwordVariable;
+    private String password;
 
     protected RegistryImageConfig(String repository, String tag) {
         this.repository = repository;
@@ -29,9 +29,9 @@ public class RegistryImageConfig implements IResourceConfig {
         return new RegistryImageConfig(repository, tag);
     }
 
-    public RegistryImageConfig setCredentials(String usernameVariable, String passwordVariable) {
-        this.usernameVariable = usernameVariable;
-        this.passwordVariable = passwordVariable;
+    public RegistryImageConfig setCredentials(String username, String password) {
+        this.username = username;
+        this.password = password;
 
         return this;
     }
