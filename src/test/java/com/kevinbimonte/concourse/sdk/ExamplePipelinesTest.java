@@ -490,23 +490,18 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/apache/kafka.git");
-        Resource repo = GitResource.createResource("apache-kafka-git", repoConfig).setIcon("github");
+        Resource repo = GitResource.createResource("apache-kafka", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
-        AnonymousResource<RegistryImageConfig> gradle = AnonymousResource.create("gradle", "jdk8-slim");
+        AnonymousResource<RegistryImageConfig> gradle = AnonymousResource.create("gradle", "jdk17");
         String javaTesting = """
-                java -Xmx32m -version
-                javac -J-Xmx32m -version
+                cd apache-kafka
                 
-                cd apache-kafka-git
-                
-                gradle wrapper
-                ./gradlew rat
-                ./gradlew systemTestLibs
+                ./gradlew clients:test --tests RequestResponseTest
                 """;
         Command testingCommand = Command.createCommand("/bin/sh")
-                .addArg("-c")
+                .addArg("-ce")
                 .addArg(javaTesting)
                 .setUser("root");
 
@@ -522,7 +517,8 @@ class ExamplePipelinesTest {
         Job job = new Job("test")
                 .markPublic()
                 .addStep(repo.createGetDefinition().enableTrigger())
-                .addStep(task);
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
@@ -541,23 +537,29 @@ class ExamplePipelinesTest {
         Resource repo = GitResource.createResource("repo", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
-        RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "18");
-        Resource image = RegistryImageResource.createResource("node-image", registryConfig);
+        RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "22-slim");
+        Resource image = RegistryImageResource.createResource("node-image", registryConfig).setIcon("docker");
         pipeline.addResource(image);
 
         // Task Config
-        Output dependencies = Output.create("dependencies").setPath("repo/node_modules");
-        Command installCommand = Command.createCommand("npm").addArg("install").setWorkingDirectory("repo");
+        Output workspace = Output.create("workspace").setPath("repo");
+        Command installCommand = Command.createCommand("npm")
+                .addArg("ci")
+                .addArg("--no-audit")
+                .addArg("--no-fund")
+                .setWorkingDirectory("repo");
         TaskConfig installConfig = TaskConfig.create(Platform.LINUX, installCommand)
                 .addInput(Input.create(repo.createGetDefinition()))
-                .addOutput(dependencies);
+                .addOutput(workspace);
         Task install = new Task("install", installConfig);
         install.setImage(image.createGetDefinition());
 
-        Command testCommand = Command.createCommand("npm").addArg("run").addArg("test").setWorkingDirectory("repo");
+        Command testCommand = Command.createCommand("npm")
+                .addArg("run")
+                .addArg("test")
+                .setWorkingDirectory("repo");
         TaskConfig testConfig = TaskConfig.create(Platform.LINUX, testCommand)
-                .addInput(Input.create(repo.createGetDefinition()))
-                .addInput(Input.create(dependencies).setPath("repo/node_modules"));
+                .addInput(Input.create(workspace).setPath("repo"));
         Task test = new Task("test", testConfig);
         test.setImage(image.createGetDefinition());
 
@@ -567,7 +569,8 @@ class ExamplePipelinesTest {
                 .addStep(image.createGetDefinition())
                 .addStep(repo.createGetDefinition().enableTrigger())
                 .addStep(install)
-                .addStep(test);
+                .addStep(test)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
@@ -582,17 +585,24 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/beyondcode/laravel-websockets.git");
-        Resource repo = GitResource.createResource("larvel-websockets-git", repoConfig).setIcon("github");
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/laravel/laravel.git");
+        Resource repo = GitResource.createResource("laravel-git", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
         String phpTest = """
-                cd larvel-websockets-git
+                cd laravel-git
                 
                 composer install
-                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover""";
-        Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
+                
+                cp .env.example .env
+                php artisan key:generate
+                
+                vendor/bin/phpunit
+                """;
+        Command command = Command.createCommand("/bin/sh")
+                .addArg("-ce")
+                .addArg(phpTest);
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
                 .addInput(Input.create(repo.createGetDefinition()));
@@ -601,7 +611,8 @@ class ExamplePipelinesTest {
         // Job Config
         Job job = new Job("test").markPublic()
                 .addStep(repo.createGetDefinition().enableTrigger())
-                .addStep(task);
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
