@@ -144,6 +144,8 @@ class ExamplePipelinesTest {
 
         pipeline.addResource(repo);
 
+        BuildLogRetentionPolicy policy = BuildLogRetentionPolicy.create().setBuilds(50);
+
         // Set Self
         Job setSelf = new Job("set-self").markPublic();
 
@@ -151,6 +153,7 @@ class ExamplePipelinesTest {
 
         setSelf.addStep(initialGet);
         setSelf.addStep(SetPipeline.create("self", initialGet, "pipelines/set-pipelines.yml"));
+        setSelf.setBuildLogRetention(policy);
 
         Get blockedGet = repo.createGetDefinition().enableTrigger().addPassedRequirement(setSelf);
 
@@ -188,6 +191,7 @@ class ExamplePipelinesTest {
         setExamples.addStep(SetPipeline.create("nodejs", blockedGet, "pipelines/nodejs-app-testing.yml"));
         setExamples.addStep(SetPipeline.create("php", blockedGet, "pipelines/php-larvel-app-testing.yml"));
         setExamples.addStep(SetPipeline.create("java", blockedGet, "pipelines/java.yml"));
+        setExamples.setBuildLogRetention(policy);
 
         // Set Rendered Pipelines
         Job setRendered = new Job("set-rendered-pipelines").markPublic();
@@ -211,6 +215,7 @@ class ExamplePipelinesTest {
 
         setRendered.addStep(SetPipeline.create("hello-world-rendered", "pipeline/hello-world-rendered.yml"));
         setRendered.addStep(SetPipeline.create("multi-files-rendered", "pipeline/multi-files-rendered.yml"));
+        setRendered.setBuildLogRetention(policy);
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
@@ -265,7 +270,9 @@ class ExamplePipelinesTest {
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
-        job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(simpleTask);
+        job.addStep(every30Seconds.createGetDefinition().enableTrigger())
+                .addStep(simpleTask)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
@@ -290,7 +297,9 @@ class ExamplePipelinesTest {
         Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
         simpleTask.getConfig().addInput(Input.create(concourseDocs.createGetDefinition()));
 
-        job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(simpleTask);
+        job.addStep(concourseDocs.createGetDefinition().enableTrigger())
+                .addStep(simpleTask)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
@@ -400,16 +409,20 @@ class ExamplePipelinesTest {
                 """;
 
         TaskConfig config = TaskConfig.create(Platform.LINUX, Command.createCommand("/bin/sh").addArg("-c").addArg(goTest));
+        BuildLogRetentionPolicy policy = BuildLogRetentionPolicy.create().setBuilds(50);
 
         Job v120 = new Job("golang-1.20").markPublic()
                 .addStep(v120Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
         Job v121 = new Job("golang-1.21").markPublic()
                 .addStep(v121Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
         Job v122 = new Job("golang-1.22").markPublic()
                 .addStep(v122Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
@@ -459,7 +472,9 @@ class ExamplePipelinesTest {
         // Job
         Job job = new Job("test").markPublic();
 
-        job.addStep(repo.createGetDefinition().enableTrigger()).addStep(task);
+        job.addStep(repo.createGetDefinition().enableTrigger())
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
