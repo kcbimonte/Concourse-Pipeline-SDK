@@ -7,6 +7,8 @@ import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
+import com.kevinbimonte.concourse.bundled.registry.get.RegistryFormat;
+import com.kevinbimonte.concourse.bundled.registry.put.RegistryPutConfig;
 import com.kevinbimonte.concourse.bundled.time.TimeConfig;
 import com.kevinbimonte.concourse.bundled.time.TimeResource;
 import com.kevinbimonte.concourse.sdk.job.BuildLogRetentionPolicy;
@@ -17,6 +19,7 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.step.SetPipeline;
 import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.step.task.config.*;
+import com.kevinbimonte.concourse.sdk.variable.Variable;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -655,6 +658,45 @@ class ExamplePipelinesTest {
 
         // Assert
         JsonElement expected = loadFromAssets("build-and-use-image.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void buildAndPushSimpleImage() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        RegistryImageConfig imageConfig = RegistryImageConfig.create(String.format("%s/simple-image", Variable.referenceVariable("image-repo-name")))
+                .setCredentials(Variable.referenceVariable("registry-username"), Variable.referenceVariable("registry-password"));
+        Resource image = RegistryImageResource.createResource("simple-image", imageConfig).setIcon("docker");
+        pipeline.addResource(image);
+
+        Job job = new Job("build-and-push").addStep(repo.createGetDefinition());
+
+        Output output = Output.create("image");
+        TaskConfig buildConfig = TaskConfig.create(Platform.LINUX, AnonymousResource.create("concourse/oci-build-task"), Command.createCommand("build"))
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addOutput(output)
+                .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
+                .addParam("UNPACK_ROOTFS", "true");
+
+        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+
+        job.addStep(build)
+                .addStep(image.createPutDefinition().setParams(RegistryPutConfig.create(output, RegistryFormat.OCI)));
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("build-and-push-simple-image.json");
 
         assertEquals(expected, generated);
     }
