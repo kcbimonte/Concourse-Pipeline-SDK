@@ -26,13 +26,14 @@ class JobTest {
                 Arguments.of("my_job", "new_my_job"),
                 Arguments.of("the-job", "new_the-job"),
                 Arguments.of("job_123", "new_job_123"),
-                Arguments.of("job.12", "new_job.12")
+                Arguments.of("job.12", "new_job.12"),
+                Arguments.of("job.12", "123_job")
         );
     }
 
     private static Stream<Arguments> invalidNamePairings() {
         return Stream.of(
-                Arguments.of("job", "123_job"),
+                Arguments.of("job", "123"),
                 Arguments.of("my_job", "((my_var))-job"),
                 Arguments.of("the-job", "MY_JOB")
         );
@@ -83,13 +84,13 @@ class JobTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_job", "((my_var))-job", "MY_JOB"})
+    @ValueSource(strings = {"123", "((my_var))-job", "MY_JOB"})
     void invalidJobName(String jobName) {
         assertThrows(RuntimeException.class, () -> new Job(jobName));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12"})
+    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12", "123_group"})
     void validSerialGroup(String groupName) {
         // Arrange
         Job job = new Job("job");
@@ -105,7 +106,7 @@ class JobTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_group", "((my_var))-group", "MY_GROUP"})
+    @ValueSource(strings = {"123", "((my_var))-group", "MY_GROUP"})
     void invalidSerialGroup(String groupName) {
         Job job = new Job("job");
 

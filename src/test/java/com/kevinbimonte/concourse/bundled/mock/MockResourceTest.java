@@ -67,7 +67,7 @@ class MockResourceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_get", "((my_var))-get", "MY_GET"})
+    @ValueSource(strings = {"123", "((my_var))-get", "MY_GET"})
     void setInvalidMockGetIdentifier(String identifier) {
         // Arrange
         MockConfig config = MockConfig.create();
@@ -109,7 +109,7 @@ class MockResourceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_get", "((my_var))-get", "MY_GET"})
+    @ValueSource(strings = {"123", "((my_var))-get", "MY_GET"})
     void setInvalidMockPutIdentifier(String identifier) {
         // Arrange
         MockConfig config = MockConfig.create();

@@ -9,14 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ValidatorTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12"})
+    @ValueSource(strings = {"group", "my_group", "the-group", "group_123", "group.12", "123_job"})
     void validIdentifier(String identifier) {
         // Assert
         assertDoesNotThrow(() -> Validator.validateIdentifier(identifier));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123_job", "((my_var))-job", "MY_JOB"})
+    @ValueSource(strings = {"123", "((my_var))-job", "MY_JOB"})
     void invalidIdentifier(String identifier) {
         assertThrows(IllegalArgumentException.class, () -> Validator.validateIdentifier(identifier));
     }
