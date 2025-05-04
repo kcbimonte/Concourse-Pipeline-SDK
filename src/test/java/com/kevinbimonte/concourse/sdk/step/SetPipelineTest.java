@@ -40,4 +40,28 @@ class SetPipelineTest {
 
         assertEquals(expected, generated);
     }
+
+    @Test
+    void failFastAcrossSteps() {
+        // Arrange
+        AcrossVariable variable = AcrossVariable.create("pipeline").addValue("hello-world").addValue("time-triggered");
+
+        String pipelineFile = String.format("pipelines/%s.yml", variable.getVariable());
+        SetPipeline setPipeline = SetPipeline.createAcrossPipeline(variable.getVariable(), pipelineFile, variable);
+
+        // Act
+        setPipeline.markAcrossFailFast();
+
+        // Assert
+        assertTrue(setPipeline.getFailFast());
+    }
+
+    @Test
+    void failFastAcrossStepsFailsWithNoVar() {
+        // Arrange
+        SetPipeline setPipeline = SetPipeline.create("pipeline", "pipelineFile.yml");
+
+        // Act
+        assertThrows(UnsupportedOperationException.class, setPipeline::markAcrossFailFast);
+    }
 }
