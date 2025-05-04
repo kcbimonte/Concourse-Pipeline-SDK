@@ -1,11 +1,11 @@
 {
   "jobs": [
     {
-      "name": "create-and-consume",
+      "name": "((first))-job",
       "public": true,
       "plan": [
         {
-          "task": "make-a-file",
+          "task": "simple-task",
           "config": {
             "platform": "linux",
             "image_resource": {
@@ -15,21 +15,21 @@
               }
             },
             "run": {
-              "path": "sh",
+              "path": "echo",
               "args": [
-                "-exc",
-                "ls -la; echo \"Created a file on $(date)\" > ./files/created_file"
+                "Hello, ((hello))!"
               ]
-            },
-            "outputs": [
-              {
-                "name": "files"
-              }
-            ]
+            }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "level-((number))-job",
+      "public": true,
+      "plan": [
         {
-          "task": "consume-the-file",
+          "task": "simple-task",
           "config": {
             "platform": "linux",
             "image_resource": {
@@ -38,15 +38,10 @@
                 "repository": "busybox"
               }
             },
-            "inputs": [
-              {
-                "name": "files"
-              }
-            ],
             "run": {
-              "path": "cat",
+              "path": "echo",
               "args": [
-                "./files/created_file"
+                "Hello, ((hello))!"
               ]
             }
           }

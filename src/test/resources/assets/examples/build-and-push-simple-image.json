@@ -1,0 +1,69 @@
+{
+  "resources": [
+    {
+      "name": "concourse-examples",
+      "type": "git",
+      "icon": "github",
+      "source": {
+        "uri": "https://github.com/concourse/examples.git",
+        "branch": "master"
+      }
+    },
+    {
+      "name": "simple-image",
+      "type": "registry-image",
+      "icon": "docker",
+      "source": {
+        "repository": "((image-repo-name))/simple-image",
+        "username": "((registry-username))",
+        "password": "((registry-password))"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "name": "build-and-push",
+      "plan": [
+        {
+          "get": "concourse-examples"
+        },
+        {
+          "task": "build-task-image",
+          "privileged": true,
+          "config": {
+            "platform": "linux",
+            "image_resource": {
+              "type": "registry-image",
+              "source": {
+                "repository": "concourse/oci-build-task"
+              }
+            },
+            "inputs": [
+              {
+                "name": "concourse-examples"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "image"
+              }
+            ],
+            "params": {
+              "CONTEXT": "concourse-examples/Dockerfiles/simple",
+              "UNPACK_ROOTFS": "true"
+            },
+            "run": {
+              "path": "build"
+            }
+          }
+        },
+        {
+          "put": "simple-image",
+          "params": {
+            "image": "image/image.tar"
+          }
+        }
+      ]
+    }
+  ]
+}

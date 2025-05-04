@@ -13,6 +13,9 @@
     {
       "name": "job",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "concourse-docs-git",

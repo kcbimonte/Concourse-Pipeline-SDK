@@ -1,11 +1,11 @@
 {
   "resources": [
     {
-      "name": "larvel-websockets-git",
+      "name": "laravel-git",
       "type": "git",
       "icon": "github",
       "source": {
-        "uri": "https://github.com/beyondcode/laravel-websockets.git"
+        "uri": "https://github.com/laravel/laravel.git"
       }
     }
   ],
@@ -13,9 +13,12 @@
     {
       "name": "test",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
-          "get": "larvel-websockets-git",
+          "get": "laravel-git",
           "trigger": true
         },
         {
@@ -30,14 +33,14 @@
             },
             "inputs": [
               {
-                "name": "larvel-websockets-git"
+                "name": "laravel-git"
               }
             ],
             "run": {
               "path": "/bin/sh",
               "args": [
-                "-c",
-                "cd larvel-websockets-git\n\ncomposer install\nvendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover"
+                "-ce",
+                "cd laravel-git\n\ncomposer install\n\ncp .env.example .env\nphp artisan key:generate\n\nvendor/bin/phpunit\n"
               ]
             }
           }

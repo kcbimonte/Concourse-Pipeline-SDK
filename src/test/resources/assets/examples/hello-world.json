@@ -1,9 +1,8 @@
 {
   "jobs": [
     {
-      "name": "serial-job",
+      "name": "job",
       "public": true,
-      "serial": true,
       "plan": [
         {
           "task": "simple-task",
@@ -18,7 +17,7 @@
             "run": {
               "path": "echo",
               "args": [
-                "Hello, world!"
+                "Hello world!"
               ]
             }
           }

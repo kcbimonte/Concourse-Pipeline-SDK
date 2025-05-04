@@ -1,23 +1,10 @@
 {
-  "resources": [
-    {
-      "name": "every-30s",
-      "type": "time",
-      "icon": "clock-outline",
-      "source": {
-        "interval": "30s"
-      }
-    }
-  ],
   "jobs": [
     {
-      "name": "job",
+      "name": "serial-job",
       "public": true,
+      "serial": true,
       "plan": [
-        {
-          "get": "every-30s",
-          "trigger": true
-        },
         {
           "task": "simple-task",
           "config": {

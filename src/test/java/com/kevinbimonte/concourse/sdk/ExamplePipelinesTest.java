@@ -7,6 +7,8 @@ import com.kevinbimonte.concourse.bundled.git.GitResource;
 import com.kevinbimonte.concourse.bundled.git.GitResourceConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
 import com.kevinbimonte.concourse.bundled.registry.RegistryImageResource;
+import com.kevinbimonte.concourse.bundled.registry.get.RegistryFormat;
+import com.kevinbimonte.concourse.bundled.registry.put.RegistryPutConfig;
 import com.kevinbimonte.concourse.bundled.time.TimeConfig;
 import com.kevinbimonte.concourse.bundled.time.TimeResource;
 import com.kevinbimonte.concourse.sdk.job.BuildLogRetentionPolicy;
@@ -17,6 +19,7 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.step.SetPipeline;
 import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.step.task.config.*;
+import com.kevinbimonte.concourse.sdk.variable.Variable;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -71,7 +74,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hello_world.json");
+        JsonElement expected = loadFromAssets("hello-world.json");
 
         assertEquals(expected, generated);
     }
@@ -92,7 +95,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("serial_job.json");
+        JsonElement expected = loadFromAssets("serial-job.json");
 
         assertEquals(expected, generated);
     }
@@ -129,7 +132,7 @@ class ExamplePipelinesTest {
 //        pipeline.addJob(job);
 //
 //        JsonElement generated = JsonParser.parseString(pipeline.render());
-//        JsonElement expected = loadFromAssets("pipeline_vars.json");
+//        JsonElement expected = loadFromAssets("pipeline-vars.json");
 //
 //        assertEquals(expected, generated);
 //    }
@@ -144,6 +147,8 @@ class ExamplePipelinesTest {
 
         pipeline.addResource(repo);
 
+        BuildLogRetentionPolicy policy = BuildLogRetentionPolicy.create().setBuilds(50);
+
         // Set Self
         Job setSelf = new Job("set-self").markPublic();
 
@@ -151,6 +156,7 @@ class ExamplePipelinesTest {
 
         setSelf.addStep(initialGet);
         setSelf.addStep(SetPipeline.create("self", initialGet, "pipelines/set-pipelines.yml"));
+        setSelf.setBuildLogRetention(policy);
 
         Get blockedGet = repo.createGetDefinition().enableTrigger().addPassedRequirement(setSelf);
 
@@ -188,6 +194,7 @@ class ExamplePipelinesTest {
         setExamples.addStep(SetPipeline.create("nodejs", blockedGet, "pipelines/nodejs-app-testing.yml"));
         setExamples.addStep(SetPipeline.create("php", blockedGet, "pipelines/php-larvel-app-testing.yml"));
         setExamples.addStep(SetPipeline.create("java", blockedGet, "pipelines/java.yml"));
+        setExamples.setBuildLogRetention(policy);
 
         // Set Rendered Pipelines
         Job setRendered = new Job("set-rendered-pipelines").markPublic();
@@ -211,11 +218,12 @@ class ExamplePipelinesTest {
 
         setRendered.addStep(SetPipeline.create("hello-world-rendered", "pipeline/hello-world-rendered.yml"));
         setRendered.addStep(SetPipeline.create("multi-files-rendered", "pipeline/multi-files-rendered.yml"));
+        setRendered.setBuildLogRetention(policy);
 
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("set_pipeline.json");
+        JsonElement expected = loadFromAssets("set-pipelines.json");
 
         assertEquals(expected, generated);
     }
@@ -246,7 +254,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(createAndConsume);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("task_inputs_outputs.json");
+        JsonElement expected = loadFromAssets("task-passing-artifact.json");
 
         assertEquals(expected, generated);
     }
@@ -265,12 +273,14 @@ class ExamplePipelinesTest {
 
         Task simpleTask = generateTask(busyBox, "simple-task", "echo", "Hello, world!");
 
-        job.addStep(every30Seconds.createGetDefinition().enableTrigger()).addStep(simpleTask);
+        job.addStep(every30Seconds.createGetDefinition().enableTrigger())
+                .addStep(simpleTask)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("time_triggered.json");
+        JsonElement expected = loadFromAssets("time-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -290,12 +300,14 @@ class ExamplePipelinesTest {
         Task simpleTask = generateTask(busyBox, "list-files", "ls", "-la", "./concourse-docs-git");
         simpleTask.getConfig().addInput(Input.create(concourseDocs.createGetDefinition()));
 
-        job.addStep(concourseDocs.createGetDefinition().enableTrigger()).addStep(simpleTask);
+        job.addStep(concourseDocs.createGetDefinition().enableTrigger())
+                .addStep(simpleTask)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("git_triggered.json");
+        JsonElement expected = loadFromAssets("git-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -332,7 +344,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("manually_triggered.json");
+        JsonElement expected = loadFromAssets("manually-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -372,7 +384,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hooks.json");
+        JsonElement expected = loadFromAssets("job-and-task-hooks.json");
 
         assertEquals(expected, generated);
     }
@@ -400,21 +412,25 @@ class ExamplePipelinesTest {
                 """;
 
         TaskConfig config = TaskConfig.create(Platform.LINUX, Command.createCommand("/bin/sh").addArg("-c").addArg(goTest));
+        BuildLogRetentionPolicy policy = BuildLogRetentionPolicy.create().setBuilds(50);
 
         Job v120 = new Job("golang-1.20").markPublic()
                 .addStep(v120Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v120Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
         Job v121 = new Job("golang-1.21").markPublic()
                 .addStep(v121Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v121Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
         Job v122 = new Job("golang-1.22").markPublic()
                 .addStep(v122Image.createGetDefinition().enableTrigger())
-                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()));
+                .addStep(new Task("run-tests", config).setImage(v122Image.createGetDefinition()))
+                .setBuildLogRetention(policy);
 
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("golang_library.json");
+        JsonElement expected = loadFromAssets("golang-lib.json");
 
         assertEquals(expected, generated);
     }
@@ -459,12 +475,14 @@ class ExamplePipelinesTest {
         // Job
         Job job = new Job("test").markPublic();
 
-        job.addStep(repo.createGetDefinition().enableTrigger()).addStep(task);
+        job.addStep(repo.createGetDefinition().enableTrigger())
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("rails_application.json");
+        JsonElement expected = loadFromAssets("rails-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -475,23 +493,18 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/apache/kafka.git");
-        Resource repo = GitResource.createResource("apache-kafka-git", repoConfig).setIcon("github");
+        Resource repo = GitResource.createResource("apache-kafka", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
-        AnonymousResource<RegistryImageConfig> gradle = AnonymousResource.create("gradle", "jdk8-slim");
+        AnonymousResource<RegistryImageConfig> gradle = AnonymousResource.create("gradle", "jdk17");
         String javaTesting = """
-                java -Xmx32m -version
-                javac -J-Xmx32m -version
+                cd apache-kafka
                 
-                cd apache-kafka-git
-                
-                gradle wrapper
-                ./gradlew rat
-                ./gradlew systemTestLibs
+                ./gradlew clients:test --tests RequestResponseTest
                 """;
         Command testingCommand = Command.createCommand("/bin/sh")
-                .addArg("-c")
+                .addArg("-ce")
                 .addArg(javaTesting)
                 .setUser("root");
 
@@ -507,12 +520,13 @@ class ExamplePipelinesTest {
         Job job = new Job("test")
                 .markPublic()
                 .addStep(repo.createGetDefinition().enableTrigger())
-                .addStep(task);
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("java_application.json");
+        JsonElement expected = loadFromAssets("java.json");
 
         assertEquals(expected, generated);
     }
@@ -526,23 +540,29 @@ class ExamplePipelinesTest {
         Resource repo = GitResource.createResource("repo", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
-        RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "18");
-        Resource image = RegistryImageResource.createResource("node-image", registryConfig);
+        RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "22-slim");
+        Resource image = RegistryImageResource.createResource("node-image", registryConfig).setIcon("docker");
         pipeline.addResource(image);
 
         // Task Config
-        Output dependencies = Output.create("dependencies").setPath("repo/node_modules");
-        Command installCommand = Command.createCommand("npm").addArg("install").setWorkingDirectory("repo");
+        Output workspace = Output.create("workspace").setPath("repo");
+        Command installCommand = Command.createCommand("npm")
+                .addArg("ci")
+                .addArg("--no-audit")
+                .addArg("--no-fund")
+                .setWorkingDirectory("repo");
         TaskConfig installConfig = TaskConfig.create(Platform.LINUX, installCommand)
                 .addInput(Input.create(repo.createGetDefinition()))
-                .addOutput(dependencies);
+                .addOutput(workspace);
         Task install = new Task("install", installConfig);
         install.setImage(image.createGetDefinition());
 
-        Command testCommand = Command.createCommand("npm").addArg("run").addArg("test").setWorkingDirectory("repo");
+        Command testCommand = Command.createCommand("npm")
+                .addArg("run")
+                .addArg("test")
+                .setWorkingDirectory("repo");
         TaskConfig testConfig = TaskConfig.create(Platform.LINUX, testCommand)
-                .addInput(Input.create(repo.createGetDefinition()))
-                .addInput(Input.create(dependencies).setPath("repo/node_modules"));
+                .addInput(Input.create(workspace).setPath("repo"));
         Task test = new Task("test", testConfig);
         test.setImage(image.createGetDefinition());
 
@@ -552,12 +572,13 @@ class ExamplePipelinesTest {
                 .addStep(image.createGetDefinition())
                 .addStep(repo.createGetDefinition().enableTrigger())
                 .addStep(install)
-                .addStep(test);
+                .addStep(test)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("nodejs_application.json");
+        JsonElement expected = loadFromAssets("nodejs-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -567,17 +588,24 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/beyondcode/laravel-websockets.git");
-        Resource repo = GitResource.createResource("larvel-websockets-git", repoConfig).setIcon("github");
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/laravel/laravel.git");
+        Resource repo = GitResource.createResource("laravel-git", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
         String phpTest = """
-                cd larvel-websockets-git
+                cd laravel-git
                 
                 composer install
-                vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover""";
-        Command command = Command.createCommand("/bin/sh").addArg("-c").addArg(phpTest);
+                
+                cp .env.example .env
+                php artisan key:generate
+                
+                vendor/bin/phpunit
+                """;
+        Command command = Command.createCommand("/bin/sh")
+                .addArg("-ce")
+                .addArg(phpTest);
         AnonymousResource<RegistryImageConfig> resource = AnonymousResource.create("composer");
         TaskConfig config = TaskConfig.create(Platform.LINUX, resource, command)
                 .addInput(Input.create(repo.createGetDefinition()));
@@ -586,12 +614,114 @@ class ExamplePipelinesTest {
         // Job Config
         Job job = new Job("test").markPublic()
                 .addStep(repo.createGetDefinition().enableTrigger())
-                .addStep(task);
+                .addStep(task)
+                .setBuildLogRetention(BuildLogRetentionPolicy.create().setBuilds(50));
 
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("php_application.json");
+        JsonElement expected = loadFromAssets("php-larvel-app-testing.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void buildAndUseImage() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        Job job = new Job("build-and-use-image").addStep(repo.createGetDefinition());
+
+        Output buildImageOutput = Output.create("image");
+        TaskConfig buildConfig = TaskConfig.create(Platform.LINUX, AnonymousResource.create("concourse/oci-build-task"), Command.createCommand("build"))
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addOutput(buildImageOutput)
+                .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
+                .addParam("UNPACK_ROOTFS", "true");
+
+        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+
+        TaskConfig useConfig = TaskConfig.create(Platform.LINUX, Command.createCommand("cat").addArg("/stranger"));
+
+        Task use = new Task("use-built-image-in-task", useConfig).setImage(buildImageOutput);
+
+        job.addStep(build).addStep(use);
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("build-and-use-image.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void buildAndPushSimpleImage() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        RegistryImageConfig imageConfig = RegistryImageConfig.create(String.format("%s/simple-image", Variable.referenceVariable("image-repo-name")))
+                .setCredentials(Variable.referenceVariable("registry-username"), Variable.referenceVariable("registry-password"));
+        Resource image = RegistryImageResource.createResource("simple-image", imageConfig).setIcon("docker");
+        pipeline.addResource(image);
+
+        Job job = new Job("build-and-push").addStep(repo.createGetDefinition());
+
+        Output output = Output.create("image");
+        TaskConfig buildConfig = TaskConfig.create(Platform.LINUX, AnonymousResource.create("concourse/oci-build-task"), Command.createCommand("build"))
+                .addInput(Input.create(repo.createGetDefinition()))
+                .addOutput(output)
+                .addParam("CONTEXT", "concourse-examples/Dockerfiles/simple")
+                .addParam("UNPACK_ROOTFS", "true");
+
+        Task build = new Task("build-task-image", buildConfig).markPrivileged();
+
+        job.addStep(build)
+                .addStep(image.createPutDefinition().setParams(RegistryPutConfig.create(output, RegistryFormat.OCI)));
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("build-and-push-simple-image.json");
+
+        assertEquals(expected, generated);
+    }
+
+    @Test
+    void separateTaskConfig() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        Job job = new Job("job")
+                .markPublic()
+                .addStep(repo.createGetDefinition())
+                .addStep(new Task("simple-task", repo.createGetDefinition(), "tasks/hello-world.yml"));
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("separate-task-config.json");
 
         assertEquals(expected, generated);
     }
