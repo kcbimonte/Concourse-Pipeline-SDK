@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class Validator {
 
     public static void validateIdentifier(String identifier) throws RuntimeException {
-        Pattern pattern = Pattern.compile("^[\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}][\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d\\-_.]*");
+        Pattern pattern = Pattern.compile("^[\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d][\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d\\-_.]*");
         Matcher matcher = pattern.matcher(identifier);
 
         if (!matcher.matches()) {
