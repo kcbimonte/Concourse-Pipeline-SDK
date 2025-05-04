@@ -287,7 +287,7 @@ class TaskTest {
 
         // Assert
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = TestUtils.loadFromAssets("across/task_across.json");
+        JsonElement expected = TestUtils.loadFromAssets("across/task-across.json");
 
         assertEquals(expected, generated);
     }

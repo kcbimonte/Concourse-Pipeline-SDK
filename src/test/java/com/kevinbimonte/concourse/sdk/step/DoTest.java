@@ -76,7 +76,7 @@ class DoTest {
         assertEquals(1, pipeline.getJobs().size());
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = TestUtils.loadFromAssets("across/do_across.json");
+        JsonElement expected = TestUtils.loadFromAssets("across/do-across.json");
 
         assertEquals(expected, generated);
     }
@@ -125,7 +125,7 @@ class DoTest {
 
         // Assert
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = TestUtils.loadFromAssets("across/input_output_across.json");
+        JsonElement expected = TestUtils.loadFromAssets("across/input-output-across.json");
 
         assertEquals(expected, generated);
     }

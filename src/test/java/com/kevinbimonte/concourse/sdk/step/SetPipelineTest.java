@@ -36,7 +36,7 @@ class SetPipelineTest {
 
         // Assert
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = TestUtils.loadFromAssets("across/set_pipeline_across.json");
+        JsonElement expected = TestUtils.loadFromAssets("across/set-pipeline-across.json");
 
         assertEquals(expected, generated);
     }
