@@ -14,6 +14,9 @@
     {
       "name": "set-self",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "concourse-examples",
@@ -28,6 +31,9 @@
     {
       "name": "set-example-pipelines",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "concourse-examples",
@@ -127,6 +133,9 @@
     {
       "name": "set-rendered-pipelines",
       "public": true,
+      "build_log_retention": {
+        "builds": 50
+      },
       "plan": [
         {
           "get": "concourse-examples",

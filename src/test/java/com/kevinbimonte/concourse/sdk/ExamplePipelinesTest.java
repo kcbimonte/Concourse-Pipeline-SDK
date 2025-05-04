@@ -71,7 +71,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hello_world.json");
+        JsonElement expected = loadFromAssets("hello-world.json");
 
         assertEquals(expected, generated);
     }
@@ -92,7 +92,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("serial_job.json");
+        JsonElement expected = loadFromAssets("serial-job.json");
 
         assertEquals(expected, generated);
     }
@@ -129,7 +129,7 @@ class ExamplePipelinesTest {
 //        pipeline.addJob(job);
 //
 //        JsonElement generated = JsonParser.parseString(pipeline.render());
-//        JsonElement expected = loadFromAssets("pipeline_vars.json");
+//        JsonElement expected = loadFromAssets("pipeline-vars.json");
 //
 //        assertEquals(expected, generated);
 //    }
@@ -215,7 +215,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(setSelf).addJob(setExamples).addJob(setRendered);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("set_pipeline.json");
+        JsonElement expected = loadFromAssets("set-pipelines.json");
 
         assertEquals(expected, generated);
     }
@@ -246,7 +246,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(createAndConsume);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("task_inputs_outputs.json");
+        JsonElement expected = loadFromAssets("task-passing-artifact.json");
 
         assertEquals(expected, generated);
     }
@@ -270,7 +270,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("time_triggered.json");
+        JsonElement expected = loadFromAssets("time-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -295,7 +295,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("git_triggered.json");
+        JsonElement expected = loadFromAssets("git-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -332,7 +332,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(triggeredFirst).addJob(notTriggered).addJob(triggeredSecond);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("manually_triggered.json");
+        JsonElement expected = loadFromAssets("manually-triggered.json");
 
         assertEquals(expected, generated);
     }
@@ -372,7 +372,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("hooks.json");
+        JsonElement expected = loadFromAssets("job-and-task-hooks.json");
 
         assertEquals(expected, generated);
     }
@@ -414,7 +414,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(v120).addJob(v121).addJob(v122);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("golang_library.json");
+        JsonElement expected = loadFromAssets("golang-lib.json");
 
         assertEquals(expected, generated);
     }
@@ -464,7 +464,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("rails_application.json");
+        JsonElement expected = loadFromAssets("rails-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -512,7 +512,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("java_application.json");
+        JsonElement expected = loadFromAssets("java.json");
 
         assertEquals(expected, generated);
     }
@@ -557,7 +557,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("nodejs_application.json");
+        JsonElement expected = loadFromAssets("nodejs-app-testing.json");
 
         assertEquals(expected, generated);
     }
@@ -591,7 +591,7 @@ class ExamplePipelinesTest {
         pipeline.addJob(job);
 
         JsonElement generated = JsonParser.parseString(pipeline.render());
-        JsonElement expected = loadFromAssets("php_application.json");
+        JsonElement expected = loadFromAssets("php-larvel-app-testing.json");
 
         assertEquals(expected, generated);
     }
