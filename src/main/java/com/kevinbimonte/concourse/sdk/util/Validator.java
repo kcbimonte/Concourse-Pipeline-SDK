@@ -11,10 +11,13 @@ import java.util.regex.Pattern;
 public class Validator {
 
     public static void validateIdentifier(String identifier) throws RuntimeException {
-        Pattern pattern = Pattern.compile("^[\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d][\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d\\-_.]*");
-        Matcher matcher = pattern.matcher(identifier);
+        Pattern validPattern = Pattern.compile("^[\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d][\\p{Ll}\\p{Lt}\\p{Lm}\\p{Lo}\\d\\-_.]*");
+        Matcher validMatcher = validPattern.matcher(identifier);
 
-        if (!matcher.matches()) {
+        Pattern justNumberPattern = Pattern.compile("^\\d+$");
+        Matcher justNumberMatcher = justNumberPattern.matcher(identifier);
+
+        if (!validMatcher.matches() || justNumberMatcher.matches()) {
             throw new IllegalArgumentException("Not valid identifier: " + identifier);
         }
     }
