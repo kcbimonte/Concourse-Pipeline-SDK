@@ -700,4 +700,29 @@ class ExamplePipelinesTest {
 
         assertEquals(expected, generated);
     }
+
+    @Test
+    void separateTaskConfig() {
+        // Arrange
+        Pipeline pipeline = new Pipeline();
+
+        GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples");
+        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        pipeline.addResource(repo);
+
+        Job job = new Job("job")
+                .markPublic()
+                .addStep(repo.createGetDefinition())
+                .addStep(new Task("simple-task", repo.createGetDefinition(), "tasks/hello-world.yml"));
+
+        pipeline.addJob(job);
+
+        // Act
+        JsonElement generated = JsonParser.parseString(pipeline.render());
+
+        // Assert
+        JsonElement expected = loadFromAssets("separate-task-config.json");
+
+        assertEquals(expected, generated);
+    }
 }
