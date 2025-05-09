@@ -2,6 +2,7 @@ package com.kevinbimonte.concourse.bundled.semver;
 
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.IResourceConfig;
+import com.kevinbimonte.concourse.sdk.util.Validator;
 
 public abstract class AbstractSemverDriverConfig<T> implements IResourceConfig {
 
@@ -14,8 +15,9 @@ public abstract class AbstractSemverDriverConfig<T> implements IResourceConfig {
         this.driver = driver;
     }
 
-    // TODO: Semver validation
     public T setInitialVersion(String initialVersion) {
+        Validator.validateSemver(initialVersion);
+
         this.initialVersion = initialVersion;
 
         return getSelf();
