@@ -1,0 +1,46 @@
+{
+  "resources": [
+    {
+      "name": "version",
+      "type": "semver",
+      "source": {
+        "driver": "git",
+        "uri": "git@github.com:concourse/concourse.git",
+        "branch": "version",
+        "file": "version",
+        "private_key": "((concourse-repo-private-key))"
+      }
+    },
+    {
+      "name": "trigger-resource",
+      "type": "mock"
+    }
+  ],
+  "jobs": [
+    {
+      "name": "some-job",
+      "plan": [
+        {
+          "get": "trigger-resource",
+          "trigger": true
+        },
+        {
+          "get": "version",
+          "param": {
+            "bump": "major"
+          }
+        },
+        {
+          "task": "a-thing-that-needs-a-version",
+          "file": "task.yml"
+        },
+        {
+          "put": "version",
+          "params": {
+            "file": "version/version"
+          }
+        }
+      ]
+    }
+  ]
+}
