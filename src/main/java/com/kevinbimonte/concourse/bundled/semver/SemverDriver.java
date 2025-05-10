@@ -4,7 +4,7 @@ import com.kevinbimonte.concourse.sdk.ISerializableEnum;
 import lombok.Getter;
 
 @Getter
-public enum SemVerDriver implements ISerializableEnum {
+public enum SemverDriver implements ISerializableEnum {
     GIT("git"),
     S3("s3"),
     SWIFT("swift"),
@@ -12,7 +12,7 @@ public enum SemVerDriver implements ISerializableEnum {
 
     private final String displayName;
 
-    SemVerDriver(String displayName) {
+    SemverDriver(String displayName) {
         this.displayName = displayName;
     }
 }

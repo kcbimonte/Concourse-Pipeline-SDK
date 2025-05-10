@@ -15,7 +15,7 @@ public class GCSDriverConfig extends AbstractSemverDriverConfig<GCSDriverConfig>
     private final String jsonKey;
 
     private GCSDriverConfig(String bucket, String key, String jsonKey) {
-        super(SemVerDriver.GCS);
+        super(SemverDriver.GCS);
 
         this.bucket = bucket;
         this.key = key;

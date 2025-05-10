@@ -9,9 +9,9 @@ public abstract class AbstractSemverDriverConfig<T> implements IResourceConfig {
     @SerializedName("initial_version")
     private String initialVersion;
 
-    private SemVerDriver driver;
+    private SemverDriver driver;
 
-    AbstractSemverDriverConfig(SemVerDriver driver) {
+    AbstractSemverDriverConfig(SemverDriver driver) {
         this.driver = driver;
     }
 

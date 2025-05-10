@@ -11,7 +11,7 @@ public class SwiftDriverConfig extends AbstractSemverDriverConfig<SwiftDriverCon
     private final OpenStack openstack;
 
     private SwiftDriverConfig(OpenStack openstack) {
-        super(SemVerDriver.SWIFT);
+        super(SemverDriver.SWIFT);
 
         this.openstack = openstack;
     }
