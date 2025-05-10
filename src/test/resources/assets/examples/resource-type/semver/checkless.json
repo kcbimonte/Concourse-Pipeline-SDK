@@ -33,7 +33,7 @@
         },
         {
           "task": "a-thing-that-needs-a-version",
-          "file": "task.yml"
+          "file": "trigger-resource/task.yml"
         },
         {
           "put": "version",
