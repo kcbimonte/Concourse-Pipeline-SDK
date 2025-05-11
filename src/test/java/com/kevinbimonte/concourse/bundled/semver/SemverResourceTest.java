@@ -1,30 +1,23 @@
 package com.kevinbimonte.concourse.bundled.semver;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.mock.MockConfig;
 import com.kevinbimonte.concourse.bundled.mock.MockResource;
+import com.kevinbimonte.concourse.bundled.semver.get.SemverGet;
 import com.kevinbimonte.concourse.bundled.semver.get.SemverGetConfig;
+import com.kevinbimonte.concourse.bundled.semver.put.SemverPut;
 import com.kevinbimonte.concourse.bundled.semver.put.SemverPutConfig;
 import com.kevinbimonte.concourse.sdk.Pipeline;
 import com.kevinbimonte.concourse.sdk.TestUtils;
 import com.kevinbimonte.concourse.sdk.job.Job;
 import com.kevinbimonte.concourse.sdk.step.task.Task;
 import com.kevinbimonte.concourse.sdk.variable.Variable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SemverResourceTest {
-    private Gson gson;
-
-    @BeforeEach
-    void setUp() {
-        this.gson = new GsonBuilder().create();
-    }
 
     @Test
     void createSemverResource() {
@@ -39,6 +32,68 @@ class SemverResourceTest {
         assertEquals("semver", resource.getName());
 
         assertInstanceOf(GitDriverConfig.class, resource.getConfig());
+    }
+
+    @Test
+    void createStandardGet() {
+        // Arrange
+        GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
+
+        SemverResource resource = SemverResource.createResource("semver", config);
+
+        // Act
+        SemverGet get = resource.createGetDefinition();
+
+        // Assert
+        assertNotNull(get);
+        assertEquals("semver", get.getIdentifier());
+    }
+
+    @Test
+    void changeGetModifier() {
+        // Arrange
+        GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
+
+        SemverResource resource = SemverResource.createResource("semver", config);
+
+        // Act
+        SemverGet get = resource.createGetDefinition("identifier");
+
+        // Assert
+        assertNotNull(get);
+        assertEquals("identifier", get.getIdentifier());
+        assertEquals("semver", get.getResource());
+    }
+
+    @Test
+    void createStandardPut() {
+        // Arrange
+        GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
+
+        SemverResource resource = SemverResource.createResource("semver", config);
+
+        // Act
+        SemverPut put = resource.createPutDefinition();
+
+        // Assert
+        assertNotNull(put);
+        assertEquals("semver", put.getIdentifier());
+    }
+
+    @Test
+    void changePutModifier() {
+        // Arrange
+        GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
+
+        SemverResource resource = SemverResource.createResource("semver", config);
+
+        // Act
+        SemverPut put = resource.createPutDefinition("identifier");
+
+        // Assert
+        assertNotNull(put);
+        assertEquals("identifier", put.getIdentifier());
+        assertEquals("semver", put.getResource());
     }
 
     @Test
