@@ -13,7 +13,8 @@
     },
     {
       "name": "trigger-resource",
-      "type": "mock"
+      "type": "mock",
+      "source": {}
     }
   ],
   "jobs": [

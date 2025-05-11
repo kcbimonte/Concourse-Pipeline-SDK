@@ -6,6 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kevinbimonte.concourse.bundled.mock.MockConfig;
 import com.kevinbimonte.concourse.bundled.mock.MockResource;
+import com.kevinbimonte.concourse.bundled.semver.get.SemverGetConfig;
+import com.kevinbimonte.concourse.bundled.semver.put.SemverPutConfig;
 import com.kevinbimonte.concourse.sdk.Pipeline;
 import com.kevinbimonte.concourse.sdk.TestUtils;
 import com.kevinbimonte.concourse.sdk.job.Job;
@@ -54,9 +56,15 @@ class SemverResourceTest {
 
         Job job = new Job("some-job")
                 .addStep(mockResource.createGetDefinition().enableTrigger())
-                .addStep(semverResource.createGetDefinition())
+                .addStep(
+                        semverResource.createGetDefinition()
+                                .setConfig(SemverGetConfig.create().setBumpType(SemverBump.MAJOR))
+                )
                 .addStep(Task.create("a-thing-that-needs-a-version", mockResource.createGetDefinition(), "task.yml"))
-                .addStep(semverResource.createPutDefinition());
+                .addStep(
+                        semverResource.createPutDefinition()
+                                .setParams(SemverPutConfig.createWithFile("version/version"))
+                );
 
         pipeline.addJob(job);
 
@@ -84,9 +92,15 @@ class SemverResourceTest {
 
         Job job = new Job("some-job")
                 .addStep(mockResource.createGetDefinition().enableTrigger())
-                .addStep(semverResource.createPutDefinition())
+                .addStep(
+                        semverResource.createPutDefinition()
+                                .setParams(SemverPutConfig.createWithGetLatest().setBump(SemverBump.MAJOR))
+                )
                 .addStep(Task.create("a-thing-that-needs-a-version", mockResource.createGetDefinition(), "task.yml"))
-                .addStep(semverResource.createPutDefinition());
+                .addStep(
+                        semverResource.createPutDefinition()
+                                .setParams(SemverPutConfig.createWithFile("version/version"))
+                );
 
         pipeline.addJob(job);
 
