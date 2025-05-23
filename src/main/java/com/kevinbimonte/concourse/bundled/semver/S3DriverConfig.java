@@ -14,6 +14,26 @@ public class S3DriverConfig extends AbstractSemverDriverConfig<S3DriverConfig> {
     @SerializedName("secret_access_key")
     private String secretAccessKey;
 
+    @SerializedName("assume_role_arn")
+    private String assumeRoleArn;
+
+    @SerializedName("session_token")
+    private String sessionToken;
+
+    @SerializedName("region_name")
+    private String region;
+
+    private String endpoint;
+
+    @SerializedName("disable_ssl")
+    private Boolean disableSSL;
+
+    @SerializedName("skip_ssl_verification")
+    private Boolean skipSSLVerification;
+
+    @SerializedName("server_side_encryption")
+    private String serverSideEncryption;
+
     private S3DriverConfig(String bucket, String key) {
         super(SemverDriver.S3);
 
