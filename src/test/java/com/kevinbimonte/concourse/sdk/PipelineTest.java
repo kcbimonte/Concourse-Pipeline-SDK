@@ -72,7 +72,7 @@ class PipelineTest {
     @Test
     void resources() {
         // Arrange
-        RegistryImageResource busybox = RegistryImageResource.createResource("busybox", RegistryImageConfig.create("busybox"));
+        RegistryImageResource busybox = RegistryImageResource.create("busybox", RegistryImageConfig.create("busybox"));
         GitResource repo = GitResource.createResource("repo", GitResourceConfig.create("https://git.company.com/group/project.git"));
         Pipeline pipeline = new Pipeline();
 

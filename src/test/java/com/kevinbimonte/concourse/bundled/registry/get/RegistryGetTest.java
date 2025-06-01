@@ -13,7 +13,7 @@ class RegistryGetTest {
     @Test
     void setLatestVersion() {
         // Arrange
-        RegistryImageResource repo = RegistryImageResource.createResource("repo", RegistryImageConfig.create("busybox"));
+        RegistryImageResource repo = RegistryImageResource.create("repo", RegistryImageConfig.create("busybox"));
         RegistryGet get = repo.createGetDefinition();
 
         // Act
@@ -27,7 +27,7 @@ class RegistryGetTest {
     @Test
     void setEveryVersion() {
         // Arrange
-        RegistryImageResource repo = RegistryImageResource.createResource("repo", RegistryImageConfig.create("busybox"));
+        RegistryImageResource repo = RegistryImageResource.create("repo", RegistryImageConfig.create("busybox"));
         RegistryGet get = repo.createGetDefinition();
 
         // Act
@@ -41,7 +41,7 @@ class RegistryGetTest {
     @Test
     void setSpecificVersion() {
         // Arrange
-        RegistryImageResource repo = RegistryImageResource.createResource("repo", RegistryImageConfig.create("concourse/concourse"));
+        RegistryImageResource repo = RegistryImageResource.create("repo", RegistryImageConfig.create("concourse/concourse"));
         RegistryGet get = repo.createGetDefinition();
 
         // Act
@@ -59,7 +59,7 @@ class RegistryGetTest {
     @Test
     void setSpecificVersionFromTag() {
         // Arrange
-        RegistryImageResource repo = RegistryImageResource.createResource("repo", RegistryImageConfig.create("busybox"));
+        RegistryImageResource repo = RegistryImageResource.create("repo", RegistryImageConfig.create("busybox"));
         RegistryGet get = repo.createGetDefinition();
 
         // Act
@@ -77,7 +77,7 @@ class RegistryGetTest {
     @Test
     void setSpecificVersionFromDigest() {
         // Arrange
-        RegistryImageResource repo = RegistryImageResource.createResource("repo", RegistryImageConfig.create("concourse/concourse"));
+        RegistryImageResource repo = RegistryImageResource.create("repo", RegistryImageConfig.create("concourse/concourse"));
         RegistryGet get = repo.createGetDefinition();
 
         // Act

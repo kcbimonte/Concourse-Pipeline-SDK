@@ -88,7 +88,7 @@ class TaskTest {
     void specifyingTaskImage() {
         // Arrange
         RegistryImageConfig config = RegistryImageConfig.create("busybox");
-        RegistryImageResource busyBox = RegistryImageResource.createResource("busy_box", config);
+        RegistryImageResource busyBox = RegistryImageResource.create("busy_box", config);
 
         Task task = Task.create("task", TaskConfig.create(Platform.LINUX, Command.createCommand("echo").addArg("Hello World")));
 

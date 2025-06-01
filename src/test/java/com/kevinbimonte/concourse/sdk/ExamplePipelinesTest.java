@@ -372,13 +372,13 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         RegistryImageConfig v120Config = RegistryImageConfig.create("golang", "1.20-alpine");
-        Resource v120Image = RegistryImageResource.createResource("golang-1.20.x-image", v120Config).setIcon("docker");
+        Resource v120Image = RegistryImageResource.create("golang-1.20.x-image", v120Config).setIcon("docker");
 
         RegistryImageConfig v121Config = RegistryImageConfig.create("golang", "1.21-alpine");
-        Resource v121Image = RegistryImageResource.createResource("golang-1.21.x-image", v121Config).setIcon("docker");
+        Resource v121Image = RegistryImageResource.create("golang-1.21.x-image", v121Config).setIcon("docker");
 
         RegistryImageConfig v122Config = RegistryImageConfig.create("golang", "1.22-alpine");
-        Resource v122Image = RegistryImageResource.createResource("golang-1.22.x-image", v122Config).setIcon("docker");
+        Resource v122Image = RegistryImageResource.create("golang-1.22.x-image", v122Config).setIcon("docker");
 
         pipeline.addResource(v120Image).addResource(v121Image).addResource(v122Image);
 
@@ -518,7 +518,7 @@ class ExamplePipelinesTest {
         pipeline.addResource(repo);
 
         RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "22-slim");
-        Resource image = RegistryImageResource.createResource("node-image", registryConfig).setIcon("docker");
+        Resource image = RegistryImageResource.create("node-image", registryConfig).setIcon("docker");
         pipeline.addResource(image);
 
         // Task Config
@@ -650,7 +650,7 @@ class ExamplePipelinesTest {
 
         RegistryImageConfig imageConfig = RegistryImageConfig.create(String.format("%s/simple-image", Variable.referenceVariable("image-repo-name")))
                 .setCredentials(Variable.referenceVariable("registry-username"), Variable.referenceVariable("registry-password"));
-        Resource image = RegistryImageResource.createResource("simple-image", imageConfig).setIcon("docker");
+        Resource image = RegistryImageResource.create("simple-image", imageConfig).setIcon("docker");
         pipeline.addResource(image);
 
         Job job = new Job("build-and-push").addStep(repo.createGetDefinition());

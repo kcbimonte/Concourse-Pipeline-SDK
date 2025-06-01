@@ -23,7 +23,7 @@ class RegistryImageResourceTest {
 
         pipeline.addResourceType(type);
 
-        RegistryImageResource resource = RegistryImageResource.createResource("mirrored-image", RegistryImageConfig.create("busybox"));
+        RegistryImageResource resource = RegistryImageResource.create("mirrored-image", RegistryImageConfig.create("busybox"));
         pipeline.addResource(resource);
 
         // Act
