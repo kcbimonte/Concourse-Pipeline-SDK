@@ -15,6 +15,7 @@ class RegistryImageResourceTest {
         // Arrange
         Pipeline pipeline = new Pipeline();
 
+        // TODO: Not sure I like how this works
         RegistryImageResourceType type = RegistryImageResourceType
                 .create(RegistryImageConfig.create("concourse/registry-image-resource"))
                 .setDefaults(RegistryImageConfig.create(null)
