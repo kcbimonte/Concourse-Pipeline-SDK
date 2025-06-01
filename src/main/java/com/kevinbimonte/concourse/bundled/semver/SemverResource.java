@@ -9,9 +9,13 @@ public class SemverResource extends Resource {
         super(name, type, config);
     }
 
-    public static SemverResource createResource(String name, AbstractSemverDriverConfig<?> config) {
-        SemverResourceType type = SemverResourceType.getInstance();
+    public static SemverResource create(String name, AbstractSemverDriverConfig<?> config) {
+        SemverResourceType type = SemverResourceType.create();
 
+        return new SemverResource(name, type, config);
+    }
+
+    public static SemverResource create(String name, SemverResourceType type, AbstractSemverDriverConfig<?> config) {
         return new SemverResource(name, type, config);
     }
 

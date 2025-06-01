@@ -18,7 +18,7 @@ class SemverGetTest {
 
     @BeforeEach
     void setUp() {
-        resource = SemverResource.createResource("semver", GitDriverConfig.create("https://git.web.com/repo.git", "branch", "version"));
+        resource = SemverResource.create("semver", GitDriverConfig.create("https://git.web.com/repo.git", "branch", "version"));
         gson = new GsonBuilder().create();
     }
 

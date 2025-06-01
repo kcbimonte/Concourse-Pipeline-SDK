@@ -25,7 +25,7 @@ class SemverResourceTest {
         GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
 
         // Act
-        SemverResource resource = SemverResource.createResource("semver", config);
+        SemverResource resource = SemverResource.create("semver", config);
 
         // Assert
         assertNotNull(resource);
@@ -39,7 +39,7 @@ class SemverResourceTest {
         // Arrange
         GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
 
-        SemverResource resource = SemverResource.createResource("semver", config);
+        SemverResource resource = SemverResource.create("semver", config);
 
         // Act
         SemverGet get = resource.createGetDefinition();
@@ -54,7 +54,7 @@ class SemverResourceTest {
         // Arrange
         GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
 
-        SemverResource resource = SemverResource.createResource("semver", config);
+        SemverResource resource = SemverResource.create("semver", config);
 
         // Act
         SemverGet get = resource.createGetDefinition("identifier");
@@ -70,7 +70,7 @@ class SemverResourceTest {
         // Arrange
         GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
 
-        SemverResource resource = SemverResource.createResource("semver", config);
+        SemverResource resource = SemverResource.create("semver", config);
 
         // Act
         SemverPut put = resource.createPutDefinition();
@@ -85,7 +85,7 @@ class SemverResourceTest {
         // Arrange
         GitDriverConfig config = GitDriverConfig.create("git.concourse-ci.org/repo.git", "branch", "version");
 
-        SemverResource resource = SemverResource.createResource("semver", config);
+        SemverResource resource = SemverResource.create("semver", config);
 
         // Act
         SemverPut put = resource.createPutDefinition("identifier");
@@ -104,8 +104,8 @@ class SemverResourceTest {
         GitDriverConfig config = GitDriverConfig.create("git@github.com:concourse/concourse.git", "version", "version")
                 .setPrivateKey(Variable.referenceVariable("concourse-repo-private-key"));
 
-        SemverResource semverResource = SemverResource.createResource("version", config);
-        MockResource mockResource = MockResource.createResource("trigger-resource", MockConfig.create());
+        SemverResource semverResource = SemverResource.create("version", config);
+        MockResource mockResource = MockResource.create("trigger-resource", MockConfig.create());
 
         pipeline.addResource(semverResource).addResource(mockResource);
 
@@ -140,8 +140,8 @@ class SemverResourceTest {
         GitDriverConfig config = GitDriverConfig.create("git@github.com:concourse/concourse.git", "version", "version")
                 .setPrivateKey(Variable.referenceVariable("concourse-repo-private-key"));
 
-        SemverResource semverResource = SemverResource.createResource("version", config);
-        MockResource mockResource = MockResource.createResource("trigger-resource", MockConfig.create());
+        SemverResource semverResource = SemverResource.create("version", config);
+        MockResource mockResource = MockResource.create("trigger-resource", MockConfig.create());
 
         pipeline.addResource(semverResource).addResource(mockResource);
 
