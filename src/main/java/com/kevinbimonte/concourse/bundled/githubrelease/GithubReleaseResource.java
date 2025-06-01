@@ -7,10 +7,13 @@ public class GithubReleaseResource extends Resource {
         super(name, type, config);
     }
 
-    public static GithubReleaseResource createResource(String name, GithubReleaseConfig config) {
-        GithubReleaseResourceType type = GithubReleaseResourceType.getInstance();
+    public static GithubReleaseResource create(String name, GithubReleaseConfig config) {
+        GithubReleaseResourceType type = GithubReleaseResourceType.create();
 
         return new GithubReleaseResource(name, type, config);
     }
 
+    public static GithubReleaseResource create(String name, GithubReleaseResourceType type, GithubReleaseConfig config) {
+        return new GithubReleaseResource(name, type, config);
+    }
 }

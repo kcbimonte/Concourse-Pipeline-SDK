@@ -60,7 +60,7 @@ public class AnonymousResource<T extends IResourceConfig> {
      * @return An Anonymous Resource of type Registry Image targeting the Registry Image Configuration
      */
     public static AnonymousResource<RegistryImageConfig> create(RegistryImageConfig config) {
-        return AnonymousResource.create(RegistryImageResourceType.getInstance(), config);
+        return AnonymousResource.create(RegistryImageResourceType.create(), config);
     }
 
     /**

@@ -17,7 +17,7 @@ class MockPutTest {
 
     @BeforeEach
     void setUp() {
-        resource = MockResource.createResource("mock", MockConfig.create());
+        resource = MockResource.create("mock", MockConfig.create());
         gson = new GsonBuilder().create();
     }
 

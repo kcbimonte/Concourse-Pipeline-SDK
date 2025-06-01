@@ -16,6 +16,9 @@ public class RegistryImageConfig implements IResourceConfig {
     @SerializedName("password")
     private String password;
 
+    @SerializedName("registry_mirror")
+    private RegistryMirrorConfig registryMirror;
+
     protected RegistryImageConfig(String repository, String tag) {
         this.repository = repository;
         this.tag = tag;
@@ -32,6 +35,12 @@ public class RegistryImageConfig implements IResourceConfig {
     public RegistryImageConfig setCredentials(String username, String password) {
         this.username = username;
         this.password = password;
+
+        return this;
+    }
+
+    public RegistryImageConfig setRegistryMirror(RegistryMirrorConfig config) {
+        this.registryMirror = config;
 
         return this;
     }

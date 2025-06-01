@@ -13,7 +13,7 @@ class GitGetTest {
     @Test
     void setLatestVersion() {
         // Arrange
-        GitResource repo = GitResource.createResource("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
+        GitResource repo = GitResource.create("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
         GitGet get = repo.createGetDefinition();
 
         // Act
@@ -27,7 +27,7 @@ class GitGetTest {
     @Test
     void setEveryVersion() {
         // Arrange
-        GitResource repo = GitResource.createResource("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
+        GitResource repo = GitResource.create("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
         GitGet get = repo.createGetDefinition();
 
         // Act
@@ -41,7 +41,7 @@ class GitGetTest {
     @Test
     void setSpecificVersion() {
         // Arrange
-        GitResource repo = GitResource.createResource("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
+        GitResource repo = GitResource.create("repo", GitResourceConfig.create("https://git.company.com/group/repo.git"));
         GitGet get = repo.createGetDefinition();
 
         // Act

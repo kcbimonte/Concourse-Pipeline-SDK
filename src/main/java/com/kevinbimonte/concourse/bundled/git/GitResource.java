@@ -9,9 +9,13 @@ public class GitResource extends Resource {
         super(name, type, config);
     }
 
-    public static GitResource createResource(String name, GitResourceConfig config) {
-        GitResourceType type = GitResourceType.getInstance();
+    public static GitResource create(String name, GitResourceConfig config) {
+        GitResourceType type = GitResourceType.create();
 
+        return new GitResource(name, type, config);
+    }
+
+    public static GitResource create(String name, GitResourceType type, GitResourceConfig config) {
         return new GitResource(name, type, config);
     }
 

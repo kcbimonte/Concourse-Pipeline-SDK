@@ -72,8 +72,8 @@ class PipelineTest {
     @Test
     void resources() {
         // Arrange
-        RegistryImageResource busybox = RegistryImageResource.createResource("busybox", RegistryImageConfig.create("busybox"));
-        GitResource repo = GitResource.createResource("repo", GitResourceConfig.create("https://git.company.com/group/project.git"));
+        RegistryImageResource busybox = RegistryImageResource.create("busybox", RegistryImageConfig.create("busybox"));
+        GitResource repo = GitResource.create("repo", GitResourceConfig.create("https://git.company.com/group/project.git"));
         Pipeline pipeline = new Pipeline();
 
         // Act
@@ -91,8 +91,8 @@ class PipelineTest {
     @Test
     void resourceTypes() {
         // Arrange
-        RegistryImageResourceType registry = RegistryImageResourceType.getInstance();
-        GitResourceType git = GitResourceType.getInstance();
+        RegistryImageResourceType registry = RegistryImageResourceType.create();
+        GitResourceType git = GitResourceType.create();
         Pipeline pipeline = new Pipeline();
 
         // Act

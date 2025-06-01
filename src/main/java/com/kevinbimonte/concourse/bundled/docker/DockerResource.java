@@ -7,10 +7,13 @@ public class DockerResource extends Resource {
         super(name, type, config);
     }
 
-    public static DockerResource createResource(String name, DockerConfig config) {
-        DockerResourceType type = DockerResourceType.getInstance();
+    public static DockerResource create(String name, DockerConfig config) {
+        DockerResourceType type = DockerResourceType.create();
 
         return new DockerResource(name, type, config);
     }
 
+    public static DockerResource create(String name, DockerResourceType type, DockerConfig config) {
+        return new DockerResource(name, type, config);
+    }
 }
