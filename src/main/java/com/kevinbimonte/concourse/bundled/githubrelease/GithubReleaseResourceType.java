@@ -3,13 +3,12 @@ package com.kevinbimonte.concourse.bundled.githubrelease;
 import com.kevinbimonte.concourse.bundled.Bundled;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
-public class GithubReleaseResourceType extends ResourceType {
+public class GithubReleaseResourceType extends ResourceType<GithubReleaseResourceType, GithubReleaseConfig> {
     private static GithubReleaseResourceType type = null;
 
     private GithubReleaseResourceType(String name) {
         super(name);
     }
-
 
     public static GithubReleaseResourceType getInstance() {
         if (type == null) {
@@ -17,5 +16,10 @@ public class GithubReleaseResourceType extends ResourceType {
         }
 
         return type;
+    }
+
+    @Override
+    protected GithubReleaseResourceType getSelf() {
+        return this;
     }
 }

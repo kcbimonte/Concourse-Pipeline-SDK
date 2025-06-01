@@ -3,13 +3,12 @@ package com.kevinbimonte.concourse.bundled.bosh.release;
 import com.kevinbimonte.concourse.bundled.Bundled;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
-public class BoshReleaseResourceType extends ResourceType {
+public class BoshReleaseResourceType extends ResourceType<BoshReleaseResourceType, BoshReleaseConfig> {
     private static BoshReleaseResourceType type = null;
 
     private BoshReleaseResourceType(String name) {
         super(name);
     }
-
 
     public static BoshReleaseResourceType getInstance() {
         if (type == null) {
@@ -17,5 +16,10 @@ public class BoshReleaseResourceType extends ResourceType {
         }
 
         return type;
+    }
+
+    @Override
+    protected BoshReleaseResourceType getSelf() {
+        return this;
     }
 }
