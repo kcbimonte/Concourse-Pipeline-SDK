@@ -2,7 +2,9 @@ package com.kevinbimonte.concourse.bundled.registry.get;
 
 import com.google.gson.annotations.SerializedName;
 import com.kevinbimonte.concourse.sdk.resource.get.IGetConfig;
+import lombok.Getter;
 
+@Getter
 public class RegistryGetConfig implements IGetConfig {
     private RegistryFormat format;
 

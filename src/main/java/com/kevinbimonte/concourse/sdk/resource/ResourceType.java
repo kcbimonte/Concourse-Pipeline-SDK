@@ -5,6 +5,7 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.resource.get.IGetConfig;
 import com.kevinbimonte.concourse.sdk.resource.put.Put;
 import com.kevinbimonte.concourse.sdk.util.Validator;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
  * that are fetched when the resource's {@link Get} step runs, and the side effect
  * that occurs when the resource's {@link Put} step runs.
  */
+@Getter
 public abstract class ResourceType<T extends ResourceType<T, U>, U extends IResourceConfig> extends AbstractResource {
 
     private Boolean privileged;
