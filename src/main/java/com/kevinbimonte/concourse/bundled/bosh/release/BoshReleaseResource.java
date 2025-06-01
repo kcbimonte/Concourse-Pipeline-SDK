@@ -7,10 +7,13 @@ public class BoshReleaseResource extends Resource {
         super(name, type, config);
     }
 
-    public static BoshReleaseResource createResource(String name, BoshReleaseConfig config) {
+    public static BoshReleaseResource create(String name, BoshReleaseConfig config) {
         BoshReleaseResourceType type = BoshReleaseResourceType.create();
 
         return new BoshReleaseResource(name, type, config);
     }
 
+    public static BoshReleaseResource create(String name, BoshReleaseResourceType type, BoshReleaseConfig config) {
+        return new BoshReleaseResource(name, type, config);
+    }
 }

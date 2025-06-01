@@ -28,7 +28,7 @@ class MockResourceTest {
         MockConfig config = MockConfig.create();
 
         // Act
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Assert
         assertNotNull(resource);
@@ -39,7 +39,7 @@ class MockResourceTest {
     void createStandardMockGet() {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Act
         MockGet get = resource.createGetDefinition();
@@ -54,7 +54,7 @@ class MockResourceTest {
     void changeMockGetIdentifier() {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Act
         MockGet get = resource.createGetDefinition("identifier");
@@ -71,7 +71,7 @@ class MockResourceTest {
     void setInvalidMockGetIdentifier(String identifier) {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Assert
         assertThrows(IllegalArgumentException.class, () -> resource.createGetDefinition(identifier));
@@ -81,7 +81,7 @@ class MockResourceTest {
     void createStandardMockPut() {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Act
         MockPut put = resource.createPutDefinition();
@@ -96,7 +96,7 @@ class MockResourceTest {
     void changeMockPutIdentifier() {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Act
         MockPut put = resource.createPutDefinition("identifier");
@@ -113,7 +113,7 @@ class MockResourceTest {
     void setInvalidMockPutIdentifier(String identifier) {
         // Arrange
         MockConfig config = MockConfig.create();
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Assert
         assertThrows(IllegalArgumentException.class, () -> resource.createPutDefinition(identifier));
@@ -128,7 +128,7 @@ class MockResourceTest {
                 .addNewMetadataEntry("baz", "qux");
 
         // Act
-        MockResource resource = MockResource.createResource("mock", config);
+        MockResource resource = MockResource.create("mock", config);
 
         // Assert
         assertNotNull(resource);

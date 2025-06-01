@@ -18,7 +18,7 @@ class SetPipelineTest {
     void setPipelineAcross() {
         // Arrange
         Pipeline pipeline = new Pipeline();
-        GitResource ci = GitResource.createResource("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
+        GitResource ci = GitResource.create("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
         pipeline.addResource(ci);
 
         Job job = new Job("job");

@@ -7,10 +7,13 @@ public class HGResource extends Resource {
         super(name, type, config);
     }
 
-    public static HGResource createResource(String name, HGConfig config) {
+    public static HGResource create(String name, HGConfig config) {
         HGResourceType type = HGResourceType.create();
 
         return new HGResource(name, type, config);
     }
 
+    public static HGResource create(String name, HGResourceType type, HGConfig config) {
+        return new HGResource(name, type, config);
+    }
 }

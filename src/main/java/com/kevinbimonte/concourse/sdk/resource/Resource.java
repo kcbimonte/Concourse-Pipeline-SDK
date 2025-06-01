@@ -29,10 +29,6 @@ public abstract class Resource extends AbstractResource {
         super(name, type.getName(), config);
     }
 
-    Resource(ResourceType<?, ?> type, IResourceConfig config) {
-        super("", type.getName(), config);
-    }
-
     public Get createGetDefinition() {
         return new NoOpGet(this);
     }

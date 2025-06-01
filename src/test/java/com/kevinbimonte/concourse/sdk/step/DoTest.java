@@ -85,7 +85,7 @@ class DoTest {
     void inputOutputAcross() {
         // Arrange
         Pipeline pipeline = new Pipeline();
-        GitResource ciRepo = GitResource.createResource("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
+        GitResource ciRepo = GitResource.create("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
         pipeline.addResource(ciRepo);
 
         Job job = new Job("job");

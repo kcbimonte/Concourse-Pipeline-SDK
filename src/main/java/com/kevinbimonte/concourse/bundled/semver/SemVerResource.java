@@ -7,10 +7,13 @@ public class SemVerResource extends Resource {
         super(name, type, config);
     }
 
-    public static SemVerResource createResource(String name, SemVerConfig config) {
+    public static SemVerResource create(String name, SemVerConfig config) {
         SemVerResourceType type = SemVerResourceType.create();
 
         return new SemVerResource(name, type, config);
     }
 
+    public static SemVerResource create(String name, SemVerResourceType type, SemVerConfig config) {
+        return new SemVerResource(name, type, config);
+    }
 }

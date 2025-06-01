@@ -7,10 +7,13 @@ public class PoolResource extends Resource {
         super(name, type, config);
     }
 
-    public static PoolResource createResource(String name, PoolConfig config) {
+    public static PoolResource create(String name, PoolConfig config) {
         PoolResourceType type = PoolResourceType.create();
 
         return new PoolResource(name, type, config);
     }
 
+    public static PoolResource create(String name, PoolResourceType type, PoolConfig config) {
+        return new PoolResource(name, type, config);
+    }
 }

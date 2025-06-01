@@ -45,7 +45,7 @@ class TaskTest {
     void taskWithYAMLTemplate() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
-        GitResource resource = GitResource.createResource("repo", gitConfig);
+        GitResource resource = GitResource.create("repo", gitConfig);
         GitGet get = resource.createGetDefinition();
 
         // Act
@@ -61,7 +61,7 @@ class TaskTest {
     void taskWithYAMLTemplateWithLeadingSlash() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
-        GitResource resource = GitResource.createResource("repo", gitConfig);
+        GitResource resource = GitResource.create("repo", gitConfig);
         GitGet get = resource.createGetDefinition();
 
         // Act
@@ -77,7 +77,7 @@ class TaskTest {
     void taskWithNullPath() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
-        GitResource resource = GitResource.createResource("repo", gitConfig);
+        GitResource resource = GitResource.create("repo", gitConfig);
         GitGet get = resource.createGetDefinition();
 
         // Assert
@@ -130,7 +130,7 @@ class TaskTest {
     void addUnstructuredVariables() {
         // Arrange
         GitResourceConfig gitConfig = GitResourceConfig.create("https://git.my_domain.com/repo.git");
-        GitResource resource = GitResource.createResource("repo", gitConfig);
+        GitResource resource = GitResource.create("repo", gitConfig);
         GitGet get = resource.createGetDefinition();
         Task task = Task.create("task", get, "/pipeline/templates/my_second_job.yml");
 
@@ -214,7 +214,7 @@ class TaskTest {
     @Test
     void addInputMappingFromGet() {
         // Arrange
-        GitResource resource = GitResource.createResource("repo", GitResourceConfig.create("https://git.website.com/group/repo.git"));
+        GitResource resource = GitResource.create("repo", GitResourceConfig.create("https://git.website.com/group/repo.git"));
         GitGet get = resource.createGetDefinition();
 
         Task task = Task.create("task", TaskConfig.create(Platform.LINUX, AnonymousResource.create("busybox"), Command.createCommand("echo").addArg("Hello, world!")));
