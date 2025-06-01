@@ -10,7 +10,7 @@ public class RegistryImageResource extends Resource {
     }
 
     public static RegistryImageResource createResource(String name, RegistryImageConfig config) {
-        RegistryImageResourceType type = RegistryImageResourceType.getInstance();
+        RegistryImageResourceType type = RegistryImageResourceType.create();
 
         return new RegistryImageResource(name, type, config);
     }

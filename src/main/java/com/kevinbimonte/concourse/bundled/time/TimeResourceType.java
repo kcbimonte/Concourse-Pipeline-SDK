@@ -1,21 +1,26 @@
 package com.kevinbimonte.concourse.bundled.time;
 
 import com.kevinbimonte.concourse.bundled.Bundled;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 public class TimeResourceType extends ResourceType<TimeResourceType, TimeConfig> {
-    private static TimeResourceType type = null;
 
     private TimeResourceType(String name) {
         super(name);
     }
 
-    public static TimeResourceType getInstance() {
-        if (type == null) {
-            type = new TimeResourceType(Bundled.TIME.getTypeName());
-        }
+    private TimeResourceType(String name, RegistryImageConfig config) {
+        super(name, RegistryImageResourceType.create(), config);
+    }
 
-        return type;
+    public static TimeResourceType create() {
+        return new TimeResourceType(Bundled.TIME.getTypeName());
+    }
+
+    public static TimeResourceType create(RegistryImageConfig config) {
+        return new TimeResourceType(Bundled.TIME.getTypeName(), config);
     }
 
     @Override

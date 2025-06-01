@@ -4,18 +4,20 @@ import com.kevinbimonte.concourse.bundled.Bundled;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 public class RegistryImageResourceType extends ResourceType<RegistryImageResourceType, RegistryImageConfig> {
-    private static RegistryImageResourceType type = null;
-
-    public RegistryImageResourceType(String name) {
+    private RegistryImageResourceType(String name) {
         super(name);
     }
 
-    public static RegistryImageResourceType getInstance() {
-        if (type == null) {
-            type = new RegistryImageResourceType(Bundled.REGISTRY_IMAGE.getTypeName());
-        }
+    private RegistryImageResourceType(String name, RegistryImageConfig source) {
+        super(name, RegistryImageResourceType.create(), source);
+    }
 
-        return type;
+    public static RegistryImageResourceType create() {
+        return new RegistryImageResourceType(Bundled.REGISTRY_IMAGE.getTypeName());
+    }
+
+    public static RegistryImageResourceType create(RegistryImageConfig source) {
+        return new RegistryImageResourceType(Bundled.REGISTRY_IMAGE.getTypeName(), source);
     }
 
     @Override

@@ -8,7 +8,7 @@ public class HGResource extends Resource {
     }
 
     public static HGResource createResource(String name, HGConfig config) {
-        HGResourceType type = HGResourceType.getInstance();
+        HGResourceType type = HGResourceType.create();
 
         return new HGResource(name, type, config);
     }

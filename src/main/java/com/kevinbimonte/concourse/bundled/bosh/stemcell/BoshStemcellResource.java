@@ -8,7 +8,7 @@ public class BoshStemcellResource extends Resource {
     }
 
     public static BoshStemcellResource createResource(String name, BoshStemcellConfig config) {
-        BoshStemcellResourceType type = BoshStemcellResourceType.getInstance();
+        BoshStemcellResourceType type = BoshStemcellResourceType.create();
 
         return new BoshStemcellResource(name, type, config);
     }

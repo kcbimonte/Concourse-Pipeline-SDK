@@ -8,7 +8,7 @@ public class GithubReleaseResource extends Resource {
     }
 
     public static GithubReleaseResource createResource(String name, GithubReleaseConfig config) {
-        GithubReleaseResourceType type = GithubReleaseResourceType.getInstance();
+        GithubReleaseResourceType type = GithubReleaseResourceType.create();
 
         return new GithubReleaseResource(name, type, config);
     }

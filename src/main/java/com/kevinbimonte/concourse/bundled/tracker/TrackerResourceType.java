@@ -1,22 +1,27 @@
 package com.kevinbimonte.concourse.bundled.tracker;
 
 import com.kevinbimonte.concourse.bundled.Bundled;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 @Deprecated
 public class TrackerResourceType extends ResourceType<TrackerResourceType, TrackerConfig> {
-    private static TrackerResourceType type = null;
 
     private TrackerResourceType(String name) {
         super(name);
     }
 
-    public static TrackerResourceType getInstance() {
-        if (type == null) {
-            type = new TrackerResourceType(Bundled.TRACKER.getTypeName());
-        }
+    private TrackerResourceType(String name, RegistryImageConfig config) {
+        super(name, RegistryImageResourceType.create(), config);
+    }
 
-        return type;
+    public static TrackerResourceType create() {
+        return new TrackerResourceType(Bundled.TRACKER.getTypeName());
+    }
+
+    public static TrackerResourceType create(RegistryImageConfig config) {
+        return new TrackerResourceType(Bundled.TRACKER.getTypeName(), config);
     }
 
     @Override

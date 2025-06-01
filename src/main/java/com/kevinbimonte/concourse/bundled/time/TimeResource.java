@@ -8,7 +8,7 @@ public class TimeResource extends Resource {
     }
 
     public static TimeResource createResource(String name, TimeConfig config) {
-        TimeResourceType type = TimeResourceType.getInstance();
+        TimeResourceType type = TimeResourceType.create();
 
         return new TimeResource(name, type, config);
     }

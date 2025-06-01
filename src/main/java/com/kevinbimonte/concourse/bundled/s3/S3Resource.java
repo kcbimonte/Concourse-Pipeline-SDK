@@ -8,7 +8,7 @@ public class S3Resource extends Resource {
     }
 
     public static S3Resource createResource(String name, S3Config config) {
-        S3ResourceType type = S3ResourceType.getInstance();
+        S3ResourceType type = S3ResourceType.create();
 
         return new S3Resource(name, type, config);
     }

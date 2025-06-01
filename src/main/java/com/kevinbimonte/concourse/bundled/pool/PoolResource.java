@@ -8,7 +8,7 @@ public class PoolResource extends Resource {
     }
 
     public static PoolResource createResource(String name, PoolConfig config) {
-        PoolResourceType type = PoolResourceType.getInstance();
+        PoolResourceType type = PoolResourceType.create();
 
         return new PoolResource(name, type, config);
     }

@@ -277,7 +277,7 @@ class TaskTest {
 
         AcrossVariable acrossVariable = AcrossVariable.create("some-text").addValue("hello-world").addValue("hello-concourse");
 
-        AnonymousResource<MockConfig> resource = AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf());
+        AnonymousResource<MockConfig> resource = AnonymousResource.create(MockResourceType.create(), MockConfig.create().mirrorSelf());
         TaskConfig config = TaskConfig.create(resource, Command.createCommand("echo").addArg(acrossVariable.getVariable()));
         Task task = Task.createAcrossTask(String.format("running-%s", acrossVariable.getVariable()), config, acrossVariable);
 

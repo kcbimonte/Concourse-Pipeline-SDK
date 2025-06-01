@@ -10,10 +10,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegistryImageResourceTest {
 
-//    @Test
+    @Test
     void separateTaskConfig() {
         // Arrange
         Pipeline pipeline = new Pipeline();
+
+        RegistryImageResourceType type = RegistryImageResourceType
+                .create(RegistryImageConfig.create("concourse/registry-image-resource"))
+                .setDefaults(RegistryImageConfig.create(null)
+                        .setRegistryMirror(RegistryMirrorConfig.create("https://registry.mirror.example.com"))
+                );
+
+        pipeline.addResourceType(type);
+
+        RegistryImageResource resource = RegistryImageResource.createResource("mirrored-image", RegistryImageConfig.create("busybox"));
+        pipeline.addResource(resource);
 
         // Act
         JsonElement generated = JsonParser.parseString(pipeline.render());

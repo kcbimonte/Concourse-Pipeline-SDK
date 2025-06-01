@@ -10,7 +10,7 @@ public class MockResource extends Resource {
     }
 
     public static MockResource createResource(String name, MockConfig config) {
-        MockResourceType type = MockResourceType.getInstance();
+        MockResourceType type = MockResourceType.create();
 
         return new MockResource(name, type, config);
     }

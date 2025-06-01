@@ -8,7 +8,7 @@ public class DockerResource extends Resource {
     }
 
     public static DockerResource createResource(String name, DockerConfig config) {
-        DockerResourceType type = DockerResourceType.getInstance();
+        DockerResourceType type = DockerResourceType.create();
 
         return new DockerResource(name, type, config);
     }

@@ -1,21 +1,26 @@
 package com.kevinbimonte.concourse.bundled.mock;
 
 import com.kevinbimonte.concourse.bundled.Bundled;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 public class MockResourceType extends ResourceType<MockResourceType, MockConfig> {
-    private static MockResourceType type = null;
 
     private MockResourceType(String name) {
         super(name);
     }
 
-    public static MockResourceType getInstance() {
-        if (type == null) {
-            type = new MockResourceType(Bundled.MOCK.getTypeName());
-        }
+    private MockResourceType(String name, RegistryImageConfig config) {
+        super(name, RegistryImageResourceType.create(), config);
+    }
 
-        return type;
+    public static MockResourceType create() {
+        return new MockResourceType(Bundled.MOCK.getTypeName());
+    }
+
+    public static MockResourceType create(RegistryImageConfig config) {
+        return new MockResourceType(Bundled.MOCK.getTypeName(), config);
     }
 
     @Override

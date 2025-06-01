@@ -1,21 +1,25 @@
 package com.kevinbimonte.concourse.bundled.bosh.release;
 
 import com.kevinbimonte.concourse.bundled.Bundled;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 public class BoshReleaseResourceType extends ResourceType<BoshReleaseResourceType, BoshReleaseConfig> {
-    private static BoshReleaseResourceType type = null;
-
     private BoshReleaseResourceType(String name) {
         super(name);
     }
 
-    public static BoshReleaseResourceType getInstance() {
-        if (type == null) {
-            type = new BoshReleaseResourceType(Bundled.BOSH_IO_RELEASE.getTypeName());
-        }
+    private BoshReleaseResourceType(String name, RegistryImageConfig config) {
+        super(name, RegistryImageResourceType.create(), config);
+    }
 
-        return type;
+    public static BoshReleaseResourceType create() {
+        return new BoshReleaseResourceType(Bundled.BOSH_IO_RELEASE.getTypeName());
+    }
+
+    public static BoshReleaseResourceType create(RegistryImageConfig config) {
+        return new BoshReleaseResourceType(Bundled.BOSH_IO_RELEASE.getTypeName(), config);
     }
 
     @Override

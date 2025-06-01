@@ -8,7 +8,7 @@ public class SemVerResource extends Resource {
     }
 
     public static SemVerResource createResource(String name, SemVerConfig config) {
-        SemVerResourceType type = SemVerResourceType.getInstance();
+        SemVerResourceType type = SemVerResourceType.create();
 
         return new SemVerResource(name, type, config);
     }

@@ -10,7 +10,7 @@ public class GitResource extends Resource {
     }
 
     public static GitResource createResource(String name, GitResourceConfig config) {
-        GitResourceType type = GitResourceType.getInstance();
+        GitResourceType type = GitResourceType.create();
 
         return new GitResource(name, type, config);
     }

@@ -91,8 +91,8 @@ class PipelineTest {
     @Test
     void resourceTypes() {
         // Arrange
-        RegistryImageResourceType registry = RegistryImageResourceType.getInstance();
-        GitResourceType git = GitResourceType.getInstance();
+        RegistryImageResourceType registry = RegistryImageResourceType.create();
+        GitResourceType git = GitResourceType.create();
         Pipeline pipeline = new Pipeline();
 
         // Act

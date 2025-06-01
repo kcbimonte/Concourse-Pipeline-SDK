@@ -8,7 +8,7 @@ public class BoshReleaseResource extends Resource {
     }
 
     public static BoshReleaseResource createResource(String name, BoshReleaseConfig config) {
-        BoshReleaseResourceType type = BoshReleaseResourceType.getInstance();
+        BoshReleaseResourceType type = BoshReleaseResourceType.create();
 
         return new BoshReleaseResource(name, type, config);
     }

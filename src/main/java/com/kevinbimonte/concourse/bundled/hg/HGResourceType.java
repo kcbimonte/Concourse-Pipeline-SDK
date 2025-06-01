@@ -1,21 +1,26 @@
 package com.kevinbimonte.concourse.bundled.hg;
 
 import com.kevinbimonte.concourse.bundled.Bundled;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageConfig;
+import com.kevinbimonte.concourse.bundled.registry.RegistryImageResourceType;
 import com.kevinbimonte.concourse.sdk.resource.ResourceType;
 
 public class HGResourceType extends ResourceType<HGResourceType, HGConfig> {
-    private static HGResourceType type = null;
 
     private HGResourceType(String name) {
         super(name);
     }
 
-    public static HGResourceType getInstance() {
-        if (type == null) {
-            type = new HGResourceType(Bundled.HG.getTypeName());
-        }
+    private HGResourceType(String name, RegistryImageConfig config) {
+        super(name, RegistryImageResourceType.create(), config);
+    }
 
-        return type;
+    public static HGResourceType create() {
+        return new HGResourceType(Bundled.HG.getTypeName());
+    }
+
+    public static HGResourceType create(RegistryImageConfig config) {
+        return new HGResourceType(Bundled.HG.getTypeName(), config);
     }
 
     @Override

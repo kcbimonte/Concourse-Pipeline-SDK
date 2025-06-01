@@ -9,7 +9,7 @@ public class TrackerResource extends Resource {
     }
 
     public static TrackerResource createResource(String name, TrackerConfig config) {
-        TrackerResourceType type = TrackerResourceType.getInstance();
+        TrackerResourceType type = TrackerResourceType.create();
 
         return new TrackerResource(name, type, config);
     }
