@@ -7,10 +7,13 @@ public class TimeResource extends Resource {
         super(name, type, config);
     }
 
-    public static TimeResource createResource(String name, TimeConfig config) {
-        TimeResourceType type = TimeResourceType.getInstance();
+    public static TimeResource create(String name, TimeConfig config) {
+        TimeResourceType type = TimeResourceType.create();
 
         return new TimeResource(name, type, config);
     }
 
+    public static TimeResource create(String name, TimeResourceType type, TimeConfig config) {
+        return new TimeResource(name, type, config);
+    }
 }

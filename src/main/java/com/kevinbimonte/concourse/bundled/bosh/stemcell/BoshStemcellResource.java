@@ -7,11 +7,13 @@ public class BoshStemcellResource extends Resource {
         super(name, type, config);
     }
 
-    public static BoshStemcellResource createResource(String name, BoshStemcellConfig config) {
-        BoshStemcellResourceType type = BoshStemcellResourceType.getInstance();
+    public static BoshStemcellResource create(String name, BoshStemcellConfig config) {
+        BoshStemcellResourceType type = BoshStemcellResourceType.create();
 
         return new BoshStemcellResource(name, type, config);
     }
 
-
+    public static BoshStemcellResource create(String name, BoshStemcellResourceType type, BoshStemcellConfig config) {
+        return new BoshStemcellResource(name, type, config);
+    }
 }

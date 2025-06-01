@@ -9,9 +9,13 @@ public class RegistryImageResource extends Resource {
         super(name, type, config);
     }
 
-    public static RegistryImageResource createResource(String name, RegistryImageConfig config) {
-        RegistryImageResourceType type = RegistryImageResourceType.getInstance();
+    public static RegistryImageResource create(String name, RegistryImageConfig config) {
+        RegistryImageResourceType type = RegistryImageResourceType.create();
 
+        return new RegistryImageResource(name, type, config);
+    }
+
+    public static RegistryImageResource create(String name, RegistryImageResourceType type, RegistryImageConfig config) {
         return new RegistryImageResource(name, type, config);
     }
 

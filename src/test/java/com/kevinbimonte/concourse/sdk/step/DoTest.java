@@ -60,11 +60,11 @@ class DoTest {
         Do doStep = Do.create().addAcrossVariable(variable);
 
         Command helloVariable = Command.createCommand("echo").addArg(String.format("Hello %s!", variable.getVariable()));
-        TaskConfig sayHello = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), helloVariable);
+        TaskConfig sayHello = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.create(), MockConfig.create().mirrorSelf()), helloVariable);
         Task hello = Task.create("saying-hello", sayHello);
 
         Command byeVariable = Command.createCommand("echo").addArg(String.format("Bye %s!", variable.getVariable()));
-        TaskConfig sayBye = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf()), byeVariable);
+        TaskConfig sayBye = TaskConfig.create(Platform.LINUX, AnonymousResource.create(MockResourceType.create(), MockConfig.create().mirrorSelf()), byeVariable);
         Task bye = Task.create("saying-bye", sayBye);
 
         // Act
@@ -85,7 +85,7 @@ class DoTest {
     void inputOutputAcross() {
         // Arrange
         Pipeline pipeline = new Pipeline();
-        GitResource ciRepo = GitResource.createResource("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
+        GitResource ciRepo = GitResource.create("ci", GitResourceConfig.create("https://github.com/concourse/examples.git"));
         pipeline.addResource(ciRepo);
 
         Job job = new Job("job");
@@ -96,7 +96,7 @@ class DoTest {
 
         Do doStep = Do.create().addAcrossVariable(variable);
 
-        AnonymousResource<MockConfig> mockResource = AnonymousResource.create(MockResourceType.getInstance(), MockConfig.create().mirrorSelf());
+        AnonymousResource<MockConfig> mockResource = AnonymousResource.create(MockResourceType.create(), MockConfig.create().mirrorSelf());
 
         //   Task Definition - Running Task
         Command runningCommand = Command.createCommand("cat").addArg(String.format("%1$s/pipelines/%1$s.yml", variable.getVariable()));

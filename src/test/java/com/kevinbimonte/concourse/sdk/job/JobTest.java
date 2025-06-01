@@ -233,7 +233,7 @@ class JobTest {
     void otherObjIsNotEqual() {
         // Arrange
         Job job = new Job("job");
-        MockResource resource = MockResource.createResource("mock", MockConfig.create());
+        MockResource resource = MockResource.create("mock", MockConfig.create());
 
         // Act
         boolean equality = job.equals(resource);

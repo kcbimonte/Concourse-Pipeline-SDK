@@ -170,7 +170,7 @@ public class MockConfig implements IResourceConfig {
     /**
      * Adds an entry to the list of metadata to be returned on every get and put.
      *
-     * @param name Name
+     * @param name  Name
      * @param value Value
      * @return self
      */

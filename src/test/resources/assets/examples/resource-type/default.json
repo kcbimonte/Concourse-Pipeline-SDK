@@ -1,0 +1,25 @@
+{
+  "resource_types": [
+    {
+      "name": "registry-image",
+      "type": "registry-image",
+      "source": {
+        "repository": "concourse/registry-image-resource"
+      },
+      "defaults": {
+        "registry_mirror": {
+          "host": "https://registry.mirror.example.com"
+        }
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "mirrored-image",
+      "type": "registry-image",
+      "source": {
+        "repository": "busybox"
+      }
+    }
+  ]
+}

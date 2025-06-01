@@ -9,9 +9,13 @@ public class MockResource extends Resource {
         super(name, type, config);
     }
 
-    public static MockResource createResource(String name, MockConfig config) {
-        MockResourceType type = MockResourceType.getInstance();
+    public static MockResource create(String name, MockConfig config) {
+        MockResourceType type = MockResourceType.create();
 
+        return new MockResource(name, type, config);
+    }
+
+    public static MockResource create(String name, MockResourceType type, MockConfig config) {
         return new MockResource(name, type, config);
     }
 

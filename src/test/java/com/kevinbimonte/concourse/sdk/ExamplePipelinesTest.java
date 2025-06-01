@@ -119,7 +119,7 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        GitResource repo = GitResource.createResource("concourse-examples", GitResourceConfig.create("https://github.com/concourse/examples"));
+        GitResource repo = GitResource.create("concourse-examples", GitResourceConfig.create("https://github.com/concourse/examples"));
         repo.setIcon("github").setCheckEvery("30m");
 
         pipeline.addResource(repo);
@@ -241,7 +241,7 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        Resource every30Seconds = TimeResource.createResource("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
+        Resource every30Seconds = TimeResource.create("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
         pipeline.addResource(every30Seconds);
 
         Job job = new Job("job").markPublic();
@@ -267,7 +267,7 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        Resource concourseDocs = GitResource.createResource("concourse-docs-git", GitResourceConfig.create("https://github.com/concourse/docs")).setIcon("github");
+        Resource concourseDocs = GitResource.create("concourse-docs-git", GitResourceConfig.create("https://github.com/concourse/docs")).setIcon("github");
         pipeline.addResource(concourseDocs);
 
         Job job = new Job("job").markPublic();
@@ -294,7 +294,7 @@ class ExamplePipelinesTest {
         // Define Pipeline
         Pipeline pipeline = new Pipeline();
 
-        Resource every30Seconds = TimeResource.createResource("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
+        Resource every30Seconds = TimeResource.create("every-30s", new TimeConfig().setInterval("30s")).setIcon("clock-outline");
         pipeline.addResource(every30Seconds);
 
         AnonymousResource<RegistryImageConfig> busyBox = AnonymousResource.create("busybox");
@@ -372,13 +372,13 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         RegistryImageConfig v120Config = RegistryImageConfig.create("golang", "1.20-alpine");
-        Resource v120Image = RegistryImageResource.createResource("golang-1.20.x-image", v120Config).setIcon("docker");
+        Resource v120Image = RegistryImageResource.create("golang-1.20.x-image", v120Config).setIcon("docker");
 
         RegistryImageConfig v121Config = RegistryImageConfig.create("golang", "1.21-alpine");
-        Resource v121Image = RegistryImageResource.createResource("golang-1.21.x-image", v121Config).setIcon("docker");
+        Resource v121Image = RegistryImageResource.create("golang-1.21.x-image", v121Config).setIcon("docker");
 
         RegistryImageConfig v122Config = RegistryImageConfig.create("golang", "1.22-alpine");
-        Resource v122Image = RegistryImageResource.createResource("golang-1.22.x-image", v122Config).setIcon("docker");
+        Resource v122Image = RegistryImageResource.create("golang-1.22.x-image", v122Config).setIcon("docker");
 
         pipeline.addResource(v120Image).addResource(v121Image).addResource(v122Image);
 
@@ -418,7 +418,7 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/rails/rails-contributors.git");
-        Resource repo = GitResource.createResource("rails-contributors-git", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("rails-contributors-git", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
@@ -470,7 +470,7 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/apache/kafka.git");
-        Resource repo = GitResource.createResource("apache-kafka", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("apache-kafka", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
@@ -514,11 +514,11 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/nodejs/nodejs.org.git");
-        Resource repo = GitResource.createResource("repo", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("repo", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         RegistryImageConfig registryConfig = RegistryImageConfig.create("node", "22-slim");
-        Resource image = RegistryImageResource.createResource("node-image", registryConfig).setIcon("docker");
+        Resource image = RegistryImageResource.create("node-image", registryConfig).setIcon("docker");
         pipeline.addResource(image);
 
         // Task Config
@@ -566,7 +566,7 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/laravel/laravel.git");
-        Resource repo = GitResource.createResource("laravel-git", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("laravel-git", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         // Task Config
@@ -608,7 +608,7 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
-        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("concourse-examples", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         Job job = new Job("build-and-use-image").addStep(repo.createGetDefinition());
@@ -645,12 +645,12 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples.git", "master");
-        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("concourse-examples", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         RegistryImageConfig imageConfig = RegistryImageConfig.create(String.format("%s/simple-image", Variable.referenceVariable("image-repo-name")))
                 .setCredentials(Variable.referenceVariable("registry-username"), Variable.referenceVariable("registry-password"));
-        Resource image = RegistryImageResource.createResource("simple-image", imageConfig).setIcon("docker");
+        Resource image = RegistryImageResource.create("simple-image", imageConfig).setIcon("docker");
         pipeline.addResource(image);
 
         Job job = new Job("build-and-push").addStep(repo.createGetDefinition());
@@ -684,7 +684,7 @@ class ExamplePipelinesTest {
         Pipeline pipeline = new Pipeline();
 
         GitResourceConfig repoConfig = GitResourceConfig.create("https://github.com/concourse/examples");
-        Resource repo = GitResource.createResource("concourse-examples", repoConfig).setIcon("github");
+        Resource repo = GitResource.create("concourse-examples", repoConfig).setIcon("github");
         pipeline.addResource(repo);
 
         Job job = new Job("job")
