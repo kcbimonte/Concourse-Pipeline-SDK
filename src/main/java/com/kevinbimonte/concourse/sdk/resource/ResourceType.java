@@ -22,7 +22,7 @@ public abstract class ResourceType<T extends ResourceType<T, U>, U extends IReso
 
     private String type = "registry-image";
 
-    private U source;
+    private IResourceConfig source;
 
     private Boolean privileged;
 
@@ -41,7 +41,7 @@ public abstract class ResourceType<T extends ResourceType<T, U>, U extends IReso
         this.name = name;
     }
 
-    protected ResourceType(String name, U source) {
+    protected ResourceType(String name, IResourceConfig source) {
         Validator.validateIdentifier(name);
 
         this.name = name;
@@ -93,6 +93,6 @@ public abstract class ResourceType<T extends ResourceType<T, U>, U extends IReso
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        return ((ResourceType) obj).name.equals(this.name);
+        return ((ResourceType<?, ?>) obj).name.equals(this.name);
     }
 }
