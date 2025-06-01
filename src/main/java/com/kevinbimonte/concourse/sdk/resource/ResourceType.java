@@ -5,7 +5,6 @@ import com.kevinbimonte.concourse.sdk.resource.get.Get;
 import com.kevinbimonte.concourse.sdk.resource.get.IGetConfig;
 import com.kevinbimonte.concourse.sdk.resource.put.Put;
 import com.kevinbimonte.concourse.sdk.util.Validator;
-import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,14 +14,7 @@ import java.util.Set;
  * that are fetched when the resource's {@link Get} step runs, and the side effect
  * that occurs when the resource's {@link Put} step runs.
  */
-public abstract class ResourceType<T extends ResourceType<T, U>, U extends IResourceConfig> {
-
-    @Getter
-    private final String name;
-
-    private String type = "registry-image";
-
-    private IResourceConfig source;
+public abstract class ResourceType<T extends ResourceType<T, U>, U extends IResourceConfig> extends AbstractResource {
 
     private Boolean privileged;
 
@@ -36,16 +28,11 @@ public abstract class ResourceType<T extends ResourceType<T, U>, U extends IReso
     private U defaults;
 
     protected ResourceType(String name) {
-        Validator.validateIdentifier(name);
-
-        this.name = name;
+        super(name, "registry-image", null);
     }
 
-    protected ResourceType(String name, IResourceConfig source) {
-        Validator.validateIdentifier(name);
-
-        this.name = name;
-        this.source = source;
+    protected <V extends IResourceConfig> ResourceType(String name, ResourceType<?, V> type, V source) {
+        super(name, type.getType(), source);
     }
 
     public T markPrivileged() {
@@ -93,6 +80,6 @@ public abstract class ResourceType<T extends ResourceType<T, U>, U extends IReso
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        return ((ResourceType<?, ?>) obj).name.equals(this.name);
+        return ((ResourceType<?, ?>) obj).getName().equals(this.getName());
     }
 }

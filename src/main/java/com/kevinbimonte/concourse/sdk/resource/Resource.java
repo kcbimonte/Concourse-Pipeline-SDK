@@ -18,30 +18,19 @@ import lombok.Getter;
  * configured on Jobs.
  */
 @Getter
-public abstract class Resource {
-    private final String name;
-    private final String type;
-
-    @SerializedName("source")
-    private final IResourceConfig config;
+public abstract class Resource extends AbstractResource {
 
     private String icon = null;
 
     @SerializedName("check_every")
     private String checkEvery = null;
 
-    public Resource(String name, ResourceType type, IResourceConfig config) {
-        Validator.validateIdentifier(name);
-
-        this.name = name;
-        this.type = type.getName();
-        this.config = config;
+    public Resource(String name, ResourceType<?, ?> type, IResourceConfig config) {
+        super(name, type.getName(), config);
     }
 
-    Resource(ResourceType type, IResourceConfig config) {
-        this.name = "";
-        this.type = type.getName();
-        this.config = config;
+    Resource(ResourceType<?, ?> type, IResourceConfig config) {
+        super("", type.getName(), config);
     }
 
     public Get createGetDefinition() {
@@ -84,6 +73,6 @@ public abstract class Resource {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        return ((Resource) obj).name.equals(this.name);
+        return ((Resource) obj).getName().equals(this.getName());
     }
 }
